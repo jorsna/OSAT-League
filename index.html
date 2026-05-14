@@ -732,15 +732,13 @@ function launchApp(role){
   document.getElementById('role-badge').textContent=role==='admin'?'Admin':'Tilskuer';
   document.getElementById('role-badge').className='login-badge '+(role==='admin'?'badge-admin':'badge-spiller');
   if(role==='admin'){
-    // Add register + heia tabs
     var tabs=document.getElementById('tabs-row');
-    tabs.innerHTML+='<button class="tab" onclick="setTab('reg',this)">Registrer</button>';
-    tabs.innerHTML+='<button class="tab" onclick="setTab('heia',this)">Heie</button>';
+    tabs.innerHTML+='<button class="tab" onclick="setTab(\'reg\',this)">Registrer</button>';
+    tabs.innerHTML+='<button class="tab" onclick="setTab(\'heia\',this)">Heie</button>';
     document.getElementById('view-reg').style.display='block';
   } else {
-    // Add heia tab for spillers too
     var tabs=document.getElementById('tabs-row');
-    tabs.innerHTML+='<button class="tab" onclick="setTab('heia',this)">Heie</button>';
+    tabs.innerHTML+='<button class="tab" onclick="setTab(\'heia\',this)">Heie</button>';
   }
   fetchAll();
   setInterval(fetchAll,30000);
