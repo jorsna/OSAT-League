@@ -420,7 +420,7 @@ select:focus,input[type=text]:focus{border-color:#f97316}
 <div class="view on" id="view-ind">
   <div class="tbl-head">
     <div>#</div><div></div><div>PST</div>
-    <div>P</div><div>9s/10s</div><div>Siste 5</div><div>&#128588;</div>
+    <div>P</div><div>9s/10s</div><div>Siste 5</div><div>&#128222;</div>
   </div>
   <div id="tbl-ind"></div>
   <div class="form-legend">
@@ -514,40 +514,124 @@ select:focus,input[type=text]:focus{border-color:#f97316}
 
 <!-- TIPS VIEW -->
 <div class="view" id="view-tips">
-  <div style="padding:14px;background:var(--card);border-bottom:1px solid var(--b1)">
-    <div style="font-family:'Anton',sans-serif;font-size:14px;color:var(--gold);letter-spacing:2px">&#128161; TIPS &amp; SANNHETER</div>
-    <div style="font-size:10px;color:var(--muted);margin-top:2px">Bli en bedre PST — én ting av gangen</div>
+  <div style="padding:12px 14px;background:var(--card);border-bottom:1px solid var(--b1);display:flex;gap:8px;flex-wrap:wrap">
+    <button onclick="showTips('guide')" id="tips-btn-guide" style="flex:1;padding:7px;font-size:10px;font-weight:700;font-family:'Barlow',sans-serif;text-transform:uppercase;letter-spacing:.6px;background:var(--gold);color:#1c1917;border:none;border-radius:4px;cursor:pointer">&#128221; Samtaleguide</button>
+    <button onclick="showTips('bank')" id="tips-btn-bank" style="flex:1;padding:7px;font-size:10px;font-weight:700;font-family:'Barlow',sans-serif;text-transform:uppercase;letter-spacing:.6px;background:var(--faint);color:var(--muted);border:1px solid var(--b1);border-radius:4px;cursor:pointer">&#10067; Spørsmålsbank</button>
+    <button onclick="showTips('visste')" id="tips-btn-visste" style="flex:1;padding:7px;font-size:10px;font-weight:700;font-family:'Barlow',sans-serif;text-transform:uppercase;letter-spacing:.6px;background:var(--faint);color:var(--muted);border:1px solid var(--b1);border-radius:4px;cursor:pointer">&#128202; Visste du at</button>
   </div>
-  <div style="padding:10px 14px;display:flex;flex-direction:column;gap:10px;background:var(--bg)">
 
-    <div style="background:var(--card);border:1px solid var(--b1);border-left:3px solid var(--gold);border-radius:4px;padding:12px 14px">
-      <div style="font-family:'Anton',sans-serif;font-size:12px;color:var(--gold);letter-spacing:1px;margin-bottom:5px">&#128222; OPPFØLGING ER ALT</div>
-      <div style="font-size:12px;color:var(--txt);line-height:1.6">Kunder som blir ringt opp etter levering gir 10-er oftere neste gang. En 3-minutters samtale kan utgjøre forskjellen mellom en fast kunde og en som aldri kommer tilbake.</div>
+  <!-- SAMTALEGUIDE -->
+  <div id="tips-guide" style="padding:12px 14px;display:flex;flex-direction:column;gap:8px;background:var(--bg)">
+    <div style="font-size:10px;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px">Følg disse stegene — tilpass til din stil</div>
+
+    <div style="background:var(--card);border:1px solid var(--b1);border-radius:4px;overflow:hidden">
+      <div style="background:#f97316;padding:8px 14px;display:flex;align-items:center;gap:8px">
+        <div style="font-family:'Anton',sans-serif;font-size:18px;color:#1c1917;width:26px;text-align:center">1</div>
+        <div style="font-family:'Anton',sans-serif;font-size:12px;color:#1c1917;letter-spacing:1px">ÅPNING — FØRSTE 20 SEKUNDER</div>
+      </div>
+      <div style="padding:12px 14px;font-size:12px;color:var(--txt);line-height:1.7">
+        <div style="color:var(--gold);font-weight:700;margin-bottom:4px">Si dette:</div>
+        <div style="background:var(--faint);border-left:2px solid var(--gold);padding:8px 10px;border-radius:0 4px 4px 0;font-style:italic;color:var(--txt)">«Hei [navn], det er [ditt navn] fra Volvo [avdeling]. Du hentet bilen din for noen dager siden — har du fått tid til å bli litt kjent med den?»</div>
+        <div style="margin-top:8px;color:var(--muted);font-size:11px">✓ Bruk navnet deres umiddelbart &nbsp;✓ Referer til bilen, ikke «kjøpet» &nbsp;✓ Vær varm, ikke formell</div>
+      </div>
     </div>
 
-    <div style="background:var(--card);border:1px solid var(--b1);border-left:3px solid var(--gold);border-radius:4px;padding:12px 14px">
-      <div style="font-family:'Anton',sans-serif;font-size:12px;color:var(--gold);letter-spacing:1px;margin-bottom:5px">&#9203; RING INNEN 48 TIMER</div>
-      <div style="font-size:12px;color:var(--txt);line-height:1.6">Kundene husker best opplevelsen de første dagene etter levering. Vent du for lenge, er inntrykket allerede låst. Ring tidlig — mens stemningen ennå er fersk.</div>
+    <div style="background:var(--card);border:1px solid var(--b1);border-radius:4px;overflow:hidden">
+      <div style="background:#f97316;padding:8px 14px;display:flex;align-items:center;gap:8px">
+        <div style="font-family:'Anton',sans-serif;font-size:18px;color:#1c1917;width:26px;text-align:center">2</div>
+        <div style="font-family:'Anton',sans-serif;font-size:12px;color:#1c1917;letter-spacing:1px">ÅPENT SPØRSMÅL — LA DE SNAKKE</div>
+      </div>
+      <div style="padding:12px 14px;font-size:12px;color:var(--txt);line-height:1.7">
+        <div style="color:var(--gold);font-weight:700;margin-bottom:4px">Si dette:</div>
+        <div style="background:var(--faint);border-left:2px solid var(--gold);padding:8px 10px;border-radius:0 4px 4px 0;font-style:italic;color:var(--txt)">«Hva er du mest fornøyd med ved bilen så langt?»</div>
+        <div style="margin-top:8px;color:var(--muted);font-size:11px">✓ Still ETT spørsmål om gangen &nbsp;✓ Lytt — avbryt ikke &nbsp;✓ Følg opp det de sier</div>
+      </div>
     </div>
 
-    <div style="background:var(--card);border:1px solid var(--b1);border-left:3px solid var(--gold);border-radius:4px;padding:12px 14px">
-      <div style="font-family:'Anton',sans-serif;font-size:12px;color:var(--gold);letter-spacing:1px;margin-bottom:5px">&#127919; SPØR — IKKE BARE INFORMER</div>
-      <div style="font-size:12px;color:var(--txt);line-height:1.6">«Er du fornøyd?» er svakere enn «Hva var du mest fornøyd med?». Åpne spørsmål skaper dialog, og dialog skaper lojalitet. Kunder som snakker blir kunder som anbefaler.</div>
+    <div style="background:var(--card);border:1px solid var(--b1);border-radius:4px;overflow:hidden">
+      <div style="background:#f97316;padding:8px 14px;display:flex;align-items:center;gap:8px">
+        <div style="font-family:'Anton',sans-serif;font-size:18px;color:#1c1917;width:26px;text-align:center">3</div>
+        <div style="font-family:'Anton',sans-serif;font-size:12px;color:#1c1917;letter-spacing:1px">SJEKK — ER DET NOE DE LURER PÅ?</div>
+      </div>
+      <div style="padding:12px 14px;font-size:12px;color:var(--txt);line-height:1.7">
+        <div style="color:var(--gold);font-weight:700;margin-bottom:4px">Si dette:</div>
+        <div style="background:var(--faint);border-left:2px solid var(--gold);padding:8px 10px;border-radius:0 4px 4px 0;font-style:italic;color:var(--txt)">«Er det noe med bilen du har lurt på, eller noe du ville ønske vi hadde gjort annerledes?»</div>
+        <div style="margin-top:8px;color:var(--muted);font-size:11px">✓ Ikke vær redd for kritikk — den er gull &nbsp;✓ Løs det du kan, eskaler det du ikke kan</div>
+      </div>
     </div>
 
-    <div style="background:var(--card);border:1px solid var(--b1);border-left:3px solid var(--gold);border-radius:4px;padding:12px 14px">
-      <div style="font-family:'Anton',sans-serif;font-size:12px;color:var(--gold);letter-spacing:1px;margin-bottom:5px">&#128200; SANNHET: 9-ERE ELLER 10-ERE BETYR NOE</div>
-      <div style="font-size:12px;color:var(--txt);line-height:1.6">En 8-er høres bra ut, men i OSAT-verdenen er det ikke det samme. Kun 9 og 10 teller som fornøyde kunder. En 8-er sier egentlig: «det var ikke godt nok til at jeg anbefaler dere.»</div>
+    <div style="background:var(--card);border:1px solid var(--b1);border-radius:4px;overflow:hidden">
+      <div style="background:#f97316;padding:8px 14px;display:flex;align-items:center;gap:8px">
+        <div style="font-family:'Anton',sans-serif;font-size:18px;color:#1c1917;width:26px;text-align:center">4</div>
+        <div style="font-family:'Anton',sans-serif;font-size:12px;color:#1c1917;letter-spacing:1px">AVSLUTNING — PLANT FRØET</div>
+      </div>
+      <div style="padding:12px 14px;font-size:12px;color:var(--txt);line-height:1.7">
+        <div style="color:var(--gold);font-weight:700;margin-bottom:4px">Si dette:</div>
+        <div style="background:var(--faint);border-left:2px solid var(--gold);padding:8px 10px;border-radius:0 4px 4px 0;font-style:italic;color:var(--txt)">«Veldig kjekt å høre, [navn]! Du vil snart få en kort undersøkelse fra Volvo — det betyr mye for oss om du tar deg tid til å svare. Ha det bra!»</div>
+        <div style="margin-top:8px;color:var(--muted);font-size:11px">✓ Nevn undersøkelsen naturlig — ikke mas &nbsp;✓ Avslutt varmt &nbsp;✓ Hele samtalen: 3–5 min</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SPØRSMÅLSBANK -->
+  <div id="tips-bank" style="display:none;padding:12px 14px;display:none;flex-direction:column;gap:8px;background:var(--bg)">
+    <div style="font-size:10px;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px">Velg ett eller to — tilpass til situasjonen</div>
+
+    <div style="font-family:'Anton',sans-serif;font-size:11px;color:var(--gold);letter-spacing:1px;margin:4px 0 2px">&#128994; ÅPNE SPØRSMÅL</div>
+    <div style="background:var(--card);border:1px solid var(--b1);border-radius:4px;padding:10px 14px;font-size:12px;color:var(--txt);line-height:1.8">
+      <div style="padding:5px 0;border-bottom:1px solid var(--b1)">«Hva er du mest fornøyd med ved bilen så langt?»</div>
+      <div style="padding:5px 0;border-bottom:1px solid var(--b1)">«Hvordan har de første dagene med den nye bilen vært?»</div>
+      <div style="padding:5px 0;border-bottom:1px solid var(--b1)">«Er det noe du allerede elsker — eller noe du fortsatt holder på å bli kjent med?»</div>
+      <div style="padding:5px 0">«Hva synes familien din om bilen?»</div>
     </div>
 
-    <div style="background:var(--card);border:1px solid var(--b1);border-left:3px solid var(--gold);border-radius:4px;padding:12px 14px">
-      <div style="font-family:'Anton',sans-serif;font-size:12px;color:var(--gold);letter-spacing:1px;margin-bottom:5px">&#128075; NAVN SKAPER KONTAKT</div>
-      <div style="font-size:12px;color:var(--txt);line-height:1.6">Bruk kundens navn i samtalen. Ikke én gang — minst tre ganger. Det signaliserer at du husker dem, og at de ikke er bare ett nummer i rekken. Det er den lille detaljen som skiller en god PST fra en minneverdig en.</div>
+    <div style="font-family:'Anton',sans-serif;font-size:11px;color:var(--gold);letter-spacing:1px;margin:8px 0 2px">&#128993; SJEKK-SPØRSMÅL</div>
+    <div style="background:var(--card);border:1px solid var(--b1);border-radius:4px;padding:10px 14px;font-size:12px;color:var(--txt);line-height:1.8">
+      <div style="padding:5px 0;border-bottom:1px solid var(--b1)">«Er det noe vi kunne ha gjort annerledes for deg?»</div>
+      <div style="padding:5px 0;border-bottom:1px solid var(--b1)">«Fikk du svar på alt du lurte på hos oss?»</div>
+      <div style="padding:5px 0">«Var det noe i prosessen som føltes unødvendig komplisert?»</div>
     </div>
 
-    <div style="background:var(--card);border:1px solid var(--b1);border-left:3px solid var(--gold);border-radius:4px;padding:12px 14px">
-      <div style="font-family:'Anton',sans-serif;font-size:12px;color:var(--gold);letter-spacing:1px;margin-bottom:5px">&#128337; 3 MINUTTER OM DAGEN</div>
-      <div style="font-size:12px;color:var(--txt);line-height:1.6">De beste PST-ene bruker bare noen minutter daglig på oppfølging. Det er ikke tidkrevende — det er en vane. Og vaner bygger tabelltopper.</div>
+    <div style="font-family:'Anton',sans-serif;font-size:11px;color:var(--gold);letter-spacing:1px;margin:8px 0 2px">&#128308; UNNGÅ DISSE</div>
+    <div style="background:var(--card);border:1px solid rgba(252,165,165,.3);border-radius:4px;padding:10px 14px;font-size:12px;color:var(--muted);line-height:1.8">
+      <div style="padding:5px 0;border-bottom:1px solid var(--b1)">«Er du fornøyd?» — for lukket, gir bare ja/nei</div>
+      <div style="padding:5px 0;border-bottom:1px solid var(--b1)">«Du gir oss 10 på undersøkelsen, ikke sant?» — aldri press</div>
+      <div style="padding:5px 0">«Har du tid til å snakke?» — bare ring, de velger selv</div>
+    </div>
+  </div>
+
+  <!-- VISSTE DU AT -->
+  <div id="tips-visste" style="display:none;padding:12px 14px;display:none;flex-direction:column;gap:8px;background:var(--bg)">
+    <div style="font-size:10px;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px">Fakta om kundetilfredshet i bilbransjen</div>
+
+    <div style="background:var(--card);border:1px solid var(--b1);border-radius:4px;padding:12px 14px;display:flex;gap:12px;align-items:flex-start">
+      <div style="font-family:'Anton',sans-serif;font-size:28px;color:var(--gold);flex-shrink:0;line-height:1">70%</div>
+      <div style="font-size:12px;color:var(--txt);line-height:1.6">av kunder som opplever et problem, men får det løst raskt, er <strong style="color:var(--gold)">mer lojale</strong> enn kunder som aldri hadde et problem. En oppfølgingssamtale er din sjanse til å rydde opp.</div>
+    </div>
+
+    <div style="background:var(--card);border:1px solid var(--b1);border-radius:4px;padding:12px 14px;display:flex;gap:12px;align-items:flex-start">
+      <div style="font-family:'Anton',sans-serif;font-size:28px;color:var(--gold);flex-shrink:0;line-height:1">5×</div>
+      <div style="font-size:12px;color:var(--txt);line-height:1.6">Det koster <strong style="color:var(--gold)">fem ganger mer</strong> å skaffe en ny kunde enn å beholde en eksisterende. En 10-minutter med oppfølging er den beste investeringen du gjør i dag.</div>
+    </div>
+
+    <div style="background:var(--card);border:1px solid var(--b1);border-radius:4px;padding:12px 14px;display:flex;gap:12px;align-items:flex-start">
+      <div style="font-family:'Anton',sans-serif;font-size:28px;color:var(--gold);flex-shrink:0;line-height:1">9/10</div>
+      <div style="font-size:12px;color:var(--txt);line-height:1.6">Kunder som gir 9 eller 10 sier de vil <strong style="color:var(--gold)">anbefale forhandleren</strong> til venner og familie. En 8-er gjør det ikke — selv om de virker fornøyde.</div>
+    </div>
+
+    <div style="background:var(--card);border:1px solid var(--b1);border-radius:4px;padding:12px 14px;display:flex;gap:12px;align-items:flex-start">
+      <div style="font-family:'Anton',sans-serif;font-size:28px;color:var(--gold);flex-shrink:0;line-height:1">48t</div>
+      <div style="font-size:12px;color:var(--txt);line-height:1.6">Kunder kontaktet <strong style="color:var(--gold)">innen 48 timer</strong> etter levering gir signifikant høyere score enn de som kontaktes etter en uke. Timing er alt.</div>
+    </div>
+
+    <div style="background:var(--card);border:1px solid var(--b1);border-radius:4px;padding:12px 14px;display:flex;gap:12px;align-items:flex-start">
+      <div style="font-family:'Anton',sans-serif;font-size:28px;color:var(--gold);flex-shrink:0;line-height:1">1:3</div>
+      <div style="font-size:12px;color:var(--txt);line-height:1.6">En misfornøyd kunde forteller det til <strong style="color:var(--gold)">tre ganger så mange</strong> som en fornøyd kunde. Det er ikke bare din score som står på spill — det er omdømmet til hele avdelingen.</div>
+    </div>
+
+    <div style="background:var(--card);border:1px solid var(--b1);border-radius:4px;padding:12px 14px;display:flex;gap:12px;align-items:flex-start">
+      <div style="font-family:'Anton',sans-serif;font-size:24px;color:var(--gold);flex-shrink:0;line-height:1">Navn</div>
+      <div style="font-size:12px;color:var(--txt);line-height:1.6">Å bruke en persons navn aktiverer en spesifikk del av hjernen som øker <strong style="color:var(--gold)">oppmerksomhet og tillit</strong>. Tre ganger i løpet av samtalen er det magiske antallet.</div>
     </div>
 
   </div>
@@ -1038,7 +1122,7 @@ function renderTeam() {
     cardsEl.innerHTML = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--b1);border-bottom:2px solid var(--b1)">'
       + rows.map(function(r,i){
         var rank=ranks[i];
-        var medal=rank===1?'&#127947;':rank===2?'&#129352;':rank===3?'&#129353;':'';
+        var medal=rank===1?'&#129351;':rank===2?'&#129352;':rank===3?'&#129353;':'';
         var pct=maxPts>0?Math.round(r.pts/maxPts*100):0;
         return '<div style="background:var(--card);padding:14px 14px 12px;position:relative;overflow:hidden">'
           +'<div style="position:absolute;top:0;left:0;right:0;height:3px;background:'+r.color+'"></div>'
@@ -1293,7 +1377,7 @@ function renderAll() {
   else if(curTab==='team'||curTab==='hof') renderTeam();
   else if(curTab==='stats') renderStats();
   else if(curTab==='scoring') renderScoring();
-  else if(curTab==='tips') {} // static, no render needed
+  else if(curTab==='tips') { showTips('guide'); } // vis samtaleguide som default
   else renderInd();
   updateTopBanner();
 }
@@ -1437,8 +1521,11 @@ function reg() {
 
     var name=pst.split(' ')[0];
     toast(name+' SCORER! +3 poeng! '+(selScore==='10'?'&#11088;10-er!':''));
-    launchKonfetti(LC[sObj.loc]||'#ffd700');
+    launchKonfetti(LC[sObj.loc]||'#f97316');
     renderAll();
+    // Sjekk hat trick umiddelbart
+    var hats = hatTrickCount(pst);
+    if(hats > 0) renderTeam(); // oppdaterer HoF med hat trick
     setTimeout(function(){
       var scoringBtn=document.querySelector('.tab[onclick*="scoring"]');
       if(scoringBtn) setTab('scoring', scoringBtn);
@@ -1477,6 +1564,20 @@ function confirmDelete(){
 
 // ─── HJELP ───────────────────────────────────────────────────
 function showHelp(){ var m=document.getElementById('help-modal'); if(m) m.classList.add('show'); }
+
+// ─── TIPS NAVIGASJON ─────────────────────────────────────────
+function showTips(which) {
+  ['guide','bank','visste'].forEach(function(id){
+    var el=document.getElementById('tips-'+id);
+    var btn=document.getElementById('tips-btn-'+id);
+    if(el){ el.style.display = id===which ? 'flex' : 'none'; el.style.flexDirection = 'column'; }
+    if(btn){
+      btn.style.background = id===which ? 'var(--gold)' : 'var(--faint)';
+      btn.style.color = id===which ? '#1c1917' : 'var(--muted)';
+      btn.style.border = id===which ? 'none' : '1px solid var(--b1)';
+    }
+  });
+}
 
 // ─── BYGG DROPDOWN ───────────────────────────────────────────
 function buildDropdown() {
