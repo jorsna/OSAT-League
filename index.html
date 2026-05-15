@@ -654,39 +654,57 @@ select:focus,input[type=text]:focus{border-color:#f97316}
 <!-- HJELP MODAL -->
 <div id="help-modal" onclick="if(event.target===this)this.classList.remove('show')">
   <div class="modal" style="text-align:left;max-width:520px;max-height:85vh;overflow-y:auto">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;position:sticky;top:0;background:var(--card);padding-bottom:10px;border-bottom:1px solid var(--b1)">
-      <div style="font-family:'Anton',sans-serif;font-size:18px;color:var(--gold)">&#9432; VCSO OSAT League</div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;position:sticky;top:0;background:var(--card);padding-bottom:10px;border-bottom:1px solid var(--b1)">
+      <div style="font-family:'Anton',sans-serif;font-size:17px;color:var(--gold)">&#9432; VCSO OSAT League</div>
       <button onclick="document.getElementById('help-modal').classList.remove('show')" style="background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer">&times;</button>
     </div>
-    <div style="font-size:13px;color:var(--muted);line-height:1.7">
+    <div style="font-size:12px;color:var(--muted);line-height:1.7">
+
       <div style="padding:10px 0;border-bottom:1px solid var(--b1)">
-        <div style="font-family:'Anton',sans-serif;font-size:13px;color:var(--gold);letter-spacing:1px;margin-bottom:6px">POENGSYSTEM</div>
-        <div>&#9733; <strong style="color:var(--txt)">3 poeng</strong> for en 9 eller 10 på kundetilfredshetsmålingen.</div>
-        <div style="margin-top:4px">&#9733; <strong style="color:var(--txt)">10-ere teller mest</strong> som tiebreaker — ved likt antall poeng vinner den med flest 10-ere.</div>
-        <div style="margin-top:4px">&#9734; <strong style="color:var(--txt)">Fulgt opp</strong> — antall kunder fulgt opp etter service vises som assist-statistikk og teller ved videre tiebreaker.</div>
+        <div style="font-family:'Anton',sans-serif;font-size:12px;color:var(--gold);letter-spacing:1px;margin-bottom:6px">POENGSYSTEM</div>
+        <div>&#9733; <strong style="color:var(--txt)">3 poeng</strong> for en 9 eller 10 på kundetilfredshetsmålingen (OSAT) etter service eller reparasjon.</div>
+        <div style="margin-top:4px">&#9733; <strong style="color:var(--txt)">10-ere tiebreaker</strong> — ved likt poengantall vinner den med flest 10-ere.</div>
+        <div style="margin-top:4px">&#9734; <strong style="color:var(--txt)">Fulgt opp</strong> — teller som tredje tiebreaker. Ingen poeng, men registreres som assist.</div>
       </div>
+
       <div style="padding:10px 0;border-bottom:1px solid var(--b1)">
-        <div style="font-family:'Anton',sans-serif;font-size:13px;color:var(--gold);letter-spacing:1px;margin-bottom:6px">BADGES</div>
-        <div>&#128081; <strong style="color:var(--txt)">MVP</strong> — flest scoringer i dag. Vises øverst på siden.</div>
-        <div style="margin-top:4px">&#128293; <strong style="color:var(--txt)">Streak</strong> — 3 eller flere dager på rad med minst én score.</div>
-        <div style="margin-top:4px">&#11088; <strong style="color:var(--txt)">Hat Trick</strong> — 3 eller flere scoringer på én dag. Samles opp og vises i Hall of Fame.</div>
-        <div style="margin-top:4px">&#128241; <strong style="color:var(--txt)">Gulltelefon</strong> — flest kunder fulgt opp totalt. Vises i Hall of Fame. Ved likt antall teller flest 10-ere.</div>
+        <div style="font-family:'Anton',sans-serif;font-size:12px;color:var(--gold);letter-spacing:1px;margin-bottom:6px">BADGES</div>
+        <div>&#128081; <strong style="color:var(--txt)">MVP</strong> — flest scoringer i dag. Vises i banner øverst på siden.</div>
+        <div style="margin-top:3px">&#128293; <strong style="color:var(--txt)">Streak</strong> — 3+ dager på rad med minst én score. Vises bak navn i tabellen.</div>
+        <div style="margin-top:3px">&#11088; <strong style="color:var(--txt)">Hat Trick</strong> — 3+ scoringer på én dag. Én stjerne per hat trick. Legges automatisk i Hall of Fame.</div>
+        <div style="margin-top:3px">&#128222; <strong style="color:var(--txt)">Gulltelefon</strong> — flest fulgt opp den uken. Deles ut ved ukesavslutning og legges i Hall of Fame.</div>
       </div>
+
       <div style="padding:10px 0;border-bottom:1px solid var(--b1)">
-        <div style="font-family:'Anton',sans-serif;font-size:13px;color:var(--gold);letter-spacing:1px;margin-bottom:6px">UKESVINNER</div>
-        <div>Kåres søndag kl. 23:59. Flest poeng vinner — ved likt antall teller flest 10-ere, deretter flest fulgt opp. Legges i Hall of Fame.</div>
+        <div style="font-family:'Anton',sans-serif;font-size:12px;color:var(--gold);letter-spacing:1px;margin-bottom:6px">UKESVINNER</div>
+        <div>Kåres <strong style="color:var(--txt)">søndag kl. 23:59</strong>. Tiebreaker: 1) flest poeng, 2) flest 10-ere, 3) flest fulgt opp. Legges manuelt inn av admin i Hall of Fame.</div>
       </div>
+
       <div style="padding:10px 0;border-bottom:1px solid var(--b1)">
-        <div style="font-family:'Anton',sans-serif;font-size:13px;color:var(--gold);letter-spacing:1px;margin-bottom:6px">AVDELINGER</div>
-        <div>&#128276; Konkurransen er delt på PST-er og avdelinger: <strong style="color:var(--txt)">Økern, Ryen, Lillestrøm og Fornebu</strong>.</div>
+        <div style="font-family:'Anton',sans-serif;font-size:12px;color:var(--gold);letter-spacing:1px;margin-bottom:6px">AVDELINGER</div>
+        <div>Konkurransen måles på tvers av <strong style="color:var(--txt)">Økern, Ryen, Lillestrøm og Fornebu</strong> — både individuelt og per avdeling.</div>
       </div>
+
+      <div style="padding:10px 0;border-bottom:1px solid var(--b1)">
+        <div style="font-family:'Anton',sans-serif;font-size:12px;color:var(--gold);letter-spacing:1px;margin-bottom:6px">REGISTRERING (admin)</div>
+        <div>1. Logg inn med Admin-knappen — passord: <strong style="color:var(--txt)">volvo10</strong></div>
+        <div>2. Velg PST fra nedtrekksmenyen (gruppert per avdeling)</div>
+        <div>3. Velg om kunden ga <strong style="color:var(--txt)">9 eller 10</strong></div>
+        <div>4. Huk av <strong style="color:var(--txt)">"Fulgt opp"</strong> om kunden er kontaktet etter service</div>
+        <div>5. Trykk registrer — scoringen er live umiddelbart</div>
+        <div style="margin-top:6px;font-size:11px">Feilregistrering: gå til Scoringer-fanen og trykk <strong style="color:var(--txt)">Slett</strong> på kortet.</div>
+      </div>
+
       <div style="padding:10px 0">
-        <div style="font-family:'Anton',sans-serif;font-size:13px;color:var(--gold);letter-spacing:1px;margin-bottom:6px">REGISTRERING</div>
-        <div>1. Velg PST</div>
-        <div>2. Velg om kunden ga 9 eller 10</div>
-        <div>3. Huk av "Fulgt opp" om kunden ble kontaktet etter service</div>
-        <div>4. Trykk registrer!</div>
+        <div style="font-family:'Anton',sans-serif;font-size:12px;color:var(--gold);letter-spacing:1px;margin-bottom:6px">FANEOVERSIKT</div>
+        <div><strong style="color:var(--txt)">PST-er</strong> — ligatabell med poeng, scoringer og streak/hat trick</div>
+        <div><strong style="color:var(--txt)">Avdelinger</strong> — lagkort med progresjon og rangering</div>
+        <div><strong style="color:var(--txt)">Statistikk</strong> — toppscorere, flest 10-ere, avdeling og oppfølging</div>
+        <div><strong style="color:var(--txt)">Scoringer</strong> — alle registrerte svar som kort (admin kan slette)</div>
+        <div><strong style="color:var(--txt)">Hall of Fame</strong> — uke-for-uke tidslinje med vinnere og hat tricks</div>
+        <div><strong style="color:var(--txt)">Tips</strong> — samtaleguide, spørsmålsbank og fakta om kundetilfredshet</div>
       </div>
+
     </div>
   </div>
 </div>
