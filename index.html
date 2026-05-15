@@ -394,13 +394,14 @@ select:focus,input[type=text]:focus{border-color:#f97316}
 </div>
 
 <!-- TABS -->
-<div class="tabs">
-  <button class="tab on" onclick="setTab('ind',this)">&#128100; PST-er</button>
-  <button class="tab" onclick="setTab('team',this)">&#127960; Avdelinger</button>
-  <button class="tab" onclick="setTab('stats',this)">&#128200; Statistikk</button>
-  <button class="tab" onclick="setTab('scoring',this)">&#127919; Scoringer</button>
-  <button class="tab" onclick="setTab('hof',this)">&#127942; Hall of Fame</button>
-  <button class="tab" onclick="setTab('tips',this)">&#128161; Tips</button>
+<div class="tabs" style="flex-wrap:wrap">
+  <button class="tab on" onclick="setTab('ind',this)" style="flex:1 1 25%">&#128100; PST-er</button>
+  <button class="tab" onclick="setTab('team',this)" style="flex:1 1 25%">&#127960; Avdelinger</button>
+  <button class="tab" onclick="setTab('stats',this)" style="flex:1 1 25%">&#128200; Statistikk</button>
+  <button class="tab" onclick="setTab('scoring',this)" style="flex:1 1 25%">&#127919; Scoringer</button>
+  <div style="width:100%;height:1px;background:var(--b1)"></div>
+  <button class="tab" onclick="setTab('hof',this)" style="flex:1 1 50%;border-top:none">&#127942; Hall of Fame</button>
+  <button class="tab" onclick="setTab('tips',this)" style="flex:1 1 50%;border-top:none">&#128161; Tips</button>
 </div>
 
 <!-- PERIODE BAR - kun Alle, ingen måneder -->
@@ -419,7 +420,7 @@ select:focus,input[type=text]:focus{border-color:#f97316}
 <div class="view on" id="view-ind">
   <div class="tbl-head">
     <div>#</div><div></div><div>PST</div>
-    <div>P</div><div>9s/10s</div><div>Siste 5</div><div>&#128588;</div>
+    <div>P</div><div>9s/10s</div><div>Siste 5</div><div>&#128222;</div>
   </div>
   <div id="tbl-ind"></div>
   <div class="form-legend">
@@ -443,7 +444,7 @@ select:focus,input[type=text]:focus{border-color:#f97316}
     <div class="stat-card"><div class="stat-title">Toppscorere</div><div id="top-scorers"></div></div>
     <div class="stat-card"><div class="stat-title">Mest 10-ere</div><div id="top-tens"></div></div>
     <div class="stat-card full"><div class="stat-title">Avdeling mot m&#229;l</div><div id="team-bars"></div></div>
-    <div class="stat-card full"><div class="stat-title">Fulgt opp etter utlevering</div><div id="followup-bars"></div></div>
+    <div class="stat-card full"><div class="stat-title">Fulgt opp etter service</div><div id="followup-bars"></div></div>
   </div>
 </div>
 
@@ -494,8 +495,8 @@ select:focus,input[type=text]:focus{border-color:#f97316}
       </div>
       <input type="checkbox" id="chk-fup" style="display:none">
       <div>
-        <div style="font-size:13px;font-weight:700;color:var(--txt)">Fulgt opp etter utlevering</div>
-        <div style="font-size:10px;color:var(--muted)">Kunden er kontaktet etter levering</div>
+        <div style="font-size:13px;font-weight:700;color:var(--txt)">Fulgt opp etter service</div>
+        <div style="font-size:10px;color:var(--muted)">Kunden er kontaktet etter at bilen ble hentet</div>
       </div>
       <div class="fup-badge-reg" id="fup-badge">&#9670; FULGT OPP!</div>
     </div>
@@ -513,40 +514,124 @@ select:focus,input[type=text]:focus{border-color:#f97316}
 
 <!-- TIPS VIEW -->
 <div class="view" id="view-tips">
-  <div style="padding:14px;background:var(--card);border-bottom:1px solid var(--b1)">
-    <div style="font-family:'Anton',sans-serif;font-size:14px;color:var(--gold);letter-spacing:2px">&#128161; TIPS &amp; SANNHETER</div>
-    <div style="font-size:10px;color:var(--muted);margin-top:2px">Bli en bedre PST — én ting av gangen</div>
+  <div style="padding:12px 14px;background:var(--card);border-bottom:1px solid var(--b1);display:flex;gap:8px;flex-wrap:wrap">
+    <button onclick="showTips('guide')" id="tips-btn-guide" style="flex:1;padding:7px;font-size:10px;font-weight:700;font-family:'Barlow',sans-serif;text-transform:uppercase;letter-spacing:.6px;background:var(--gold);color:#1c1917;border:none;border-radius:4px;cursor:pointer">&#128221; Samtaleguide</button>
+    <button onclick="showTips('bank')" id="tips-btn-bank" style="flex:1;padding:7px;font-size:10px;font-weight:700;font-family:'Barlow',sans-serif;text-transform:uppercase;letter-spacing:.6px;background:var(--faint);color:var(--muted);border:1px solid var(--b1);border-radius:4px;cursor:pointer">&#10067; Spørsmålsbank</button>
+    <button onclick="showTips('visste')" id="tips-btn-visste" style="flex:1;padding:7px;font-size:10px;font-weight:700;font-family:'Barlow',sans-serif;text-transform:uppercase;letter-spacing:.6px;background:var(--faint);color:var(--muted);border:1px solid var(--b1);border-radius:4px;cursor:pointer">&#128202; Visste du at</button>
   </div>
-  <div style="padding:10px 14px;display:flex;flex-direction:column;gap:10px;background:var(--bg)">
 
-    <div style="background:var(--card);border:1px solid var(--b1);border-left:3px solid var(--gold);border-radius:4px;padding:12px 14px">
-      <div style="font-family:'Anton',sans-serif;font-size:12px;color:var(--gold);letter-spacing:1px;margin-bottom:5px">&#128222; OPPFØLGING ER ALT</div>
-      <div style="font-size:12px;color:var(--txt);line-height:1.6">Kunder som blir ringt opp etter levering gir 10-er oftere neste gang. En 3-minutters samtale kan utgjøre forskjellen mellom en fast kunde og en som aldri kommer tilbake.</div>
+  <!-- SAMTALEGUIDE -->
+  <div id="tips-guide" style="padding:12px 14px;display:flex;flex-direction:column;gap:8px;background:var(--bg)">
+    <div style="font-size:10px;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px">Følg disse stegene — tilpass til din stil</div>
+
+    <div style="background:var(--card);border:1px solid var(--b1);border-radius:4px;overflow:hidden">
+      <div style="background:#f97316;padding:8px 14px;display:flex;align-items:center;gap:8px">
+        <div style="font-family:'Anton',sans-serif;font-size:18px;color:#1c1917;width:26px;text-align:center">1</div>
+        <div style="font-family:'Anton',sans-serif;font-size:12px;color:#1c1917;letter-spacing:1px">ÅPNING — FØRSTE 20 SEKUNDER</div>
+      </div>
+      <div style="padding:12px 14px;font-size:12px;color:var(--txt);line-height:1.7">
+        <div style="color:var(--gold);font-weight:700;margin-bottom:4px">Si dette:</div>
+        <div style="background:var(--faint);border-left:2px solid var(--gold);padding:8px 10px;border-radius:0 4px 4px 0;font-style:italic;color:var(--txt)">«Hei [navn], det er [ditt navn] fra Volvo [avdeling]. Vi hadde bilen din inne til service/reparasjon for noen dager siden — er du fornøyd med hvordan det gikk?»</div>
+        <div style="margin-top:8px;color:var(--muted);font-size:11px">✓ Bruk navnet deres umiddelbart &nbsp;✓ Referer til servicen, ikke «besøket» &nbsp;✓ Vær varm, ikke formell</div>
+      </div>
     </div>
 
-    <div style="background:var(--card);border:1px solid var(--b1);border-left:3px solid var(--gold);border-radius:4px;padding:12px 14px">
-      <div style="font-family:'Anton',sans-serif;font-size:12px;color:var(--gold);letter-spacing:1px;margin-bottom:5px">&#9203; RING INNEN 48 TIMER</div>
-      <div style="font-size:12px;color:var(--txt);line-height:1.6">Kundene husker best opplevelsen de første dagene etter levering. Vent du for lenge, er inntrykket allerede låst. Ring tidlig — mens stemningen ennå er fersk.</div>
+    <div style="background:var(--card);border:1px solid var(--b1);border-radius:4px;overflow:hidden">
+      <div style="background:#f97316;padding:8px 14px;display:flex;align-items:center;gap:8px">
+        <div style="font-family:'Anton',sans-serif;font-size:18px;color:#1c1917;width:26px;text-align:center">2</div>
+        <div style="font-family:'Anton',sans-serif;font-size:12px;color:#1c1917;letter-spacing:1px">ÅPENT SPØRSMÅL — LA DE SNAKKE</div>
+      </div>
+      <div style="padding:12px 14px;font-size:12px;color:var(--txt);line-height:1.7">
+        <div style="color:var(--gold);font-weight:700;margin-bottom:4px">Si dette:</div>
+        <div style="background:var(--faint);border-left:2px solid var(--gold);padding:8px 10px;border-radius:0 4px 4px 0;font-style:italic;color:var(--txt)">«Hva er du mest fornøyd med fra servicen hos oss?»</div>
+        <div style="margin-top:8px;color:var(--muted);font-size:11px">✓ Still ETT spørsmål om gangen &nbsp;✓ Lytt — avbryt ikke &nbsp;✓ Følg opp det de sier</div>
+      </div>
     </div>
 
-    <div style="background:var(--card);border:1px solid var(--b1);border-left:3px solid var(--gold);border-radius:4px;padding:12px 14px">
-      <div style="font-family:'Anton',sans-serif;font-size:12px;color:var(--gold);letter-spacing:1px;margin-bottom:5px">&#127919; SPØR — IKKE BARE INFORMER</div>
-      <div style="font-size:12px;color:var(--txt);line-height:1.6">«Er du fornøyd?» er svakere enn «Hva var du mest fornøyd med?». Åpne spørsmål skaper dialog, og dialog skaper lojalitet. Kunder som snakker blir kunder som anbefaler.</div>
+    <div style="background:var(--card);border:1px solid var(--b1);border-radius:4px;overflow:hidden">
+      <div style="background:#f97316;padding:8px 14px;display:flex;align-items:center;gap:8px">
+        <div style="font-family:'Anton',sans-serif;font-size:18px;color:#1c1917;width:26px;text-align:center">3</div>
+        <div style="font-family:'Anton',sans-serif;font-size:12px;color:#1c1917;letter-spacing:1px">SJEKK — ER DET NOE DE LURER PÅ?</div>
+      </div>
+      <div style="padding:12px 14px;font-size:12px;color:var(--txt);line-height:1.7">
+        <div style="color:var(--gold);font-weight:700;margin-bottom:4px">Si dette:</div>
+        <div style="background:var(--faint);border-left:2px solid var(--gold);padding:8px 10px;border-radius:0 4px 4px 0;font-style:italic;color:var(--txt)">«Er det noe med servicen eller reparasjonen du har lurt på, eller noe du ville ønske vi hadde gjort annerledes?»</div>
+        <div style="margin-top:8px;color:var(--muted);font-size:11px">✓ Ikke vær redd for kritikk — den er gull &nbsp;✓ Løs det du kan, eskaler det du ikke kan</div>
+      </div>
     </div>
 
-    <div style="background:var(--card);border:1px solid var(--b1);border-left:3px solid var(--gold);border-radius:4px;padding:12px 14px">
-      <div style="font-family:'Anton',sans-serif;font-size:12px;color:var(--gold);letter-spacing:1px;margin-bottom:5px">&#128200; SANNHET: 9-ERE ELLER 10-ERE BETYR NOE</div>
-      <div style="font-size:12px;color:var(--txt);line-height:1.6">En 8-er høres bra ut, men i OSAT-verdenen er det ikke det samme. Kun 9 og 10 teller som fornøyde kunder. En 8-er sier egentlig: «det var ikke godt nok til at jeg anbefaler dere.»</div>
+    <div style="background:var(--card);border:1px solid var(--b1);border-radius:4px;overflow:hidden">
+      <div style="background:#f97316;padding:8px 14px;display:flex;align-items:center;gap:8px">
+        <div style="font-family:'Anton',sans-serif;font-size:18px;color:#1c1917;width:26px;text-align:center">4</div>
+        <div style="font-family:'Anton',sans-serif;font-size:12px;color:#1c1917;letter-spacing:1px">AVSLUTNING — PLANT FRØET</div>
+      </div>
+      <div style="padding:12px 14px;font-size:12px;color:var(--txt);line-height:1.7">
+        <div style="color:var(--gold);font-weight:700;margin-bottom:4px">Si dette:</div>
+        <div style="background:var(--faint);border-left:2px solid var(--gold);padding:8px 10px;border-radius:0 4px 4px 0;font-style:italic;color:var(--txt)">«Veldig kjekt å høre, [navn]! Du vil snart få en kort undersøkelse fra Volvo om servicen — det betyr mye for oss om du tar deg tid til å svare. Ha det bra!»</div>
+        <div style="margin-top:8px;color:var(--muted);font-size:11px">✓ Nevn undersøkelsen naturlig — ikke mas &nbsp;✓ Avslutt varmt &nbsp;✓ Hele samtalen: 3–5 min</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SPØRSMÅLSBANK -->
+  <div id="tips-bank" style="display:none;padding:12px 14px;display:none;flex-direction:column;gap:8px;background:var(--bg)">
+    <div style="font-size:10px;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px">Velg ett eller to — tilpass til situasjonen</div>
+
+    <div style="font-family:'Anton',sans-serif;font-size:11px;color:var(--gold);letter-spacing:1px;margin:4px 0 2px">&#128994; ÅPNE SPØRSMÅL</div>
+    <div style="background:var(--card);border:1px solid var(--b1);border-radius:4px;padding:10px 14px;font-size:12px;color:var(--txt);line-height:1.8">
+      <div style="padding:5px 0;border-bottom:1px solid var(--b1)">«Hva er du mest fornøyd med fra servicen hos oss?»</div>
+      <div style="padding:5px 0;border-bottom:1px solid var(--b1)">«Hvordan opplevde du kommunikasjonen vår underveis i servicen?»</div>
+      <div style="padding:5px 0;border-bottom:1px solid var(--b1)">«Fikk du god informasjon om hva som ble gjort med bilen?»</div>
+      <div style="padding:5px 0">«Var ventetiden og tidsestimatet vi ga deg presist?»</div>
     </div>
 
-    <div style="background:var(--card);border:1px solid var(--b1);border-left:3px solid var(--gold);border-radius:4px;padding:12px 14px">
-      <div style="font-family:'Anton',sans-serif;font-size:12px;color:var(--gold);letter-spacing:1px;margin-bottom:5px">&#128075; NAVN SKAPER KONTAKT</div>
-      <div style="font-size:12px;color:var(--txt);line-height:1.6">Bruk kundens navn i samtalen. Ikke én gang — minst tre ganger. Det signaliserer at du husker dem, og at de ikke er bare ett nummer i rekken. Det er den lille detaljen som skiller en god PST fra en minneverdig en.</div>
+    <div style="font-family:'Anton',sans-serif;font-size:11px;color:var(--gold);letter-spacing:1px;margin:8px 0 2px">&#128993; SJEKK-SPØRSMÅL</div>
+    <div style="background:var(--card);border:1px solid var(--b1);border-radius:4px;padding:10px 14px;font-size:12px;color:var(--txt);line-height:1.8">
+      <div style="padding:5px 0;border-bottom:1px solid var(--b1)">«Er det noe med servicen vi kunne gjort annerledes for deg?»</div>
+      <div style="padding:5px 0;border-bottom:1px solid var(--b1)">«Fikk du svar på alle spørsmål du hadde om jobben som ble gjort?»</div>
+      <div style="padding:5px 0">«Er det noe du er usikker på etter servicen — noe du gjerne skulle fått mer forklaring på?»</div>
     </div>
 
-    <div style="background:var(--card);border:1px solid var(--b1);border-left:3px solid var(--gold);border-radius:4px;padding:12px 14px">
-      <div style="font-family:'Anton',sans-serif;font-size:12px;color:var(--gold);letter-spacing:1px;margin-bottom:5px">&#128337; 3 MINUTTER OM DAGEN</div>
-      <div style="font-size:12px;color:var(--txt);line-height:1.6">De beste PST-ene bruker bare noen minutter daglig på oppfølging. Det er ikke tidkrevende — det er en vane. Og vaner bygger tabelltopper.</div>
+    <div style="font-family:'Anton',sans-serif;font-size:11px;color:var(--gold);letter-spacing:1px;margin:8px 0 2px">&#128308; UNNGÅ DISSE</div>
+    <div style="background:var(--card);border:1px solid rgba(252,165,165,.3);border-radius:4px;padding:10px 14px;font-size:12px;color:var(--muted);line-height:1.8">
+      <div style="padding:5px 0;border-bottom:1px solid var(--b1)">«Er du fornøyd?» — for lukket, gir bare ja/nei</div>
+      <div style="padding:5px 0;border-bottom:1px solid var(--b1)">«Du gir oss 10 på undersøkelsen, ikke sant?» — aldri press</div>
+      <div style="padding:5px 0">«Har du tid til å snakke?» — bare ring, de velger selv</div>
+    </div>
+  </div>
+
+  <!-- VISSTE DU AT -->
+  <div id="tips-visste" style="display:none;padding:12px 14px;display:none;flex-direction:column;gap:8px;background:var(--bg)">
+    <div style="font-size:10px;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px">Fakta om kundetilfredshet i bilbransjen</div>
+
+    <div style="background:var(--card);border:1px solid var(--b1);border-radius:4px;padding:12px 14px;display:flex;gap:12px;align-items:flex-start">
+      <div style="font-family:'Anton',sans-serif;font-size:28px;color:var(--gold);flex-shrink:0;line-height:1">70%</div>
+      <div style="font-size:12px;color:var(--txt);line-height:1.6">av kunder som opplever et problem, men får det løst raskt, er <strong style="color:var(--gold)">mer lojale</strong> enn kunder som aldri hadde et problem. En oppfølgingssamtale er din sjanse til å rydde opp.</div>
+    </div>
+
+    <div style="background:var(--card);border:1px solid var(--b1);border-radius:4px;padding:12px 14px;display:flex;gap:12px;align-items:flex-start">
+      <div style="font-family:'Anton',sans-serif;font-size:28px;color:var(--gold);flex-shrink:0;line-height:1">5×</div>
+      <div style="font-size:12px;color:var(--txt);line-height:1.6">Det koster <strong style="color:var(--gold)">fem ganger mer</strong> å skaffe en ny kunde enn å beholde en eksisterende. En 10-minutter med oppfølging er den beste investeringen du gjør i dag.</div>
+    </div>
+
+    <div style="background:var(--card);border:1px solid var(--b1);border-radius:4px;padding:12px 14px;display:flex;gap:12px;align-items:flex-start">
+      <div style="font-family:'Anton',sans-serif;font-size:28px;color:var(--gold);flex-shrink:0;line-height:1">9/10</div>
+      <div style="font-size:12px;color:var(--txt);line-height:1.6">Kunder som gir 9 eller 10 sier de vil <strong style="color:var(--gold)">anbefale forhandleren</strong> til venner og familie. En 8-er gjør det ikke — selv om de virker fornøyde.</div>
+    </div>
+
+    <div style="background:var(--card);border:1px solid var(--b1);border-radius:4px;padding:12px 14px;display:flex;gap:12px;align-items:flex-start">
+      <div style="font-family:'Anton',sans-serif;font-size:28px;color:var(--gold);flex-shrink:0;line-height:1">48t</div>
+      <div style="font-size:12px;color:var(--txt);line-height:1.6">Kunder kontaktet <strong style="color:var(--gold)">innen 48 timer</strong> etter at bilen er hentet gir signifikant høyere score enn de som kontaktes etter en uke. Timing er alt.</div>
+    </div>
+
+    <div style="background:var(--card);border:1px solid var(--b1);border-radius:4px;padding:12px 14px;display:flex;gap:12px;align-items:flex-start">
+      <div style="font-family:'Anton',sans-serif;font-size:28px;color:var(--gold);flex-shrink:0;line-height:1">1:3</div>
+      <div style="font-size:12px;color:var(--txt);line-height:1.6">En misfornøyd kunde forteller det til <strong style="color:var(--gold)">tre ganger så mange</strong> som en fornøyd kunde. Det er ikke bare din score som står på spill — det er omdømmet til hele avdelingen.</div>
+    </div>
+
+    <div style="background:var(--card);border:1px solid var(--b1);border-radius:4px;padding:12px 14px;display:flex;gap:12px;align-items:flex-start">
+      <div style="font-family:'Anton',sans-serif;font-size:24px;color:var(--gold);flex-shrink:0;line-height:1">Navn</div>
+      <div style="font-size:12px;color:var(--txt);line-height:1.6">Å bruke en persons navn aktiverer en spesifikk del av hjernen som øker <strong style="color:var(--gold)">oppmerksomhet og tillit</strong>. Tre ganger i løpet av samtalen er det magiske antallet.</div>
     </div>
 
   </div>
@@ -569,39 +654,57 @@ select:focus,input[type=text]:focus{border-color:#f97316}
 <!-- HJELP MODAL -->
 <div id="help-modal" onclick="if(event.target===this)this.classList.remove('show')">
   <div class="modal" style="text-align:left;max-width:520px;max-height:85vh;overflow-y:auto">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;position:sticky;top:0;background:var(--card);padding-bottom:10px;border-bottom:1px solid var(--b1)">
-      <div style="font-family:'Anton',sans-serif;font-size:18px;color:var(--gold)">&#9432; VCSO OSAT League</div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;position:sticky;top:0;background:var(--card);padding-bottom:10px;border-bottom:1px solid var(--b1)">
+      <div style="font-family:'Anton',sans-serif;font-size:17px;color:var(--gold)">&#9432; VCSO OSAT League</div>
       <button onclick="document.getElementById('help-modal').classList.remove('show')" style="background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer">&times;</button>
     </div>
-    <div style="font-size:13px;color:var(--muted);line-height:1.7">
+    <div style="font-size:12px;color:var(--muted);line-height:1.7">
+
       <div style="padding:10px 0;border-bottom:1px solid var(--b1)">
-        <div style="font-family:'Anton',sans-serif;font-size:13px;color:var(--gold);letter-spacing:1px;margin-bottom:6px">POENGSYSTEM</div>
-        <div>&#9733; <strong style="color:var(--txt)">3 poeng</strong> for en 9 eller 10 på kundetilfredshetsmålingen.</div>
-        <div style="margin-top:4px">&#9733; <strong style="color:var(--txt)">10-ere teller mest</strong> som tiebreaker — ved likt antall poeng vinner den med flest 10-ere.</div>
-        <div style="margin-top:4px">&#9734; <strong style="color:var(--txt)">Fulgt opp</strong> — antall kunder fulgt opp etter utlevering vises som assist-statistikk og teller ved videre tiebreaker.</div>
+        <div style="font-family:'Anton',sans-serif;font-size:12px;color:var(--gold);letter-spacing:1px;margin-bottom:6px">POENGSYSTEM</div>
+        <div>&#9733; <strong style="color:var(--txt)">3 poeng</strong> for en 9 eller 10 på kundetilfredshetsmålingen (OSAT) etter service eller reparasjon.</div>
+        <div style="margin-top:4px">&#9733; <strong style="color:var(--txt)">10-ere tiebreaker</strong> — ved likt poengantall vinner den med flest 10-ere.</div>
+        <div style="margin-top:4px">&#9734; <strong style="color:var(--txt)">Fulgt opp</strong> — teller som tredje tiebreaker. Ingen poeng, men registreres som assist.</div>
       </div>
+
       <div style="padding:10px 0;border-bottom:1px solid var(--b1)">
-        <div style="font-family:'Anton',sans-serif;font-size:13px;color:var(--gold);letter-spacing:1px;margin-bottom:6px">BADGES</div>
-        <div>&#128081; <strong style="color:var(--txt)">MVP</strong> — flest scoringer i dag. Vises øverst på siden.</div>
-        <div style="margin-top:4px">&#128293; <strong style="color:var(--txt)">Streak</strong> — 3 eller flere dager på rad med minst én score.</div>
-        <div style="margin-top:4px">&#11088; <strong style="color:var(--txt)">Hat Trick</strong> — 3 eller flere scoringer på én dag. Samles opp og vises i Hall of Fame.</div>
-        <div style="margin-top:4px">&#128241; <strong style="color:var(--txt)">Gulltelefon</strong> — flest kunder fulgt opp totalt. Vises i Hall of Fame. Ved likt antall teller flest 10-ere.</div>
+        <div style="font-family:'Anton',sans-serif;font-size:12px;color:var(--gold);letter-spacing:1px;margin-bottom:6px">BADGES</div>
+        <div>&#128081; <strong style="color:var(--txt)">MVP</strong> — flest scoringer i dag. Vises i banner øverst på siden.</div>
+        <div style="margin-top:3px">&#128293; <strong style="color:var(--txt)">Streak</strong> — 3+ dager på rad med minst én score. Vises bak navn i tabellen.</div>
+        <div style="margin-top:3px">&#11088; <strong style="color:var(--txt)">Hat Trick</strong> — 3+ scoringer på én dag. Én stjerne per hat trick. Legges automatisk i Hall of Fame.</div>
+        <div style="margin-top:3px">&#128222; <strong style="color:var(--txt)">Gulltelefon</strong> — flest fulgt opp den uken. Deles ut ved ukesavslutning og legges i Hall of Fame.</div>
       </div>
+
       <div style="padding:10px 0;border-bottom:1px solid var(--b1)">
-        <div style="font-family:'Anton',sans-serif;font-size:13px;color:var(--gold);letter-spacing:1px;margin-bottom:6px">UKESVINNER</div>
-        <div>Kåres søndag kl. 23:59. Flest poeng vinner — ved likt antall teller flest 10-ere, deretter flest fulgt opp. Legges i Hall of Fame.</div>
+        <div style="font-family:'Anton',sans-serif;font-size:12px;color:var(--gold);letter-spacing:1px;margin-bottom:6px">UKESVINNER</div>
+        <div>Kåres <strong style="color:var(--txt)">søndag kl. 23:59</strong>. Tiebreaker: 1) flest poeng, 2) flest 10-ere, 3) flest fulgt opp. Legges manuelt inn av admin i Hall of Fame.</div>
       </div>
+
       <div style="padding:10px 0;border-bottom:1px solid var(--b1)">
-        <div style="font-family:'Anton',sans-serif;font-size:13px;color:var(--gold);letter-spacing:1px;margin-bottom:6px">AVDELINGER</div>
-        <div>&#128276; Konkurransen er delt på PST-er og avdelinger: <strong style="color:var(--txt)">Økern, Ryen, Lillestrøm og Fornebu</strong>.</div>
+        <div style="font-family:'Anton',sans-serif;font-size:12px;color:var(--gold);letter-spacing:1px;margin-bottom:6px">AVDELINGER</div>
+        <div>Konkurransen måles på tvers av <strong style="color:var(--txt)">Økern, Ryen, Lillestrøm og Fornebu</strong> — både individuelt og per avdeling.</div>
       </div>
+
+      <div style="padding:10px 0;border-bottom:1px solid var(--b1)">
+        <div style="font-family:'Anton',sans-serif;font-size:12px;color:var(--gold);letter-spacing:1px;margin-bottom:6px">REGISTRERING (admin)</div>
+        <div>1. Logg inn med Admin-knappen — passord: <strong style="color:var(--txt)">volvo10</strong></div>
+        <div>2. Velg PST fra nedtrekksmenyen (gruppert per avdeling)</div>
+        <div>3. Velg om kunden ga <strong style="color:var(--txt)">9 eller 10</strong></div>
+        <div>4. Huk av <strong style="color:var(--txt)">"Fulgt opp"</strong> om kunden er kontaktet etter service</div>
+        <div>5. Trykk registrer — scoringen er live umiddelbart</div>
+        <div style="margin-top:6px;font-size:11px">Feilregistrering: gå til Scoringer-fanen og trykk <strong style="color:var(--txt)">Slett</strong> på kortet.</div>
+      </div>
+
       <div style="padding:10px 0">
-        <div style="font-family:'Anton',sans-serif;font-size:13px;color:var(--gold);letter-spacing:1px;margin-bottom:6px">REGISTRERING</div>
-        <div>1. Velg PST</div>
-        <div>2. Velg om kunden ga 9 eller 10</div>
-        <div>3. Huk av "Fulgt opp" om kunden ble kontaktet etter levering</div>
-        <div>4. Trykk registrer!</div>
+        <div style="font-family:'Anton',sans-serif;font-size:12px;color:var(--gold);letter-spacing:1px;margin-bottom:6px">FANEOVERSIKT</div>
+        <div><strong style="color:var(--txt)">PST-er</strong> — ligatabell med poeng, scoringer og streak/hat trick</div>
+        <div><strong style="color:var(--txt)">Avdelinger</strong> — lagkort med progresjon og rangering</div>
+        <div><strong style="color:var(--txt)">Statistikk</strong> — toppscorere, flest 10-ere, avdeling og oppfølging</div>
+        <div><strong style="color:var(--txt)">Scoringer</strong> — alle registrerte svar som kort (admin kan slette)</div>
+        <div><strong style="color:var(--txt)">Hall of Fame</strong> — uke-for-uke tidslinje med vinnere og hat tricks</div>
+        <div><strong style="color:var(--txt)">Tips</strong> — samtaleguide, spørsmålsbank og fakta om kundetilfredshet</div>
       </div>
+
     </div>
   </div>
 </div>
@@ -983,7 +1086,7 @@ function renderInd() {
     scoreHtml += '</div>';
 
     var fupHtml = r.fup>0
-      ? '<span class="fup-badge" style="font-size:14px">&#128222;</span>'
+      ? '<span style="font-family:Anton,sans-serif;font-size:13px;color:var(--gold)">'+r.fup+'</span>'
       : '<span style="font-size:9px;color:var(--muted)">-</span>';
 
     // Badges bak navn
@@ -1037,7 +1140,7 @@ function renderTeam() {
     cardsEl.innerHTML = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--b1);border-bottom:2px solid var(--b1)">'
       + rows.map(function(r,i){
         var rank=ranks[i];
-        var medal=rank===1?'&#127947;':rank===2?'&#129352;':rank===3?'&#129353;':'';
+        var medal=rank===1?'&#129351;':rank===2?'&#129352;':rank===3?'&#129353;':'';
         var pct=maxPts>0?Math.round(r.pts/maxPts*100):0;
         return '<div style="background:var(--card);padding:14px 14px 12px;position:relative;overflow:hidden">'
           +'<div style="position:absolute;top:0;left:0;right:0;height:3px;background:'+r.color+'"></div>'
@@ -1087,76 +1190,164 @@ function renderHoF() {
   var hof = document.getElementById('hof-container');
   if(!hof) return;
 
-  var m = curMonth;
-  var topPst = SELGERE.map(function(s){
-    return {s:s, g:goalsFor(s.navn,m), tens:tensFor(s.navn,m), fup:followupFor(s.navn,m)};
-  }).filter(function(x){return x.g>0;})
-    .sort(function(a,b){return b.g-a.g||b.tens-a.tens||b.fup-a.fup;})
-    .slice(0,3);
+  // Gulltelefon SVG
+  var gpSvg = '<svg width="16" height="16" viewBox="0 0 28 28" fill="none" style="flex-shrink:0;vertical-align:middle">'
+    +'<path d="M9.5 8C9.5 8 8 8.5 8 10.5C8 15.5 12.5 20 17.5 20C19.5 20 20 18.5 20 18.5L18 16.5C18 16.5 17 17 16.5 17C14.5 17 11 13.5 11 11.5C11 11 11.5 10 11.5 10L9.5 8Z"'
+    +' fill="url(#gps)" stroke="#f97316" stroke-width=".8"/>'
+    +'<defs><linearGradient id="gps" x1="8" y1="8" x2="20" y2="20"><stop stop-color="#ffd700"/><stop offset="1" stop-color="#f97316"/></linearGradient></defs>'
+    +'</svg>';
 
-  var html = '';
-
-  // Toppscorere
-  if(!topPst.length){
-    html += '<div style="color:var(--muted);font-size:13px;font-style:italic;padding:12px 0">Ingen scoringer registrert ennå</div>';
-  } else {
-    html += '<div style="font-family:Anton,sans-serif;font-size:11px;color:var(--gold);letter-spacing:2px;margin-bottom:8px;text-transform:uppercase">Toppscorere</div>';
-    html += topPst.map(function(x,i){
-      var medals=['&#127947;','&#129352;','&#129353;'];
-      var s=x.s;
-      var hasPhoto=SELGER_PHOTOS[s.id];
-      var avHtml=hasPhoto?'<img src="'+SELGER_PHOTOS[s.id]+'" style="width:100%;height:100%;object-fit:cover">':'<div style="font-size:16px;font-weight:900;color:'+s.color+'">'+s.initials+'</div>';
-      return '<div style="display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--b1)">'
-        +'<div style="font-size:22px">'+medals[i]+'</div>'
-        +'<div style="width:40px;height:40px;border-radius:50%;overflow:hidden;border:2px solid var(--gold);flex-shrink:0">'+avHtml+'</div>'
-        +'<div style="flex:1"><div style="font-family:Anton,sans-serif;font-size:14px;color:var(--txt)">'+s.short+'</div>'
-          +'<div style="font-size:9px;color:'+s.color+'">'+( LL[s.loc]||s.loc)+'</div></div>'
-        +'<div style="text-align:right">'
-          +'<div style="font-family:Anton,sans-serif;font-size:17px;color:var(--gold)">'+x.g*PTS+' p</div>'
-          +'<div style="font-size:9px;color:var(--muted)">'+x.tens+' &#10005; 10</div>'
-        +'</div></div>';
-    }).join('');
+  // Hent ISO ukenummer for i dag
+  function getWeekNr(d) {
+    var tmp = new Date(d.getTime());
+    tmp.setDate(tmp.getDate() + 3 - ((tmp.getDay()+6)%7));
+    var w1 = new Date(tmp.getFullYear(),0,4);
+    return 1 + Math.round(((tmp-w1)/86400000 - 3 + ((w1.getDay()+6)%7))/7);
+  }
+  // Mandag i uken
+  function getMondayOf(d) {
+    var day = d.getDay();
+    var diff = (day===0) ? -6 : 1-day;
+    var mon = new Date(d); mon.setDate(d.getDate()+diff); mon.setHours(0,0,0,0);
+    return mon;
+  }
+  function fmtDate(d) {
+    return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
   }
 
-  // Hat Tricks
+  var now = new Date();
+  var curWeekNr = getWeekNr(now);
+  var curMon = getMondayOf(now);
+
+  // ── INNEVÆRENDE UKE ──────────────────────────────
+  var curMonStr = fmtDate(curMon);
+  var curSunDate = new Date(curMon); curSunDate.setDate(curMon.getDate()+6);
+  var curSunStr = fmtDate(curSunDate);
+
+  // Hat tricks denne uken
   var hatters = SELGERE.map(function(s){
     return {s:s, hats:hatTrickCount(s.navn)};
   }).filter(function(x){return x.hats>0;})
     .sort(function(a,b){return b.hats-a.hats;});
 
+  var curWeekHtml = '<div style="'
+    +'background:rgba(249,115,22,.06);border:1px solid rgba(249,115,22,.25);'
+    +'border-radius:8px;overflow:hidden;margin-bottom:1px">'
+    // Header
+    +'<div style="display:flex;align-items:center;justify-content:space-between;'
+      +'padding:8px 12px;background:rgba(249,115,22,.1);border-bottom:1px solid rgba(249,115,22,.2)">'
+      +'<div style="font-family:Anton,sans-serif;font-size:13px;color:var(--gold);letter-spacing:2px">UKE '+curWeekNr+'</div>'
+      +'<div style="font-size:9px;color:var(--muted);letter-spacing:1px">'+curMonStr+' – '+curSunStr+'</div>'
+      +'<div style="font-size:9px;font-weight:700;color:var(--gold);background:rgba(249,115,22,.15);'
+        +'padding:2px 7px;border-radius:10px;letter-spacing:1px">P\u00e5g\u00e5r</div>'
+    +'</div>'
+    +'<div style="padding:10px 12px">';
+
   if(hatters.length){
-    html += '<div style="font-family:Anton,sans-serif;font-size:11px;color:var(--gold);letter-spacing:2px;margin:16px 0 8px;text-transform:uppercase">&#11088; Hat Tricks</div>';
-    html += hatters.map(function(x){
+    curWeekHtml += '<div style="font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">&#11088; Hat Tricks</div>';
+    curWeekHtml += hatters.map(function(x){
       var s=x.s;
-      var stars='';
-      for(var h=0;h<x.hats;h++) stars+='&#11088;';
-      return '<div style="display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid var(--b1)">'
-        +'<div style="font-family:Anton,sans-serif;font-size:13px;color:var(--txt);flex:1">'+s.short+'</div>'
+      var hasPhoto=SELGER_PHOTOS[s.id];
+      var avHtml=hasPhoto?'<img src="'+SELGER_PHOTOS[s.id]+'" style="width:100%;height:100%;object-fit:cover;filter:grayscale(100%)">':'<div style="font-size:10px;font-weight:900;color:'+s.color+'">'+s.initials+'</div>';
+      var stars=''; for(var h=0;h<x.hats;h++) stars+='&#11088;';
+      return '<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--b1)">'
+        +'<div style="width:28px;height:28px;border-radius:50%;overflow:hidden;border:1px solid var(--gold);flex-shrink:0">'+avHtml+'</div>'
+        +'<div style="flex:1;font-size:12px;font-weight:600;color:var(--txt)">'+s.short+'</div>'
         +'<div style="font-size:9px;color:'+s.color+'">'+( LL[s.loc]||s.loc)+'</div>'
-        +'<div style="font-size:14px;letter-spacing:1px">'+stars+'</div>'
+        +'<div style="font-size:12px">'+stars+'</div>'
         +'</div>';
     }).join('');
+  } else {
+    curWeekHtml += '<div style="font-size:11px;color:var(--muted);font-style:italic">Ingen hat tricks ennå denne uken</div>';
   }
+  curWeekHtml += '</div></div>';
 
-  // Gulltelefon
-  var gpLeader = goldenPhoneLeader();
-  if(gpLeader){
-    var gpFup = followupFor(gpLeader.navn,'all');
-    html += '<div style="font-family:Anton,sans-serif;font-size:11px;color:var(--gold);letter-spacing:2px;margin:16px 0 8px;text-transform:uppercase">&#128241; Gulltelefon</div>';
-    var hasPhoto=SELGER_PHOTOS[gpLeader.id];
-    var gpAv=hasPhoto?'<img src="'+SELGER_PHOTOS[gpLeader.id]+'" style="width:100%;height:100%;object-fit:cover">':'<div style="font-size:14px;font-weight:900;color:'+gpLeader.color+'">'+gpLeader.initials+'</div>';
-    html += '<div style="display:flex;align-items:center;gap:12px;padding:8px 0">'
-      +'<div style="font-size:22px">&#128241;</div>'
-      +'<div style="width:40px;height:40px;border-radius:50%;overflow:hidden;border:2px solid var(--gold);flex-shrink:0">'+gpAv+'</div>'
-      +'<div style="flex:1"><div style="font-family:Anton,sans-serif;font-size:14px;color:var(--txt)">'+gpLeader.short+'</div>'
-        +'<div style="font-size:9px;color:'+gpLeader.color+'">'+( LL[gpLeader.loc]||gpLeader.loc)+'</div></div>'
-      +'<div style="text-align:right">'
-        +'<div style="font-family:Anton,sans-serif;font-size:17px;color:var(--gold)">'+gpFup+' &#10022;</div>'
-        +'<div style="font-size:9px;color:var(--muted)">fulgt opp</div>'
-      +'</div></div>';
-  }
+  hof.innerHTML = curWeekHtml
+    + '<div id="hof-past-weeks" style="display:flex;flex-direction:column;gap:1px;margin-top:8px">'
+    + '<div style="font-size:11px;color:var(--muted);font-style:italic;padding:8px 0">Laster tidligere uker...</div>'
+    + '</div>';
 
-  hof.innerHTML = html;
+  // ── AVSLUTTEDE UKER fra Supabase ────────────────
+  fetch(SUPABASE_URL + '/rest/v1/weekly_winners?order=week_nr.desc&limit=30', {
+    mode:'cors', headers: sbH()
+  }).then(function(r){
+    if(!r.ok) throw new Error('feil');
+    return r.json();
+  }).then(function(data){
+    var el = document.getElementById('hof-past-weeks');
+    if(!el) return;
+    if(!data || !data.length){
+      el.innerHTML='<div style="font-size:11px;color:var(--muted);font-style:italic;padding:4px 0">Avsluttede uker vises her fra og med neste søndag.</div>';
+      return;
+    }
+
+    // Grupper per uke
+    var byWeek = {};
+    data.forEach(function(w){
+      var k = w.week_nr;
+      if(!byWeek[k]) byWeek[k]={weekNr:k, weekEnd:w.week_end, winner:null, golden:null, hatTricks:[]};
+      if(!byWeek[k].winner) byWeek[k].winner = w; // første rad = vinner
+      if(w.golden_phone) byWeek[k].golden = w;
+    });
+
+    var weeks = Object.values(byWeek).sort(function(a,b){return b.weekNr-a.weekNr;});
+
+    el.innerHTML = weeks.map(function(wk){
+      var w = wk.winner;
+      var sObj = SELGERE.find(function(s){return s.navn===w.pst;})||{};
+      var hasPhoto = sObj.id && SELGER_PHOTOS[sObj.id];
+      var avHtml = hasPhoto
+        ? '<img src="'+SELGER_PHOTOS[sObj.id]+'" style="width:100%;height:100%;object-fit:cover;filter:grayscale(100%)">'
+        : '<div style="font-size:10px;font-weight:900;color:'+(sObj.color||'var(--gold)')+'">'+( sObj.initials||'?')+'</div>';
+
+      // Hat tricks for denne uken (fra weekly_hat_tricks om de finnes, ellers bare flagg)
+      var hatHtml = '';
+      if(w.hat_tricks && w.hat_tricks.length){
+        hatHtml = '<div style="font-size:9px;color:var(--muted);margin-top:4px">&#11088; '+w.hat_tricks+'</div>';
+      }
+
+      // Gulltelefon
+      var gpHtml = '';
+      if(wk.golden){
+        var gpObj = SELGERE.find(function(s){return s.navn===wk.golden.pst;})||{};
+        gpHtml = '<div style="display:flex;align-items:center;gap:5px;margin-top:5px;'
+          +'background:rgba(249,115,22,.06);border-radius:3px;padding:4px 8px">'
+          +gpSvg
+          +'<span style="font-size:10px;color:var(--gold);font-weight:700">Gulltelefon: '+(gpObj.short||wk.golden.pst)+'</span>'
+          +'<span style="font-size:9px;color:var(--muted);margin-left:4px">'+wk.golden.fup+' &#128222;</span>'
+          +'</div>';
+      }
+
+      return '<div style="background:var(--card);border:1px solid var(--b1);border-radius:8px;overflow:hidden">'
+        // Ukeheader
+        +'<div style="display:flex;align-items:center;justify-content:space-between;'
+          +'padding:7px 12px;background:var(--card2);border-bottom:1px solid var(--b1)">'
+          +'<div style="font-family:Anton,sans-serif;font-size:12px;color:var(--muted);letter-spacing:2px">UKE '+wk.weekNr+'</div>'
+          +'<div style="font-size:9px;color:var(--muted)">'+(wk.weekEnd||'').slice(0,10)+'</div>'
+        +'</div>'
+        // Vinner
+        +'<div style="padding:10px 12px">'
+          +'<div style="font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">&#127942; Ukens vinner</div>'
+          +'<div style="display:flex;align-items:center;gap:10px">'
+            +'<div style="width:36px;height:36px;border-radius:50%;overflow:hidden;border:2px solid var(--gold);flex-shrink:0">'+avHtml+'</div>'
+            +'<div style="flex:1">'
+              +'<div style="font-family:Anton,sans-serif;font-size:14px;color:var(--txt)">'+(sObj.short||w.pst)+'</div>'
+              +'<div style="font-size:9px;color:'+(sObj.color||'var(--muted)')+'">'+( LL[sObj.loc]||w.loc||'')+'</div>'
+              + hatHtml
+              + gpHtml
+            +'</div>'
+            +'<div style="text-align:right">'
+              +'<div style="font-family:Anton,sans-serif;font-size:18px;color:var(--gold)">'+(w.pts||0)+' p</div>'
+              +'<div style="font-size:9px;color:var(--muted)">'+(w.tens||0)+' &#10005; 10</div>'
+            +'</div>'
+          +'</div>'
+        +'</div>'
+        +'</div>';
+    }).join('');
+  }).catch(function(){
+    var el=document.getElementById('hof-past-weeks');
+    if(el) el.innerHTML='<div style="font-size:11px;color:var(--muted);font-style:italic;padding:4px 0">Avsluttede uker vises her fra og med neste søndag.</div>';
+  });
 }
 
 // ─── RENDER: STATISTIKK ──────────────────────────────────────
@@ -1292,7 +1483,10 @@ function renderAll() {
   else if(curTab==='team'||curTab==='hof') renderTeam();
   else if(curTab==='stats') renderStats();
   else if(curTab==='scoring') renderScoring();
-  else if(curTab==='tips') {} // static, no render needed
+  else if(curTab==='tips') {
+    showTips('guide');
+    var ro=document.getElementById('reg-outer'); if(ro) ro.style.display='none';
+  }
   else renderInd();
   updateTopBanner();
 }
@@ -1306,6 +1500,9 @@ function setTab(tab, btn) {
   var viewId = (tab==='hof') ? 'view-hof' : 'view-'+tab;
   var v = document.getElementById(viewId);
   if(v) v.classList.add('on');
+  // Vis/skjul registreringsskjema basert på fane
+  var ro=document.getElementById('reg-outer');
+  if(ro && userRole==='admin') ro.style.display = (tab==='tips'||tab==='hof') ? 'none' : 'block';
   renderAll();
 }
 
@@ -1436,8 +1633,11 @@ function reg() {
 
     var name=pst.split(' ')[0];
     toast(name+' SCORER! +3 poeng! '+(selScore==='10'?'&#11088;10-er!':''));
-    launchKonfetti(LC[sObj.loc]||'#ffd700');
+    launchKonfetti(LC[sObj.loc]||'#f97316');
     renderAll();
+    // Sjekk hat trick umiddelbart
+    var hats = hatTrickCount(pst);
+    if(hats > 0) renderTeam(); // oppdaterer HoF med hat trick
     setTimeout(function(){
       var scoringBtn=document.querySelector('.tab[onclick*="scoring"]');
       if(scoringBtn) setTab('scoring', scoringBtn);
@@ -1476,6 +1676,20 @@ function confirmDelete(){
 
 // ─── HJELP ───────────────────────────────────────────────────
 function showHelp(){ var m=document.getElementById('help-modal'); if(m) m.classList.add('show'); }
+
+// ─── TIPS NAVIGASJON ─────────────────────────────────────────
+function showTips(which) {
+  ['guide','bank','visste'].forEach(function(id){
+    var el=document.getElementById('tips-'+id);
+    var btn=document.getElementById('tips-btn-'+id);
+    if(el){ el.style.display = id===which ? 'flex' : 'none'; el.style.flexDirection = 'column'; }
+    if(btn){
+      btn.style.background = id===which ? 'var(--gold)' : 'var(--faint)';
+      btn.style.color = id===which ? '#1c1917' : 'var(--muted)';
+      btn.style.border = id===which ? 'none' : '1px solid var(--b1)';
+    }
+  });
+}
 
 // ─── BYGG DROPDOWN ───────────────────────────────────────────
 function buildDropdown() {
