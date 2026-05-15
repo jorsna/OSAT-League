@@ -444,7 +444,7 @@ select:focus,input[type=text]:focus{border-color:#f97316}
     <div class="stat-card"><div class="stat-title">Toppscorere</div><div id="top-scorers"></div></div>
     <div class="stat-card"><div class="stat-title">Mest 10-ere</div><div id="top-tens"></div></div>
     <div class="stat-card full"><div class="stat-title">Avdeling mot m&#229;l</div><div id="team-bars"></div></div>
-    <div class="stat-card full"><div class="stat-title">Fulgt opp etter utlevering</div><div id="followup-bars"></div></div>
+    <div class="stat-card full"><div class="stat-title">Fulgt opp etter service</div><div id="followup-bars"></div></div>
   </div>
 </div>
 
@@ -495,8 +495,8 @@ select:focus,input[type=text]:focus{border-color:#f97316}
       </div>
       <input type="checkbox" id="chk-fup" style="display:none">
       <div>
-        <div style="font-size:13px;font-weight:700;color:var(--txt)">Fulgt opp etter utlevering</div>
-        <div style="font-size:10px;color:var(--muted)">Kunden er kontaktet etter levering</div>
+        <div style="font-size:13px;font-weight:700;color:var(--txt)">Fulgt opp etter service</div>
+        <div style="font-size:10px;color:var(--muted)">Kunden er kontaktet etter at bilen ble hentet</div>
       </div>
       <div class="fup-badge-reg" id="fup-badge">&#9670; FULGT OPP!</div>
     </div>
@@ -531,8 +531,8 @@ select:focus,input[type=text]:focus{border-color:#f97316}
       </div>
       <div style="padding:12px 14px;font-size:12px;color:var(--txt);line-height:1.7">
         <div style="color:var(--gold);font-weight:700;margin-bottom:4px">Si dette:</div>
-        <div style="background:var(--faint);border-left:2px solid var(--gold);padding:8px 10px;border-radius:0 4px 4px 0;font-style:italic;color:var(--txt)">«Hei [navn], det er [ditt navn] fra Volvo [avdeling]. Du hentet bilen din for noen dager siden — har du fått tid til å bli litt kjent med den?»</div>
-        <div style="margin-top:8px;color:var(--muted);font-size:11px">✓ Bruk navnet deres umiddelbart &nbsp;✓ Referer til bilen, ikke «kjøpet» &nbsp;✓ Vær varm, ikke formell</div>
+        <div style="background:var(--faint);border-left:2px solid var(--gold);padding:8px 10px;border-radius:0 4px 4px 0;font-style:italic;color:var(--txt)">«Hei [navn], det er [ditt navn] fra Volvo [avdeling]. Vi hadde bilen din inne til service/reparasjon for noen dager siden — er du fornøyd med hvordan det gikk?»</div>
+        <div style="margin-top:8px;color:var(--muted);font-size:11px">✓ Bruk navnet deres umiddelbart &nbsp;✓ Referer til servicen, ikke «besøket» &nbsp;✓ Vær varm, ikke formell</div>
       </div>
     </div>
 
@@ -543,7 +543,7 @@ select:focus,input[type=text]:focus{border-color:#f97316}
       </div>
       <div style="padding:12px 14px;font-size:12px;color:var(--txt);line-height:1.7">
         <div style="color:var(--gold);font-weight:700;margin-bottom:4px">Si dette:</div>
-        <div style="background:var(--faint);border-left:2px solid var(--gold);padding:8px 10px;border-radius:0 4px 4px 0;font-style:italic;color:var(--txt)">«Hva er du mest fornøyd med ved bilen så langt?»</div>
+        <div style="background:var(--faint);border-left:2px solid var(--gold);padding:8px 10px;border-radius:0 4px 4px 0;font-style:italic;color:var(--txt)">«Hva er du mest fornøyd med fra servicen hos oss?»</div>
         <div style="margin-top:8px;color:var(--muted);font-size:11px">✓ Still ETT spørsmål om gangen &nbsp;✓ Lytt — avbryt ikke &nbsp;✓ Følg opp det de sier</div>
       </div>
     </div>
@@ -555,7 +555,7 @@ select:focus,input[type=text]:focus{border-color:#f97316}
       </div>
       <div style="padding:12px 14px;font-size:12px;color:var(--txt);line-height:1.7">
         <div style="color:var(--gold);font-weight:700;margin-bottom:4px">Si dette:</div>
-        <div style="background:var(--faint);border-left:2px solid var(--gold);padding:8px 10px;border-radius:0 4px 4px 0;font-style:italic;color:var(--txt)">«Er det noe med bilen du har lurt på, eller noe du ville ønske vi hadde gjort annerledes?»</div>
+        <div style="background:var(--faint);border-left:2px solid var(--gold);padding:8px 10px;border-radius:0 4px 4px 0;font-style:italic;color:var(--txt)">«Er det noe med servicen eller reparasjonen du har lurt på, eller noe du ville ønske vi hadde gjort annerledes?»</div>
         <div style="margin-top:8px;color:var(--muted);font-size:11px">✓ Ikke vær redd for kritikk — den er gull &nbsp;✓ Løs det du kan, eskaler det du ikke kan</div>
       </div>
     </div>
@@ -567,7 +567,7 @@ select:focus,input[type=text]:focus{border-color:#f97316}
       </div>
       <div style="padding:12px 14px;font-size:12px;color:var(--txt);line-height:1.7">
         <div style="color:var(--gold);font-weight:700;margin-bottom:4px">Si dette:</div>
-        <div style="background:var(--faint);border-left:2px solid var(--gold);padding:8px 10px;border-radius:0 4px 4px 0;font-style:italic;color:var(--txt)">«Veldig kjekt å høre, [navn]! Du vil snart få en kort undersøkelse fra Volvo — det betyr mye for oss om du tar deg tid til å svare. Ha det bra!»</div>
+        <div style="background:var(--faint);border-left:2px solid var(--gold);padding:8px 10px;border-radius:0 4px 4px 0;font-style:italic;color:var(--txt)">«Veldig kjekt å høre, [navn]! Du vil snart få en kort undersøkelse fra Volvo om servicen — det betyr mye for oss om du tar deg tid til å svare. Ha det bra!»</div>
         <div style="margin-top:8px;color:var(--muted);font-size:11px">✓ Nevn undersøkelsen naturlig — ikke mas &nbsp;✓ Avslutt varmt &nbsp;✓ Hele samtalen: 3–5 min</div>
       </div>
     </div>
@@ -579,17 +579,17 @@ select:focus,input[type=text]:focus{border-color:#f97316}
 
     <div style="font-family:'Anton',sans-serif;font-size:11px;color:var(--gold);letter-spacing:1px;margin:4px 0 2px">&#128994; ÅPNE SPØRSMÅL</div>
     <div style="background:var(--card);border:1px solid var(--b1);border-radius:4px;padding:10px 14px;font-size:12px;color:var(--txt);line-height:1.8">
-      <div style="padding:5px 0;border-bottom:1px solid var(--b1)">«Hva er du mest fornøyd med ved bilen så langt?»</div>
-      <div style="padding:5px 0;border-bottom:1px solid var(--b1)">«Hvordan har de første dagene med den nye bilen vært?»</div>
-      <div style="padding:5px 0;border-bottom:1px solid var(--b1)">«Er det noe du allerede elsker — eller noe du fortsatt holder på å bli kjent med?»</div>
-      <div style="padding:5px 0">«Hva synes familien din om bilen?»</div>
+      <div style="padding:5px 0;border-bottom:1px solid var(--b1)">«Hva er du mest fornøyd med fra servicen hos oss?»</div>
+      <div style="padding:5px 0;border-bottom:1px solid var(--b1)">«Hvordan opplevde du kommunikasjonen vår underveis i servicen?»</div>
+      <div style="padding:5px 0;border-bottom:1px solid var(--b1)">«Fikk du god informasjon om hva som ble gjort med bilen?»</div>
+      <div style="padding:5px 0">«Var ventetiden og tidsestimatet vi ga deg presist?»</div>
     </div>
 
     <div style="font-family:'Anton',sans-serif;font-size:11px;color:var(--gold);letter-spacing:1px;margin:8px 0 2px">&#128993; SJEKK-SPØRSMÅL</div>
     <div style="background:var(--card);border:1px solid var(--b1);border-radius:4px;padding:10px 14px;font-size:12px;color:var(--txt);line-height:1.8">
-      <div style="padding:5px 0;border-bottom:1px solid var(--b1)">«Er det noe vi kunne ha gjort annerledes for deg?»</div>
-      <div style="padding:5px 0;border-bottom:1px solid var(--b1)">«Fikk du svar på alt du lurte på hos oss?»</div>
-      <div style="padding:5px 0">«Var det noe i prosessen som føltes unødvendig komplisert?»</div>
+      <div style="padding:5px 0;border-bottom:1px solid var(--b1)">«Er det noe med servicen vi kunne gjort annerledes for deg?»</div>
+      <div style="padding:5px 0;border-bottom:1px solid var(--b1)">«Fikk du svar på alle spørsmål du hadde om jobben som ble gjort?»</div>
+      <div style="padding:5px 0">«Er det noe du er usikker på etter servicen — noe du gjerne skulle fått mer forklaring på?»</div>
     </div>
 
     <div style="font-family:'Anton',sans-serif;font-size:11px;color:var(--gold);letter-spacing:1px;margin:8px 0 2px">&#128308; UNNGÅ DISSE</div>
@@ -621,7 +621,7 @@ select:focus,input[type=text]:focus{border-color:#f97316}
 
     <div style="background:var(--card);border:1px solid var(--b1);border-radius:4px;padding:12px 14px;display:flex;gap:12px;align-items:flex-start">
       <div style="font-family:'Anton',sans-serif;font-size:28px;color:var(--gold);flex-shrink:0;line-height:1">48t</div>
-      <div style="font-size:12px;color:var(--txt);line-height:1.6">Kunder kontaktet <strong style="color:var(--gold)">innen 48 timer</strong> etter levering gir signifikant høyere score enn de som kontaktes etter en uke. Timing er alt.</div>
+      <div style="font-size:12px;color:var(--txt);line-height:1.6">Kunder kontaktet <strong style="color:var(--gold)">innen 48 timer</strong> etter at bilen er hentet gir signifikant høyere score enn de som kontaktes etter en uke. Timing er alt.</div>
     </div>
 
     <div style="background:var(--card);border:1px solid var(--b1);border-radius:4px;padding:12px 14px;display:flex;gap:12px;align-items:flex-start">
@@ -663,7 +663,7 @@ select:focus,input[type=text]:focus{border-color:#f97316}
         <div style="font-family:'Anton',sans-serif;font-size:13px;color:var(--gold);letter-spacing:1px;margin-bottom:6px">POENGSYSTEM</div>
         <div>&#9733; <strong style="color:var(--txt)">3 poeng</strong> for en 9 eller 10 på kundetilfredshetsmålingen.</div>
         <div style="margin-top:4px">&#9733; <strong style="color:var(--txt)">10-ere teller mest</strong> som tiebreaker — ved likt antall poeng vinner den med flest 10-ere.</div>
-        <div style="margin-top:4px">&#9734; <strong style="color:var(--txt)">Fulgt opp</strong> — antall kunder fulgt opp etter utlevering vises som assist-statistikk og teller ved videre tiebreaker.</div>
+        <div style="margin-top:4px">&#9734; <strong style="color:var(--txt)">Fulgt opp</strong> — antall kunder fulgt opp etter service vises som assist-statistikk og teller ved videre tiebreaker.</div>
       </div>
       <div style="padding:10px 0;border-bottom:1px solid var(--b1)">
         <div style="font-family:'Anton',sans-serif;font-size:13px;color:var(--gold);letter-spacing:1px;margin-bottom:6px">BADGES</div>
@@ -684,7 +684,7 @@ select:focus,input[type=text]:focus{border-color:#f97316}
         <div style="font-family:'Anton',sans-serif;font-size:13px;color:var(--gold);letter-spacing:1px;margin-bottom:6px">REGISTRERING</div>
         <div>1. Velg PST</div>
         <div>2. Velg om kunden ga 9 eller 10</div>
-        <div>3. Huk av "Fulgt opp" om kunden ble kontaktet etter levering</div>
+        <div>3. Huk av "Fulgt opp" om kunden ble kontaktet etter service</div>
         <div>4. Trykk registrer!</div>
       </div>
     </div>
@@ -1068,7 +1068,7 @@ function renderInd() {
     scoreHtml += '</div>';
 
     var fupHtml = r.fup>0
-      ? '<span class="fup-badge" style="font-size:14px">&#128222;</span>'
+      ? '<span style="font-family:Anton,sans-serif;font-size:13px;color:var(--gold)">'+r.fup+'</span>'
       : '<span style="font-size:9px;color:var(--muted)">-</span>';
 
     // Badges bak navn
@@ -1377,7 +1377,10 @@ function renderAll() {
   else if(curTab==='team'||curTab==='hof') renderTeam();
   else if(curTab==='stats') renderStats();
   else if(curTab==='scoring') renderScoring();
-  else if(curTab==='tips') { showTips('guide'); } // vis samtaleguide som default
+  else if(curTab==='tips') {
+    showTips('guide');
+    var ro=document.getElementById('reg-outer'); if(ro) ro.style.display='none';
+  }
   else renderInd();
   updateTopBanner();
 }
@@ -1391,6 +1394,9 @@ function setTab(tab, btn) {
   var viewId = (tab==='hof') ? 'view-hof' : 'view-'+tab;
   var v = document.getElementById(viewId);
   if(v) v.classList.add('on');
+  // Vis/skjul registreringsskjema basert på fane
+  var ro=document.getElementById('reg-outer');
+  if(ro && userRole==='admin') ro.style.display = (tab==='tips') ? 'none' : 'block';
   renderAll();
 }
 
