@@ -1172,76 +1172,93 @@ function renderHoF() {
   var hof = document.getElementById('hof-container');
   if(!hof) return;
 
-  var m = curMonth;
-  var topPst = SELGERE.map(function(s){
-    return {s:s, g:goalsFor(s.navn,m), tens:tensFor(s.navn,m), fup:followupFor(s.navn,m)};
-  }).filter(function(x){return x.g>0;})
-    .sort(function(a,b){return b.g-a.g||b.tens-a.tens||b.fup-a.fup;})
-    .slice(0,3);
-
   var html = '';
 
-  // Toppscorere
-  if(!topPst.length){
-    html += '<div style="color:var(--muted);font-size:13px;font-style:italic;padding:12px 0">Ingen scoringer registrert ennå</div>';
-  } else {
-    html += '<div style="font-family:Anton,sans-serif;font-size:11px;color:var(--gold);letter-spacing:2px;margin-bottom:8px;text-transform:uppercase">Toppscorere</div>';
-    html += topPst.map(function(x,i){
-      var medals=['&#127947;','&#129352;','&#129353;'];
-      var s=x.s;
-      var hasPhoto=SELGER_PHOTOS[s.id];
-      var avHtml=hasPhoto?'<img src="'+SELGER_PHOTOS[s.id]+'" style="width:100%;height:100%;object-fit:cover">':'<div style="font-size:16px;font-weight:900;color:'+s.color+'">'+s.initials+'</div>';
-      return '<div style="display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--b1)">'
-        +'<div style="font-size:22px">'+medals[i]+'</div>'
-        +'<div style="width:40px;height:40px;border-radius:50%;overflow:hidden;border:2px solid var(--gold);flex-shrink:0">'+avHtml+'</div>'
-        +'<div style="flex:1"><div style="font-family:Anton,sans-serif;font-size:14px;color:var(--txt)">'+s.short+'</div>'
-          +'<div style="font-size:9px;color:'+s.color+'">'+( LL[s.loc]||s.loc)+'</div></div>'
-        +'<div style="text-align:right">'
-          +'<div style="font-family:Anton,sans-serif;font-size:17px;color:var(--gold)">'+x.g*PTS+' p</div>'
-          +'<div style="font-size:9px;color:var(--muted)">'+x.tens+' &#10005; 10</div>'
-        +'</div></div>';
-    }).join('');
-  }
+  // ── GULLTELEFON SVG (inline, brukes nedenfor) ──
+  var gulltelefon = '<svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0">'
+    +'<circle cx="14" cy="14" r="14" fill="rgba(249,180,50,.15)"/>'
+    +'<path d="M9.5 8C9.5 8 8 8.5 8 10.5C8 15.5 12.5 20 17.5 20C19.5 20 20 18.5 20 18.5L18 16.5C18 16.5 17 17 16.5 17C14.5 17 11 13.5 11 11.5C11 11 11.5 10 11.5 10L9.5 8Z" fill="url(#gp)" stroke="#e8b84b" stroke-width=".5"/>'
+    +'<defs><linearGradient id="gp" x1="8" y1="8" x2="20" y2="20" gradientUnits="userSpaceOnUse">'
+    +'<stop stop-color="#ffd700"/><stop offset="1" stop-color="#e8b84b"/></linearGradient></defs>'
+    +'</svg>';
 
-  // Hat Tricks
+  // ── HAT TRICKS DENNE UKEN (live) ──
   var hatters = SELGERE.map(function(s){
     return {s:s, hats:hatTrickCount(s.navn)};
   }).filter(function(x){return x.hats>0;})
     .sort(function(a,b){return b.hats-a.hats;});
 
   if(hatters.length){
-    html += '<div style="font-family:Anton,sans-serif;font-size:11px;color:var(--gold);letter-spacing:2px;margin:16px 0 8px;text-transform:uppercase">&#11088; Hat Tricks</div>';
+    html += '<div style="font-family:Anton,sans-serif;font-size:11px;color:var(--gold);letter-spacing:2px;margin-bottom:8px;text-transform:uppercase">&#11088; Hat Tricks — denne uken</div>';
     html += hatters.map(function(x){
       var s=x.s;
-      var stars='';
-      for(var h=0;h<x.hats;h++) stars+='&#11088;';
-      return '<div style="display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid var(--b1)">'
-        +'<div style="font-family:Anton,sans-serif;font-size:13px;color:var(--txt);flex:1">'+s.short+'</div>'
-        +'<div style="font-size:9px;color:'+s.color+'">'+( LL[s.loc]||s.loc)+'</div>'
-        +'<div style="font-size:14px;letter-spacing:1px">'+stars+'</div>'
+      var hasPhoto=SELGER_PHOTOS[s.id];
+      var avHtml=hasPhoto?'<img src="'+SELGER_PHOTOS[s.id]+'" style="width:100%;height:100%;object-fit:cover;filter:grayscale(100%)">':'<div style="font-size:12px;font-weight:900;color:'+s.color+'">'+s.initials+'</div>';
+      var stars=''; for(var h=0;h<x.hats;h++) stars+='&#11088;';
+      return '<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--b1)">'
+        +'<div style="width:34px;height:34px;border-radius:50%;overflow:hidden;border:2px solid var(--gold);flex-shrink:0">'+avHtml+'</div>'
+        +'<div style="flex:1"><div style="font-family:Anton,sans-serif;font-size:13px;color:var(--txt)">'+s.short+'</div>'
+          +'<div style="font-size:9px;color:'+s.color+'">'+( LL[s.loc]||s.loc)+'</div></div>'
+        +'<div style="font-size:15px;letter-spacing:1px">'+stars+'</div>'
         +'</div>';
     }).join('');
+  } else {
+    html += '<div style="color:var(--muted);font-size:12px;font-style:italic;padding:10px 0;border-bottom:1px solid var(--b1)">Ingen hat tricks registrert denne uken</div>';
   }
 
-  // Gulltelefon
-  var gpLeader = goldenPhoneLeader();
-  if(gpLeader){
-    var gpFup = followupFor(gpLeader.navn,'all');
-    html += '<div style="font-family:Anton,sans-serif;font-size:11px;color:var(--gold);letter-spacing:2px;margin:16px 0 8px;text-transform:uppercase">&#128241; Gulltelefon</div>';
-    var hasPhoto=SELGER_PHOTOS[gpLeader.id];
-    var gpAv=hasPhoto?'<img src="'+SELGER_PHOTOS[gpLeader.id]+'" style="width:100%;height:100%;object-fit:cover">':'<div style="font-size:14px;font-weight:900;color:'+gpLeader.color+'">'+gpLeader.initials+'</div>';
-    html += '<div style="display:flex;align-items:center;gap:12px;padding:8px 0">'
-      +'<div style="font-size:22px">&#128241;</div>'
-      +'<div style="width:40px;height:40px;border-radius:50%;overflow:hidden;border:2px solid var(--gold);flex-shrink:0">'+gpAv+'</div>'
-      +'<div style="flex:1"><div style="font-family:Anton,sans-serif;font-size:14px;color:var(--txt)">'+gpLeader.short+'</div>'
-        +'<div style="font-size:9px;color:'+gpLeader.color+'">'+( LL[gpLeader.loc]||gpLeader.loc)+'</div></div>'
-      +'<div style="text-align:right">'
-        +'<div style="font-family:Anton,sans-serif;font-size:17px;color:var(--gold)">'+gpFup+' &#10022;</div>'
-        +'<div style="font-size:9px;color:var(--muted)">fulgt opp</div>'
-      +'</div></div>';
-  }
+  // ── AVSLUTTEDE UKER (fra Supabase weekly_winners) ──
+  html += '<div style="font-family:Anton,sans-serif;font-size:11px;color:var(--gold);letter-spacing:2px;margin:20px 0 8px;text-transform:uppercase">&#127942; Ukens vinnere</div>';
+  html += '<div id="hof-weekly" style="color:var(--muted);font-size:12px;font-style:italic">Laster...</div>';
 
   hof.innerHTML = html;
+
+  // Hent ukevinnere fra Supabase
+  fetch(SUPABASE_URL + '/rest/v1/weekly_winners?order=week_end.desc&limit=20', {
+    mode:'cors', headers: sbH()
+  }).then(function(r){
+    if(!r.ok) throw new Error('ingen tabell');
+    return r.json();
+  }).then(function(data){
+    var el = document.getElementById('hof-weekly');
+    if(!el) return;
+    if(!data || !data.length){
+      el.textContent = 'Ingen avsluttede uker ennå.';
+      return;
+    }
+    el.innerHTML = data.map(function(w){
+      var sObj = SELGERE.find(function(s){return s.navn===w.pst;})||{};
+      var hasPhoto = sObj.id && SELGER_PHOTOS[sObj.id];
+      var avHtml = hasPhoto
+        ? '<img src="'+SELGER_PHOTOS[sObj.id]+'" style="width:100%;height:100%;object-fit:cover;filter:grayscale(100%)">'
+        : '<div style="font-size:11px;font-weight:900;color:'+(sObj.color||'var(--gold)')+'">'+( sObj.initials||'?')+'</div>';
+
+      // Gulltelefon — vis om flagget er satt
+      var gpHtml = '';
+      if(w.golden_phone){
+        gpHtml = '<div style="display:flex;align-items:center;gap:6px;margin-top:4px">'
+          + gulltelefon
+          + '<span style="font-size:10px;color:var(--gold);font-weight:700">Gulltelefon</span>'
+          +'</div>';
+      }
+
+      return '<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--b1)">'
+        +'<div style="font-size:20px">&#127942;</div>'
+        +'<div style="width:36px;height:36px;border-radius:50%;overflow:hidden;border:2px solid var(--gold);flex-shrink:0">'+avHtml+'</div>'
+        +'<div style="flex:1">'
+          +'<div style="font-family:Anton,sans-serif;font-size:13px;color:var(--txt)">'+(w.pst||'')+'</div>'
+          +'<div style="font-size:9px;color:var(--muted)">Uke '+( w.week_nr||'?')+' &middot; '+(w.week_end||'').slice(0,10)+'</div>'
+          + gpHtml
+        +'</div>'
+        +'<div style="text-align:right">'
+          +'<div style="font-family:Anton,sans-serif;font-size:16px;color:var(--gold)">'+(w.pts||0)+' p</div>'
+          +'<div style="font-size:9px;color:var(--muted)">'+(w.tens||0)+' &#10005; 10</div>'
+        +'</div>'
+        +'</div>';
+    }).join('');
+  }).catch(function(){
+    var el=document.getElementById('hof-weekly');
+    if(el) el.innerHTML='<div style="font-size:11px;color:var(--muted);font-style:italic">Ukevinnere lagres her når første uke avsluttes.</div>';
+  });
 }
 
 // ─── RENDER: STATISTIKK ──────────────────────────────────────
@@ -1396,7 +1413,7 @@ function setTab(tab, btn) {
   if(v) v.classList.add('on');
   // Vis/skjul registreringsskjema basert på fane
   var ro=document.getElementById('reg-outer');
-  if(ro && userRole==='admin') ro.style.display = (tab==='tips') ? 'none' : 'block';
+  if(ro && userRole==='admin') ro.style.display = (tab==='tips'||tab==='hof') ? 'none' : 'block';
   renderAll();
 }
 
