@@ -377,13 +377,29 @@ select:focus,input[type=text]:focus{border-color:var(--gold)}
   <div class="intro-divider"></div>
   <div class="intro-tagline">La kundene bestemme hvem som vinner</div>
   <div class="login-section">
-    <input class="login-input" type="password" id="pw-input"
-      placeholder="Skriv inn passord"
-      onkeydown="if(event.key==='Enter')tryLogin()">
-    <div class="login-err" id="pw-err"></div>
-    <button class="btn-pst" onclick="tryLogin()">&#9733;&nbsp; Logg inn som PST</button>
-    <div class="btn-divider">eller</div>
-    <button class="btn-tilskuer" onclick="enterAsGuest()">&#128065;&nbsp; Tilskuer</button>
+
+    <!-- Hovedknapp: Se resultater (ingen passord) -->
+    <button class="btn-pst" onclick="enterAsGuest()">&#128065;&nbsp; Se resultater</button>
+
+    <!-- Admin-seksjon: liten diskret knapp -->
+    <div id="admin-toggle" style="margin-top:6px">
+      <button onclick="toggleAdminLogin()" style="background:none;border:none;color:var(--muted);font-size:11px;cursor:pointer;letter-spacing:1px;text-transform:uppercase;padding:4px 8px;border-radius:3px;transition:color .2s" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--muted)'">
+        &#9881; Admin
+      </button>
+    </div>
+
+    <!-- Admin login (skjult som standard) -->
+    <div id="admin-login" style="display:none;width:100%;display:none;flex-direction:column;gap:8px;margin-top:4px">
+      <input class="login-input" type="password" id="pw-input"
+        placeholder="Adminpassord"
+        style="font-size:13px;padding:10px;letter-spacing:3px"
+        onkeydown="if(event.key==='Enter')tryLogin()">
+      <div class="login-err" id="pw-err"></div>
+      <button class="btn-pst" onclick="tryLogin()" style="font-size:13px;padding:12px">
+        &#9654;&nbsp; Logg inn som admin
+      </button>
+    </div>
+
   </div>
 </div>
 
@@ -619,7 +635,7 @@ var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSI
 var API = SUPABASE_URL + '/rest/v1/osat_scores';
 
 // Passord
-var PASSORD = 'vcso2026';
+var PASSORD_ADMIN = 'volvo10';
 
 var PTS = 3;
 
@@ -1051,7 +1067,7 @@ function renderScoring() {
     var isTen=s.score===10;
 
     return '<div class="score-card" style="animation-delay:'+(i*0.02)+'s">'
-      +(userRole==='pst'?'<div class="score-del" onclick="askDel(\''+s.id+'\',\''+s.pst+' &ndash; '+s.score+'\')">Slett</div>':'')
+      +(userRole==='admin'?'<div class="score-del" onclick="askDel(\''+s.id+'\',\''+s.pst+' &ndash; '+s.score+'\')">Slett</div>':'')
       +(isNew?'<div class="score-new">NY</div>':'')
       +'<div class="score-number-display">'
         +'<span class="score-big-num '+(isTen?'ten':'')+'">'+s.score+'</span>'
@@ -1289,13 +1305,29 @@ function closeIntro() {
 
 function updateRoleBadge() {
   var b=document.getElementById('role-badge'); if(!b) return;
-  if(userRole==='pst'){ b.className='login-badge badge-pst'; b.textContent='\u2605 PST'; }
-  else { b.className='login-badge badge-tilskuer'; b.textContent='\uD83D\uDC41 Tilskuer'; }
+  if(userRole==='admin'){
+    b.className='login-badge badge-pst';
+    b.textContent='\u2699 Admin';
+    b.style.background='rgba(255,215,0,.15)';
+    b.style.color='var(--gold)';
+    b.style.border='1px solid rgba(255,215,0,.3)';
+  } else {
+    b.className='login-badge badge-tilskuer';
+    b.textContent='\uD83D\uDC41 Tilskuer';
+  }
 }
 
-function enterAsPst() {
-  userRole='pst';
-  sessionStorage.setItem('osat-role','pst');
+function toggleAdminLogin() {
+  var box=document.getElementById('admin-login');
+  if(!box) return;
+  var isVisible = box.style.display==='flex';
+  box.style.display = isVisible ? 'none' : 'flex';
+  if(!isVisible) setTimeout(function(){ var pw=document.getElementById('pw-input'); if(pw) pw.focus(); }, 100);
+}
+
+function enterAsAdmin() {
+  userRole='admin';
+  sessionStorage.setItem('osat-role','admin');
   closeIntro();
   var ro=document.getElementById('reg-outer'); if(ro) ro.style.display='block';
   updateRoleBadge();
@@ -1316,7 +1348,7 @@ function enterAsGuest() {
 
 function tryLogin() {
   var pw=document.getElementById('pw-input').value;
-  if(pw===PASSORD){ enterAsPst(); }
+  if(pw===PASSORD_ADMIN){ enterAsAdmin(); }
   else {
     var err=document.getElementById('pw-err');
     if(err){ err.textContent='Feil passord – prøv igjen'; setTimeout(function(){err.textContent='';},3000); }
@@ -1331,7 +1363,7 @@ setInterval(function(){ if(userRole) fetchSales(); }, 120000);
 // ─── RESTORE SESSION ─────────────────────────────────────────
 (function(){
   var saved=sessionStorage.getItem('osat-role');
-  if(saved==='pst') enterAsPst();
+  if(saved==='admin') enterAsAdmin();
   else if(saved==='tilskuer') enterAsGuest();
 })();
 
