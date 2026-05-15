@@ -21,45 +21,192 @@ html,body{background:var(--bg);font-family:'Barlow',sans-serif;color:var(--txt);
 
 /* ─── INTRO / LOGIN ─────────────────────────────────────── */
 #intro-overlay{
-  position:fixed;inset:0;z-index:999;background:#1c1917;
+  position:fixed;inset:0;z-index:999;
+  background:#0c0a08;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  overflow:hidden;transition:opacity .4s ease
+  overflow:hidden;transition:opacity .5s ease;
 }
-.intro-logo{font-family:'Anton',sans-serif;font-size:46px;letter-spacing:6px;
-  color:#fff;text-align:center;line-height:1}
-.intro-logo2{font-family:'Anton',sans-serif;font-size:22px;letter-spacing:8px;
-  color:#f97316;text-align:center;margin-top:2px;opacity:.95}
-@keyframes logoShine{to{background-position:200% center}}
-.name-short{font-size:13px;font-weight:700;color:var(--txt)}
-.intro-sub{font-size:10px;letter-spacing:4px;text-transform:uppercase;
-  color:rgba(255,255,255,.4);margin-top:10px;text-align:center}
-.intro-divider{width:280px;height:2px;
+/* Ambiensbelysning */
+#intro-overlay::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 80% 55% at 50% -5%, rgba(249,115,22,.18) 0%, transparent 65%),
+    radial-gradient(ellipse 50% 35% at 15% 90%, rgba(249,115,22,.07) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 35% at 85% 85%, rgba(251,191,36,.05) 0%, transparent 55%);
+}
+/* Subtilt rutenett */
+#intro-overlay::after{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background-image:
+    linear-gradient(rgba(249,115,22,.028) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(249,115,22,.028) 1px, transparent 1px);
+  background-size:44px 44px;
+}
+/* Pulserende ringer */
+.ix-ring{
+  position:absolute;border-radius:50%;
+  border:1px solid rgba(249,115,22,.09);
+  top:50%;left:50%;transform:translate(-50%,-50%);
+  pointer-events:none;
+  animation:ixRing 5s ease-in-out infinite;
+}
+@keyframes ixRing{
+  0%,100%{opacity:.6;transform:translate(-50%,-50%) scale(1)}
+  50%{opacity:.15;transform:translate(-50%,-50%) scale(1.03)}
+}
+/* Sidelinje-aksenter */
+.ix-bar{position:absolute;width:3px;top:0;bottom:0;pointer-events:none}
+.ix-bar-l{left:0;background:linear-gradient(180deg,transparent 0%,#f97316 30%,#f97316 70%,transparent 100%)}
+.ix-bar-r{right:0;background:linear-gradient(180deg,transparent 0%,rgba(249,115,22,.25) 30%,rgba(249,115,22,.25) 70%,transparent 100%)}
+/* Horisontale linjer */
+.ix-hbar{position:absolute;left:0;right:0;height:1px;pointer-events:none;
+  background:linear-gradient(90deg,transparent,rgba(249,115,22,.15),rgba(249,115,22,.15),transparent)}
+.ix-hbar-t{top:0}.ix-hbar-b{bottom:0}
+/* Hjørneprikker */
+.ix-corner{position:absolute;width:6px;height:6px;border-radius:50%;
+  background:#f97316;opacity:.4;pointer-events:none}
+.ix-corner-tl{top:12px;left:12px}.ix-corner-tr{top:12px;right:12px}
+.ix-corner-bl{bottom:12px;left:12px}.ix-corner-br{bottom:12px;right:12px}
+
+/* ── EMBLEM ── */
+.ix-emblem{
+  position:relative;z-index:2;
+  width:96px;height:96px;border-radius:50%;
+  background:
+    radial-gradient(circle at 38% 32%, rgba(255,255,255,.12) 0%, transparent 55%),
+    linear-gradient(145deg,#251508,#150b03);
+  border:1.5px solid rgba(249,115,22,.45);
+  box-shadow:
+    0 0 0 7px rgba(249,115,22,.05),
+    0 0 32px rgba(249,115,22,.3),
+    0 0 70px rgba(249,115,22,.1),
+    inset 0 1px 0 rgba(255,255,255,.08);
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:30px;
+  animation:ixEmblem 3.5s ease-in-out infinite;
+}
+@keyframes ixEmblem{
+  0%,100%{box-shadow:0 0 0 7px rgba(249,115,22,.05),0 0 32px rgba(249,115,22,.3),0 0 70px rgba(249,115,22,.1),inset 0 1px 0 rgba(255,255,255,.08)}
+  50%{box-shadow:0 0 0 12px rgba(249,115,22,.03),0 0 50px rgba(249,115,22,.45),0 0 110px rgba(249,115,22,.18),inset 0 1px 0 rgba(255,255,255,.08)}
+}
+
+/* ── TITTEL ── */
+.ix-vcso{
+  font-family:'Anton',sans-serif;
+  font-size:clamp(58px,16vw,80px);
+  letter-spacing:12px;line-height:1;
+  background:linear-gradient(150deg,
+    #ffffff 0%,
+    #f97316 25%,
+    #fbbf24 45%,
+    #f97316 65%,
+    #ffffff 85%,
+    #f97316 100%);
+  background-size:300% auto;
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:ixShine 4.5s linear infinite;
+  filter:drop-shadow(0 0 24px rgba(249,115,22,.35));
+  text-align:center;
+}
+@keyframes ixShine{to{background-position:300% center}}
+.ix-league{
+  font-family:'Anton',sans-serif;
+  font-size:clamp(12px,3vw,16px);
+  letter-spacing:clamp(7px,2.5vw,12px);
+  color:#f97316;opacity:.85;
+  text-align:center;margin-top:3px;display:block;
+}
+
+/* ── DIVIDER ── */
+.ix-divider{
+  display:flex;align-items:center;gap:12px;
+  width:100%;margin:22px 0;
+}
+.ix-divider-line{
+  flex:1;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(249,115,22,.55),transparent);
+}
+.ix-divider-gem{
+  width:6px;height:6px;border-radius:1px;
   background:#f97316;
-  margin:22px auto}
-.intro-tagline{font-family:'Anton',sans-serif;font-size:15px;letter-spacing:3px;
-  color:rgba(255,255,255,.6);text-align:center;text-transform:uppercase;margin-bottom:28px}
-.login-section{position:relative;z-index:2;width:100%;max-width:300px;
-  display:flex;flex-direction:column;gap:10px;align-items:center;padding:0 20px}
-.login-input{width:100%;padding:14px;font-size:15px;text-align:center;
-  letter-spacing:4px;background:rgba(255,255,255,.07);
-  border:1px solid rgba(249,115,22,.4);border-radius:5px;color:#fff;
-  outline:none;font-family:'Barlow',sans-serif;transition:border-color .2s}
-.login-input:focus{border-color:#f97316}
-.login-input::placeholder{letter-spacing:1px;color:rgba(255,255,255,.25)}
+  box-shadow:0 0 10px #f97316,0 0 20px rgba(249,115,22,.5);
+  transform:rotate(45deg);
+}
+
+/* ── TAGLINE OG META ── */
+.ix-tag{
+  font-size:9px;letter-spacing:4px;text-transform:uppercase;
+  color:rgba(255,255,255,.3);text-align:center;margin-bottom:6px;
+}
+.ix-meta{
+  font-size:8px;letter-spacing:3px;text-transform:uppercase;
+  color:rgba(255,255,255,.18);text-align:center;margin-bottom:32px;
+}
+
+/* ── AVDELINGSMERKER ── */
+.ix-avd{display:flex;gap:8px;margin-bottom:34px}
+.ix-avd-badge{
+  width:36px;height:36px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Anton',sans-serif;font-size:9px;letter-spacing:.5px;
+  border:1px solid currentColor;
+  transition:all .3s;cursor:default;
+  background:rgba(0,0,0,.3);
+}
+.ix-avd-badge:hover{opacity:1!important;transform:scale(1.1)}
+
+/* ── KNAPPER ── */
+.login-section{
+  position:relative;z-index:2;width:100%;max-width:290px;
+  display:flex;flex-direction:column;gap:10px;align-items:center;padding:0 20px;
+}
+.login-input{
+  width:100%;padding:13px;font-size:14px;text-align:center;
+  letter-spacing:4px;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(249,115,22,.3);
+  border-radius:4px;color:#fff;
+  outline:none;font-family:'Barlow',sans-serif;transition:all .25s;
+}
+.login-input:focus{
+  border-color:#f97316;
+  background:rgba(249,115,22,.05);
+  box-shadow:0 0 0 3px rgba(249,115,22,.1);
+}
+.login-input::placeholder{letter-spacing:1px;color:rgba(255,255,255,.2)}
 .login-err{min-height:14px;font-size:11px;color:#fca5a5;text-align:center}
-.btn-pst{width:100%;padding:16px;font-family:'Anton',sans-serif;font-size:16px;
-  letter-spacing:3px;text-transform:uppercase;
-  background:#f97316;color:#1c1917;
-  border:none;border-radius:5px;cursor:pointer;transition:opacity .2s;font-weight:900}
-.btn-pst:hover{opacity:.88}
+
+.btn-pst{
+  width:100%;padding:15px;
+  font-family:'Anton',sans-serif;font-size:15px;
+  letter-spacing:4px;text-transform:uppercase;
+  background:linear-gradient(135deg,#f97316 0%,#ea580c 50%,#c2410c 100%);
+  color:#fff;border:none;border-radius:4px;cursor:pointer;
+  transition:all .3s;font-weight:900;
+  position:relative;overflow:hidden;
+  box-shadow:0 2px 0 rgba(0,0,0,.4), 0 4px 20px rgba(249,115,22,.35);
+}
+.btn-pst::before{
+  content:'';position:absolute;
+  top:0;left:-100%;width:100%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent);
+  transition:left .5s;
+}
+.btn-pst:hover::before{left:100%}
+.btn-pst:hover{
+  box-shadow:0 2px 0 rgba(0,0,0,.4), 0 6px 28px rgba(249,115,22,.55);
+  transform:translateY(-1px);
+}
+.btn-pst:active{transform:translateY(0);box-shadow:0 1px 0 rgba(0,0,0,.4),0 2px 10px rgba(249,115,22,.3)}
+
 .btn-divider{display:flex;align-items:center;gap:10px;width:100%;
-  font-size:10px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.5px}
-.btn-divider::before,.btn-divider::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.1)}
+  font-size:9px;color:rgba(255,255,255,.22);text-transform:uppercase;letter-spacing:.5px}
+.btn-divider::before,.btn-divider::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.07)}
 .btn-tilskuer{width:100%;padding:14px;font-family:'Anton',sans-serif;font-size:14px;
   letter-spacing:2px;text-transform:uppercase;background:transparent;
-  color:rgba(255,255,255,.4);border:1px solid rgba(255,255,255,.15);
-  border-radius:5px;cursor:pointer;transition:all .2s}
-.btn-tilskuer:hover{border-color:rgba(255,255,255,.5);color:rgba(255,255,255,.8)}
+  color:rgba(255,255,255,.35);border:1px solid rgba(255,255,255,.12);
+  border-radius:4px;cursor:pointer;transition:all .2s}
+.btn-tilskuer:hover{border-color:rgba(255,255,255,.4);color:rgba(255,255,255,.75)}
 
 /* ─── KONFETTI ──────────────────────────────────────────── */
 .konfetti-wrap{position:fixed;inset:0;pointer-events:none;z-index:998;overflow:hidden}
@@ -328,33 +475,88 @@ select:focus,input[type=text]:focus{border-color:#f97316}
 
 <!-- INTRO / LOGIN -->
 <div id="intro-overlay">
-  <div class="intro-logo">VCSO</div>
-  <div class="intro-logo2">OSAT LEAGUE</div>
-  <div class="intro-sub">Volvo Car Stor Oslo &nbsp;&middot;&nbsp; Kundetilfredshet 2026</div>
-  <div class="intro-divider"></div>
-  <div class="intro-tagline">La kundene bestemme hvem som vinner</div>
-  <div class="login-section">
 
-    <!-- Hovedknapp: Se resultater (ingen passord) -->
-    <button class="btn-pst" onclick="enterAsGuest()">&#128065;&nbsp; Oversikt</button>
+  <!-- Dekor-elementer -->
+  <div class="ix-ring" style="width:420px;height:420px;animation-delay:0s"></div>
+  <div class="ix-ring" style="width:640px;height:640px;animation-delay:1.7s;border-color:rgba(249,115,22,.055)"></div>
+  <div class="ix-ring" style="width:860px;height:860px;animation-delay:3.4s;border-color:rgba(249,115,22,.03)"></div>
+  <div class="ix-bar ix-bar-l"></div>
+  <div class="ix-bar ix-bar-r"></div>
+  <div class="ix-hbar ix-hbar-t"></div>
+  <div class="ix-hbar ix-hbar-b"></div>
+  <div class="ix-corner ix-corner-tl"></div>
+  <div class="ix-corner ix-corner-tr"></div>
+  <div class="ix-corner ix-corner-bl"></div>
+  <div class="ix-corner ix-corner-br"></div>
 
-    <!-- Admin-seksjon: liten diskret knapp -->
-    <div id="admin-toggle" style="margin-top:6px">
-      <button onclick="toggleAdminLogin()" style="background:none;border:none;color:var(--muted);font-size:11px;cursor:pointer;letter-spacing:1px;text-transform:uppercase;padding:4px 8px;border-radius:3px;transition:color .2s" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--muted)'">
-        &#9881; Admin
-      </button>
+  <!-- Sentralt innhold -->
+  <div style="position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;width:100%;max-width:340px;padding:0 24px">
+
+    <!-- Emblem -->
+    <div class="ix-emblem">
+      <svg width="52" height="52" viewBox="0 0 52 52" fill="none">
+        <path d="M26 7L31 19H44L34 27L38 39L26 32L14 39L18 27L8 19H21L26 7Z"
+          fill="url(#ig)" stroke="rgba(249,115,22,.2)" stroke-width=".5"/>
+        <rect x="22.5" y="39" width="7" height="3.5" rx=".8" fill="rgba(249,115,22,.55)"/>
+        <rect x="19" y="42" width="14" height="3" rx="1.5" fill="rgba(249,115,22,.65)"/>
+        <defs>
+          <linearGradient id="ig" x1="8" y1="7" x2="44" y2="44" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#fde68a"/>
+            <stop offset=".4" stop-color="#f97316"/>
+            <stop offset="1" stop-color="#fbbf24"/>
+          </linearGradient>
+        </defs>
+      </svg>
     </div>
 
-    <!-- Admin login (skjult som standard) -->
-    <div id="admin-login" style="display:none;width:100%;display:none;flex-direction:column;gap:8px;margin-top:4px">
-      <input class="login-input" type="password" id="pw-input"
-        placeholder="Adminpassord"
-        style="font-size:13px;padding:10px;letter-spacing:3px"
-        onkeydown="if(event.key==='Enter')tryLogin()">
-      <div class="login-err" id="pw-err"></div>
-      <button class="btn-pst" onclick="tryLogin()" style="font-size:13px;padding:12px">
-        &#9654;&nbsp; Logg inn som admin
-      </button>
+    <!-- Logo -->
+    <div class="ix-vcso">VCSO</div>
+    <span class="ix-league">OSAT &nbsp; LEAGUE</span>
+
+    <!-- Divider -->
+    <div class="ix-divider">
+      <div class="ix-divider-line"></div>
+      <div class="ix-divider-gem"></div>
+      <div class="ix-divider-line"></div>
+    </div>
+
+    <!-- Tekst -->
+    <div class="ix-tag">Kundetilfredshet &nbsp;&middot;&nbsp; 2026</div>
+    <div class="ix-meta">Volvo Car Stor Oslo</div>
+
+    <!-- Avdelingsmerker -->
+    <div class="ix-avd">
+      <div class="ix-avd-badge" style="color:#fca5a5;opacity:.65">&Oslash;K</div>
+      <div class="ix-avd-badge" style="color:#fde047;opacity:.65">RY</div>
+      <div class="ix-avd-badge" style="color:#93c5fd;opacity:.65">FN</div>
+      <div class="ix-avd-badge" style="color:#86efac;opacity:.65">LS</div>
+    </div>
+
+    <!-- Knapper -->
+    <div class="login-section">
+      <button class="btn-pst" onclick="enterAsGuest()">&#128065;&nbsp; Se resultater</button>
+
+      <div id="admin-toggle" style="margin-top:4px">
+        <button onclick="toggleAdminLogin()"
+          style="background:none;border:none;color:rgba(255,255,255,.25);
+          font-size:10px;cursor:pointer;letter-spacing:2px;text-transform:uppercase;
+          padding:6px 10px;border-radius:3px;transition:all .2s;font-family:'Barlow',sans-serif"
+          onmouseover="this.style.color='#f97316';this.style.background='rgba(249,115,22,.07)'"
+          onmouseout="this.style.color='rgba(255,255,255,.25)';this.style.background='none'">
+          &#9881; Admin
+        </button>
+      </div>
+
+      <div id="admin-login" style="display:none;width:100%;flex-direction:column;gap:8px;margin-top:2px">
+        <input class="login-input" type="password" id="pw-input"
+          placeholder="Adminpassord"
+          style="font-size:13px;padding:11px;letter-spacing:3px"
+          onkeydown="if(event.key==='Enter')tryLogin()">
+        <div class="login-err" id="pw-err"></div>
+        <button class="btn-pst" onclick="tryLogin()" style="font-size:13px;padding:13px;letter-spacing:3px">
+          &#9654;&nbsp; Logg inn
+        </button>
+      </div>
     </div>
 
   </div>
@@ -1785,7 +1987,6 @@ function tryLogin() {
 // ─── AUTO-REFRESH ────────────────────────────────────────────
 setInterval(function(){ if(userRole) fetchSales(); }, 120000);
 
-// ─── RESTORE SESSION ─────────────────────────────────────────
 (function(){
   // Render tabellen med tomme data umiddelbart så layout er klar
   renderInd();
