@@ -8,13 +8,13 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#0a0f1a;--card:#0f1824;--card2:#131e2c;
-  --b1:#1a2a3d;--b2:#243348;
-  --txt:#e8f4ff;--muted:#4d7090;--faint:#111c29;
+  --bg:#0d0d0d;--card:#141414;--card2:#1a1a1a;
+  --b1:#252525;--b2:#2e2e2e;
+  --txt:#f0f0f0;--muted:#666;--faint:#111;
   --gold:#ffd700;--gold2:#ffec80;--silver:#94a3b8;--bronze:#cd7f32;
   --g:#22c55e;--r:#ef4444;--y:#eab308;
-  --okern:#a855f7;--ryen:#3b82f6;--lstr:#f59e0b;--fnbu:#10b981;
-  --accent:#7c3aed;
+  --okern:#e11d48;--ryen:#0ea5e9;--lstr:#f97316;--fnbu:#8b5cf6;
+  --accent:#e11d48;
 }
 html,body{background:var(--bg);font-family:'Barlow',sans-serif;color:var(--txt);min-height:100vh;overflow-x:hidden}
 .page{max-width:800px;margin:0 auto;overflow-x:hidden}
@@ -26,7 +26,7 @@ html,body{background:var(--bg);font-family:'Barlow',sans-serif;color:var(--txt);
   overflow:hidden;transition:opacity .4s ease
 }
 .intro-logo{font-family:'Anton',sans-serif;font-size:46px;letter-spacing:6px;
-  background:linear-gradient(135deg,#fff 0%,var(--gold) 50%,#a855f7 100%);
+  background:linear-gradient(135deg,#fff 0%,var(--gold) 50%,#e11d48 100%);
   background-size:200% auto;-webkit-background-clip:text;background-clip:text;
   color:transparent;text-align:center;line-height:1;
   animation:logoShine 3s linear infinite}
@@ -36,7 +36,7 @@ html,body{background:var(--bg);font-family:'Barlow',sans-serif;color:var(--txt);
 .intro-sub{font-size:10px;letter-spacing:4px;text-transform:uppercase;
   color:rgba(255,255,255,.45);margin-top:10px;text-align:center}
 .intro-divider{width:280px;height:2px;
-  background:linear-gradient(90deg,transparent,var(--gold),#a855f7,transparent);
+  background:linear-gradient(90deg,transparent,var(--gold),#e11d48,transparent);
   margin:22px auto}
 .intro-tagline{font-family:'Anton',sans-serif;font-size:15px;letter-spacing:3px;
   color:#fff;text-align:center;text-transform:uppercase;opacity:.8;margin-bottom:28px}
@@ -44,14 +44,14 @@ html,body{background:var(--bg);font-family:'Barlow',sans-serif;color:var(--txt);
   display:flex;flex-direction:column;gap:10px;align-items:center;padding:0 20px}
 .login-input{width:100%;padding:14px;font-size:15px;text-align:center;
   letter-spacing:4px;background:rgba(255,255,255,.06);
-  border:1px solid rgba(168,85,247,.3);border-radius:5px;color:#fff;
+  border:1px solid rgba(225,29,72,.3);border-radius:5px;color:#fff;
   outline:none;font-family:'Barlow',sans-serif;transition:border-color .2s}
-.login-input:focus{border-color:rgba(168,85,247,.8)}
+.login-input:focus{border-color:rgba(225,29,72,.8)}
 .login-input::placeholder{letter-spacing:1px;color:rgba(255,255,255,.3)}
 .login-err{min-height:14px;font-size:11px;color:var(--r);text-align:center}
 .btn-pst{width:100%;padding:16px;font-family:'Anton',sans-serif;font-size:16px;
   letter-spacing:3px;text-transform:uppercase;
-  background:linear-gradient(135deg,var(--gold),#a855f7);color:#000;
+  background:linear-gradient(135deg,var(--gold),#e11d48);color:#fff;
   border:none;border-radius:5px;cursor:pointer;transition:opacity .2s}
 .btn-pst:hover{opacity:.85}
 .btn-divider{display:flex;align-items:center;gap:10px;width:100%;
@@ -78,7 +78,7 @@ html,body{background:var(--bg);font-family:'Barlow',sans-serif;color:var(--txt);
 .hdr-top{display:flex;justify-content:space-between;align-items:center;gap:8px}
 .brand{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
 .crest{width:40px;height:40px;border-radius:50%;
-  background:linear-gradient(135deg,#1a1040,#2d1565);
+  background:linear-gradient(135deg,#1a0005,#4a0010);
   border:2px solid var(--gold);
   display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
 .t1{font-family:'Anton',sans-serif;font-size:16px;letter-spacing:2px;line-height:1;white-space:nowrap}
@@ -86,23 +86,23 @@ html,body{background:var(--bg);font-family:'Barlow',sans-serif;color:var(--txt);
 .hdr-right{display:flex;gap:6px;align-items:center;flex-shrink:0}
 .login-badge{display:inline-block;font-size:9px;font-weight:700;padding:2px 7px;
   border-radius:8px;vertical-align:middle;margin-left:6px}
-.badge-pst{background:rgba(168,85,247,.15);color:#a855f7;border:1px solid rgba(168,85,247,.3)}
-.badge-tilskuer{background:rgba(77,112,144,.15);color:var(--muted);border:1px solid var(--b1)}
-.hdr-btn{background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.35);border-radius:4px;
-  padding:0 10px;height:28px;color:#a855f7;font-size:11px;cursor:pointer;font-weight:700;
+.badge-pst{background:rgba(225,29,72,.15);color:#e11d48;border:1px solid rgba(225,29,72,.3)}
+.badge-tilskuer{background:rgba(100,100,100,.15);color:var(--muted);border:1px solid var(--b1)}
+.hdr-btn{background:rgba(225,29,72,.1);border:1px solid rgba(225,29,72,.35);border-radius:4px;
+  padding:0 10px;height:28px;color:#e11d48;font-size:11px;cursor:pointer;font-weight:700;
   flex-shrink:0;white-space:nowrap;display:flex;align-items:center;gap:5px}
-.hdr-btn:hover{background:rgba(168,85,247,.2)}
+.hdr-btn:hover{background:rgba(225,29,72,.2)}
 
 /* ─── TOP SCORER BANNER ─────────────────────────────────── */
 #top-banner{display:none;padding:10px 16px;
-  background:linear-gradient(135deg,rgba(168,85,247,.1),rgba(255,215,0,.04));
-  border-bottom:1px solid rgba(168,85,247,.2);align-items:center;gap:12px}
+  background:linear-gradient(135deg,rgba(225,29,72,.08),rgba(255,215,0,.04));
+  border-bottom:1px solid rgba(225,29,72,.2);align-items:center;gap:12px}
 
 /* ─── TABS ──────────────────────────────────────────────── */
 .tabs{display:flex;flex-wrap:wrap;background:var(--card);border-bottom:1px solid var(--b1)}
 .tab{flex:1 1 20%;padding:9px 0;font-size:10px;font-weight:700;border:none;background:transparent;
   color:var(--muted);cursor:pointer;font-family:'Barlow',sans-serif;
-  border-bottom:3px solid transparent;transition:all .2s;text-transform:uppercase;letter-spacing:.5px}
+  border-bottom:3px solid transparent;transition:all .2s;text-transform:uppercase;letter-spacing:.3px}
 .tab.on{color:var(--gold);border-bottom-color:var(--gold)}
 .tab.wide{flex:1 1 30%;font-size:10px}
 
@@ -299,8 +299,8 @@ select:focus,input[type=text]:focus{border-color:var(--gold)}
   opacity:0;transition:opacity .15s}
 
 .reg-btn{width:100%;padding:11px;font-size:12px;font-weight:700;
-  background:linear-gradient(135deg,var(--gold),#a855f7);
-  color:#000;border:none;border-radius:4px;cursor:pointer;font-family:'Anton',sans-serif;
+  background:linear-gradient(135deg,var(--gold),#e11d48);
+  color:#fff;border:none;border-radius:4px;cursor:pointer;font-family:'Anton',sans-serif;
   letter-spacing:2px;text-transform:uppercase;transition:all .2s}
 .reg-btn:hover{opacity:.85}
 .reg-btn:disabled{opacity:.4;cursor:not-allowed}
@@ -328,15 +328,15 @@ select:focus,input[type=text]:focus{border-color:var(--gold)}
 /* ─── SPILLERKORT HOVER ─────────────────────────────────── */
 .trow{position:relative}
 .player-card{position:fixed;z-index:9999;width:220px;
-  background:linear-gradient(160deg,#130d24 0%,#0a0f1a 70%);
-  border:1px solid rgba(168,85,247,.35);border-radius:10px;overflow:hidden;
-  box-shadow:0 8px 40px rgba(0,0,0,.7),0 0 30px rgba(168,85,247,.1);
+  background:linear-gradient(160deg,#1a0005 0%,#0d0d0d 70%);
+  border:1px solid rgba(225,29,72,.35);border-radius:10px;overflow:hidden;
+  box-shadow:0 8px 40px rgba(0,0,0,.7),0 0 30px rgba(225,29,72,.1);
   pointer-events:none;opacity:0;transition:opacity .15s ease}
 .player-card.show{opacity:1}
-.pc-top{background:linear-gradient(135deg,rgba(168,85,247,.15),rgba(255,215,0,.03));
-  border-bottom:1px solid rgba(168,85,247,.15);
+.pc-top{background:linear-gradient(135deg,rgba(225,29,72,.15),rgba(255,215,0,.03));
+  border-bottom:1px solid rgba(225,29,72,.15);
   padding:8px 12px;display:flex;justify-content:space-between;align-items:center}
-.pc-comp{font-size:8px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(168,85,247,.8)}
+.pc-comp{font-size:8px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(225,29,72,.8)}
 .pc-week{font-size:8px;color:#4d7090}
 .pc-photo-wrap{padding:14px 0 0;display:flex;justify-content:center}
 .pc-photo{width:80px;height:80px;border-radius:50%;overflow:hidden;
@@ -433,27 +433,18 @@ select:focus,input[type=text]:focus{border-color:var(--gold)}
 
 <!-- TABS -->
 <div class="tabs">
-  <button class="tab on" onclick="setTab('ind',this)">PST-er</button>
-  <button class="tab" onclick="setTab('team',this)">Avdelinger</button>
-  <button class="tab" onclick="setTab('stats',this)">Statistikk</button>
-  <button class="tab" onclick="setTab('scoring',this)">Scoringer</button>
+  <button class="tab on" onclick="setTab('ind',this)">&#128100; PST-er</button>
+  <button class="tab" onclick="setTab('team',this)">&#127960; Avdelinger</button>
+  <button class="tab" onclick="setTab('stats',this)">&#128200; Statistikk</button>
+  <button class="tab" onclick="setTab('scoring',this)">&#127919; Scoringer</button>
   <button class="tab wide" onclick="setTab('hof',this)">&#127942; Hall of Fame</button>
 </div>
 
-<!-- PERIODE BAR -->
+<!-- PERIODE BAR - kun Alle, ingen måneder -->
 <div class="mbar">
   <div>
     <div class="mbar-l">Periode</div>
-    <div class="mbar-v" id="mbar-v">Alle måneder</div>
-  </div>
-  <div class="mtabs">
-    <button class="mt on" onclick="setMonth('all',this)">Alle</button>
-    <button class="mt" onclick="setMonth('jan',this)">Jan</button>
-    <button class="mt" onclick="setMonth('feb',this)">Feb</button>
-    <button class="mt" onclick="setMonth('mar',this)">Mar</button>
-    <button class="mt" onclick="setMonth('apr',this)">Apr</button>
-    <button class="mt" onclick="setMonth('mai',this)">Mai</button>
-    <button class="mt" onclick="setMonth('jun',this)">Jun</button>
+    <div class="mbar-v" id="mbar-v">Alle resultater</div>
   </div>
 </div>
 
@@ -611,21 +602,48 @@ select:focus,input[type=text]:focus{border-color:var(--gold)}
 
 // ─── FOTO-MAPPE ──────────────────────────────────────────────
 const SELGER_PHOTOS = {
-  "thomas_dokken":           "photos/thomas_dokken.jpg",
-  "emma_valen":              "photos/emma_valen.jpg",
-  "william_ostby":           "photos/william_ostby.jpg",
-  "norman_elton":            "photos/norman_elton.jpg",
-  "alexander_karlsen":       "photos/alexander_karlsen.jpg",
-  "fabian_bredaljorgensen":  "photos/fabian_bredaljorgensen.jpg",
-  "henrik_ostby":            "photos/henrik_ostby.jpg",
-  "johan_kalenius":          "photos/johan_kalenius.jpg",
-  "odd_bjarne_bjorvik":      "photos/odd_bjarne_bjorvik.jpg",
-  "ask_herlofsen":           "photos/ask_herlofsen.jpg",
-  "emanuel_bereket":         "photos/emanuel_bereket.jpg",
-  "daniel_k_johansen":       "photos/daniel_k_johansen.jpg",
-  "linn_askmannolsen":       "photos/linn_askmannolsen.jpg",
-  "simen_olsen":             "photos/simen_olsen.jpg",
-  "andreas_lydersen":        "photos/andreas_lydersen.jpg",
+  // Fornebu
+  "aldahir_ramirez":            "photos/aldahir_ramirez.jpg",
+  "aras_fasal_omar":            "photos/aras_fasal_omar.jpg",
+  "bawar_faraj":                "photos/bawar_faraj.jpg",
+  "brage_grammeltvedt_grefstad":"photos/brage_grammeltvedt_grefstad.jpg",
+  "gjermund_mauland":           "photos/gjermund_mauland.jpg",
+  "gohar_ehtisham":             "photos/gohar_ehtisham.jpg",
+  "kaniwar_nassan":             "photos/kaniwar_nassan.jpg",
+  "marek_zebrowski":            "photos/marek_zebrowski.jpg",
+  "mathuran_sandrakumar":       "photos/mathuran_sandrakumar.jpg",
+  "mohammad_sirwan_salar":      "photos/mohammad_sirwan_salar.jpg",
+  "moosa_butt":                 "photos/moosa_butt.jpg",
+  // Lillestrøm
+  "aleksander_pettersen":       "photos/aleksander_pettersen.jpg",
+  "christopher_sjostrom":       "photos/christopher_sjostrom.jpg",
+  "dennis_uggerud":             "photos/dennis_uggerud.jpg",
+  "george_xheki_hanelli":       "photos/george_xheki_hanelli.jpg",
+  "hedvig_oyen_larsen":         "photos/hedvig_oyen_larsen.jpg",
+  "john_arild_bergengen":       "photos/john_arild_bergengen.jpg",
+  "jorn_sorensen":              "photos/jorn_sorensen.jpg",
+  "martin_pedersen":            "photos/martin_pedersen.jpg",
+  "pavel_jizba":                "photos/pavel_jizba.jpg",
+  "tom_kjetil_sandmoe":         "photos/tom_kjetil_sandmoe.jpg",
+  // Økern
+  "ali_husseini":               "photos/ali_husseini.jpg",
+  "basil_omar":                 "photos/basil_omar.jpg",
+  "emirhan_cimen":              "photos/emirhan_cimen.jpg",
+  "shezad_masih_azam":          "photos/shezad_masih_azam.jpg",
+  // Ryen
+  "abdulghani_ajjan":           "photos/abdulghani_ajjan.jpg",
+  "algirdas_ambrozaitis":       "photos/algirdas_ambrozaitis.jpg",
+  "biniam_tesfamichael_tekle":  "photos/biniam_tesfamichael_tekle.jpg",
+  "elias_palacios":             "photos/elias_palacios.jpg",
+  "harvinder_singh_kular":      "photos/harvinder_singh_kular.jpg",
+  "joel_andom_jiji":            "photos/joel_andom_jiji.jpg",
+  "kristoffer_langerud":        "photos/kristoffer_langerud.jpg",
+  "marco_bjornstad":            "photos/marco_bjornstad.jpg",
+  "mohammad_yousaf_ahmed":      "photos/mohammad_yousaf_ahmed.jpg",
+  "sindre_andre_tomte":         "photos/sindre_andre_tomte.jpg",
+  "sipan_zewki":                "photos/sipan_zewki.jpg",
+  "vidar_flesvik":              "photos/vidar_flesvik.jpg",
+  "wajahit_elahit":             "photos/wajahit_elahit.jpg",
 };
 
 // ─── KONFIGURASJON ───────────────────────────────────────────
@@ -641,10 +659,10 @@ var PTS = 3;
 
 // Farger per avdeling
 var LC = {
-  okern:      '#a855f7',
-  ryen:       '#3b82f6',
-  lillestrom: '#f59e0b',
-  fornebu:    '#10b981'
+  okern:      '#e11d48',
+  ryen:       '#0ea5e9',
+  lillestrom: '#f97316',
+  fornebu:    '#8b5cf6'
 };
 var LL = {
   okern:      'Øker\u006e',
@@ -655,25 +673,48 @@ var LL = {
 
 // ─── PST-ER ──────────────────────────────────────────────────
 var SELGERE_RAW = [
-  // Økern
-  { navn: 'Thomas Dokken',              loc: 'okern'      },
-  { navn: 'Emma Valen',                 loc: 'okern'      },
-  { navn: 'William \u00d8stby',         loc: 'okern'      },
-  // Ryen
-  { navn: 'Norman Elton',               loc: 'ryen'       },
-  { navn: 'Alexander Karlsen',          loc: 'ryen'       },
   // Fornebu
-  { navn: 'Fabian Bredal-J\u00f8rgensen', loc: 'fornebu' },
-  { navn: 'Henrik \u00d8stby',          loc: 'fornebu'    },
-  { navn: 'Johan Kalenius',             loc: 'fornebu'    },
-  { navn: 'Odd Bjarne Bj\u00f8rvik',    loc: 'fornebu'    },
-  { navn: 'Ask Herlofsen',              loc: 'fornebu'    },
-  { navn: 'Emanuel Bereket',            loc: 'fornebu'    },
+  { navn: 'Aldahir Ramirez',              loc: 'fornebu' },
+  { navn: 'Aras Fasal Omar',              loc: 'fornebu' },
+  { navn: 'Bawar Faraj',                  loc: 'fornebu' },
+  { navn: 'Brage Grammeltvedt Grefstad',  loc: 'fornebu' },
+  { navn: 'Gjermund Mauland',             loc: 'fornebu' },
+  { navn: 'Gohar Ehtisham',               loc: 'fornebu' },
+  { navn: 'Kaniwar Nassan',               loc: 'fornebu' },
+  { navn: 'Marek Zebrowski',              loc: 'fornebu' },
+  { navn: 'Mathuran Sandrakumar',         loc: 'fornebu' },
+  { navn: 'Mohammad Sirwan Salar',        loc: 'fornebu' },
+  { navn: 'Moosa Butt',                   loc: 'fornebu' },
   // Lillestrøm
-  { navn: 'Daniel K. Johansen',         loc: 'lillestrom' },
-  { navn: 'Linn Askmann-Olsen',         loc: 'lillestrom' },
-  { navn: 'Simen Olsen',                loc: 'lillestrom' },
-  { navn: 'Andreas Lydersen',           loc: 'lillestrom' }
+  { navn: 'Aleksander Pettersen',         loc: 'lillestrom' },
+  { navn: 'Christopher Sj\u00f8str\u00f8m', loc: 'lillestrom' },
+  { navn: 'Dennis Uggerud',               loc: 'lillestrom' },
+  { navn: 'George Xheki Hanelli',         loc: 'lillestrom' },
+  { navn: 'Hedvig \u00d8yen Larsen',      loc: 'lillestrom' },
+  { navn: 'John Arild Bergengen',         loc: 'lillestrom' },
+  { navn: 'J\u00f8rn S\u00f8rensen',      loc: 'lillestrom' },
+  { navn: 'Martin Pedersen',              loc: 'lillestrom' },
+  { navn: 'Pavel Jizba',                  loc: 'lillestrom' },
+  { navn: 'Tom Kjetil Sandmoe',           loc: 'lillestrom' },
+  // Økern
+  { navn: 'Ali Husseini',                 loc: 'okern' },
+  { navn: 'Basil Omar',                   loc: 'okern' },
+  { navn: 'Emirhan Cimen',                loc: 'okern' },
+  { navn: 'Shezad Masih Azam',            loc: 'okern' },
+  // Ryen
+  { navn: 'Abdulghani Ajjan',             loc: 'ryen' },
+  { navn: 'Algirdas Ambrozaitis',         loc: 'ryen' },
+  { navn: 'Biniam Tesfamichael Tekle',    loc: 'ryen' },
+  { navn: 'Elias Palacios',               loc: 'ryen' },
+  { navn: 'Harvinder Singh Kular',        loc: 'ryen' },
+  { navn: 'Joel Andom Jiji',              loc: 'ryen' },
+  { navn: 'Kristoffer Langerud',          loc: 'ryen' },
+  { navn: 'Marco Bj\u00f8rnstad',         loc: 'ryen' },
+  { navn: 'Mohammad Yousaf Ahmed',        loc: 'ryen' },
+  { navn: 'Sindre Andr\u00e8 T\u00f8mte', loc: 'ryen' },
+  { navn: 'Sipan Zewki',                  loc: 'ryen' },
+  { navn: 'Vidar Flesvik',                loc: 'ryen' },
+  { navn: 'Wajahit Elahit',               loc: 'ryen' },
 ];
 
 var SELGERE = SELGERE_RAW.map(function(s) {
@@ -683,6 +724,8 @@ var SELGERE = SELGERE_RAW.map(function(s) {
   var id = s.navn.toLowerCase()
     .replace(/\s+/g,'_')
     .replace(/\u00e6/g,'ae').replace(/\u00f8/g,'o').replace(/\u00e5/g,'aa')
+    .replace(/\u00f6/g,'o').replace(/\u00e8/g,'e').replace(/\u00e9/g,'e')
+    .replace(/\u00e0/g,'a').replace(/\u00fc/g,'u').replace(/\u00e4/g,'a')
     .replace(/[^a-z0-9_]/g,'');
   var initials = s.navn.split(' ').map(function(x){return x[0]}).join('').slice(0,2).toUpperCase();
   return { navn:s.navn, loc:s.loc, id:id, initials:initials, color:col,
@@ -690,10 +733,10 @@ var SELGERE = SELGERE_RAW.map(function(s) {
 });
 
 var TEAMS = [
-  { id:'okern',      navn:'Øker\u006e',         initials:'ØK', color:'#a855f7', bg:'rgba(168,85,247,.2)'  },
-  { id:'ryen',       navn:'Ryen',              initials:'RY', color:'#3b82f6', bg:'rgba(59,130,246,.2)'   },
-  { id:'fornebu',    navn:'Fornebu',           initials:'FN', color:'#10b981', bg:'rgba(16,185,129,.2)'   },
-  { id:'lillestrom', navn:'Lillestr\u00f8m',   initials:'LS', color:'#f59e0b', bg:'rgba(245,158,11,.2)'   }
+  { id:'okern',      navn:'Øker\u006e',         initials:'ØK', color:'#e11d48', bg:'rgba(225,29,72,.2)'    },
+  { id:'ryen',       navn:'Ryen',              initials:'RY', color:'#0ea5e9', bg:'rgba(14,165,233,.2)'   },
+  { id:'fornebu',    navn:'Fornebu',           initials:'FN', color:'#8b5cf6', bg:'rgba(139,92,246,.2)'   },
+  { id:'lillestrom', navn:'Lillestr\u00f8m',   initials:'LS', color:'#f97316', bg:'rgba(249,115,22,.2)'   }
 ];
 
 // ─── STATE ───────────────────────────────────────────────────
@@ -1310,8 +1353,7 @@ function updateRoleBadge() {
     b.textContent='\u2699 Admin';
     b.style.background='rgba(255,215,0,.15)';
     b.style.color='var(--gold)';
-    b.style.border='1px solid rgba(255,215,0,.3)';
-  } else {
+    b.style.border='1px solid rgba(255,215,0,.3)';  } else {
     b.className='login-badge badge-tilskuer';
     b.textContent='\uD83D\uDC41 Tilskuer';
   }
