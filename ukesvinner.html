@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VCSO OSAT League — Ukesvinner</title>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow+Condensed:wght@300;400;600;700;900&family=Barlow:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --bg:#0d0a08;
+  --card:#161210;
+  --gold:#f97316;
+  --gold2:#fbbf24;
+  --gold3:#fde68a;
+  --b1:#2a2420;
+  --txt:#f5f0eb;
+  --muted:#78716c;
+  --okern:#fca5a5;
+  --ryen:#fde047;
+  --lstr:#86efac;
+  --fnbu:#93c5fd;
+}
+
+html,body{
+  background:var(--bg);
+  font-family:'Barlow Condensed',sans-serif;
+  color:var(--txt);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* ── KONFIGURER HER ─────────────────────────── */
+/* Fyll inn ukens data nedenfor i JS-blokken    */
+/* ─────────────────────────────────────────── */
+
+/* ── BAKGRUNN ─────────────────────────────── */
+.bg-noise{
+  position:fixed;inset:0;z-index:0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% -10%, rgba(249,115,22,.18) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 40% at 80% 100%, rgba(251,191,36,.1) 0%, transparent 60%),
+    var(--bg);
+  pointer-events:none;
+}
+.bg-grid{
+  position:fixed;inset:0;z-index:0;
+  background-image:
+    linear-gradient(rgba(249,115,22,.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(249,115,22,.04) 1px, transparent 1px);
+  background-size:40px 40px;
+  pointer-events:none;
+}
+.bg-scanline{
+  position:fixed;inset:0;z-index:0;
+  background:repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,.06) 2px,
+    rgba(0,0,0,.06) 4px
+  );
+  pointer-events:none;
+}
+
+/* ── WRAPPER ──────────────────────────────── */
+.wrap{
+  position:relative;z-index:1;
+  max-width:560px;
+  margin:0 auto;
+  padding:0 0 60px;
+}
+
+/* ── INNLEDNING ───────────────────────────── */
+.intro-section{
+  padding:48px 24px 0;
+  text-align:center;
+  animation:fadeDown .8s ease both;
+}
+.league-label{
+  font-size:11px;font-weight:600;letter-spacing:6px;
+  text-transform:uppercase;color:var(--gold);
+  opacity:.8;margin-bottom:16px;display:block;
+}
+.trophy-gfx{
+  width:80px;height:80px;
+  background:radial-gradient(circle at 40% 35%, #fff8 0%, transparent 60%),
+    linear-gradient(135deg,var(--gold) 0%,#c2410c 100%);
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:36px;margin:0 auto 20px;
+  box-shadow:0 0 40px rgba(249,115,22,.5),0 0 80px rgba(249,115,22,.2);
+  animation:trophyPulse 2s ease-in-out infinite;
+}
+@keyframes trophyPulse{
+  0%,100%{box-shadow:0 0 40px rgba(249,115,22,.5),0 0 80px rgba(249,115,22,.2)}
+  50%{box-shadow:0 0 60px rgba(249,115,22,.8),0 0 120px rgba(249,115,22,.4)}
+}
+.main-title{
+  font-family:'Anton',sans-serif;
+  font-size:clamp(36px,10vw,58px);
+  letter-spacing:3px;
+  line-height:.95;
+  text-transform:uppercase;
+}
+.main-title .line1{color:#fff}
+.main-title .line2{
+  background:linear-gradient(90deg,var(--gold),var(--gold2),var(--gold3),var(--gold2),var(--gold));
+  background-size:200% auto;
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:shine 2.5s linear infinite;
+}
+@keyframes shine{to{background-position:200% center}}
+.week-meta{
+  font-size:13px;color:var(--muted);letter-spacing:2px;
+  text-transform:uppercase;margin-top:12px;
+}
+.divider{
+  height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  margin:32px 24px;
+  opacity:.6;
+}
+
+/* ── VINNERKORT ───────────────────────────── */
+.winner-section{
+  padding:0 24px;
+  animation:fadeUp .9s .2s ease both;
+}
+.winner-card{
+  background:linear-gradient(145deg,#1e1510 0%,#0d0a08 100%);
+  border:1px solid rgba(249,115,22,.3);
+  border-radius:12px;
+  overflow:hidden;
+  position:relative;
+}
+.winner-card::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 80% 50% at 50% 0%,rgba(249,115,22,.12),transparent 70%);
+  pointer-events:none;
+}
+.winner-card-top{
+  background:linear-gradient(135deg,rgba(249,115,22,.15),rgba(251,191,36,.05));
+  border-bottom:1px solid rgba(249,115,22,.2);
+  padding:10px 16px;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.winner-card-top-label{
+  font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;
+  color:var(--gold);
+}
+.winner-card-top-week{
+  font-size:9px;color:var(--muted);letter-spacing:1px;
+}
+.winner-body{
+  padding:24px 20px;
+  display:flex;align-items:center;gap:20px;
+}
+.winner-photo{
+  width:90px;height:90px;border-radius:50%;
+  overflow:hidden;flex-shrink:0;
+  border:3px solid var(--gold);
+  box-shadow:0 0 20px rgba(249,115,22,.4),0 0 40px rgba(249,115,22,.15);
+  position:relative;
+}
+.winner-photo img{
+  width:100%;height:100%;object-fit:cover;
+  filter:grayscale(20%) contrast(1.05);
+}
+.winner-photo-ph{
+  width:100%;height:100%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Anton',sans-serif;font-size:28px;
+  color:var(--gold);background:rgba(249,115,22,.1);
+}
+.winner-rank{
+  font-family:'Anton',sans-serif;
+  font-size:72px;line-height:1;
+  color:var(--gold);
+  position:absolute;top:-8px;left:-4px;
+  opacity:.12;
+  pointer-events:none;
+}
+.winner-info{flex:1;min-width:0}
+.winner-name{
+  font-family:'Anton',sans-serif;
+  font-size:clamp(22px,6vw,32px);
+  line-height:1;color:#fff;letter-spacing:.5px;
+  margin-bottom:4px;
+}
+.winner-avd{
+  font-size:11px;font-weight:600;letter-spacing:2px;
+  text-transform:uppercase;margin-bottom:14px;
+}
+.winner-stats{
+  display:flex;gap:16px;flex-wrap:wrap;
+}
+.wstat{text-align:center}
+.wstat-n{
+  font-family:'Anton',sans-serif;font-size:24px;line-height:1;
+  color:var(--gold);
+}
+.wstat-l{
+  font-size:9px;color:var(--muted);text-transform:uppercase;
+  letter-spacing:1px;margin-top:2px;
+}
+
+/* ── BADGES ───────────────────────────────── */
+.badges-row{
+  display:flex;gap:6px;flex-wrap:wrap;
+  padding:0 20px 20px;
+}
+.badge{
+  display:flex;align-items:center;gap:5px;
+  padding:5px 10px;border-radius:20px;
+  font-size:10px;font-weight:700;letter-spacing:1px;
+  text-transform:uppercase;
+}
+.badge-hat{background:rgba(251,191,36,.12);border:1px solid rgba(251,191,36,.35);color:var(--gold2)}
+.badge-streak{background:rgba(249,115,22,.12);border:1px solid rgba(249,115,22,.35);color:var(--gold)}
+.badge-phone{background:rgba(134,239,172,.1);border:1px solid rgba(134,239,172,.3);color:#86efac}
+
+/* ── UKESTATISTIKK ────────────────────────── */
+.stats-section{
+  padding:0 24px;
+  animation:fadeUp .9s .35s ease both;
+}
+.section-label{
+  font-family:'Anton',sans-serif;font-size:11px;
+  letter-spacing:3px;text-transform:uppercase;
+  color:var(--gold);opacity:.7;
+  margin-bottom:12px;display:block;
+}
+.stat-row{
+  display:flex;gap:1px;margin-bottom:1px;
+}
+.stat-box{
+  flex:1;background:var(--card);
+  padding:14px;text-align:center;
+  border:1px solid var(--b1);
+}
+.stat-box:first-child{border-radius:8px 0 0 8px}
+.stat-box:last-child{border-radius:0 8px 8px 0}
+.stat-box-n{
+  font-family:'Anton',sans-serif;font-size:26px;
+  line-height:1;color:var(--gold);
+}
+.stat-box-l{
+  font-size:9px;color:var(--muted);text-transform:uppercase;
+  letter-spacing:1px;margin-top:4px;
+}
+
+/* ── AVDELING RESULTATER ──────────────────── */
+.avd-section{
+  padding:0 24px;
+  animation:fadeUp .9s .45s ease both;
+}
+.avd-row{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 14px;background:var(--card);
+  border:1px solid var(--b1);
+  margin-bottom:1px;
+  border-radius:4px;
+}
+.avd-row:first-child{border-radius:8px 8px 4px 4px}
+.avd-row:last-child{border-radius:4px 4px 8px 8px}
+.avd-rank{
+  font-family:'Anton',sans-serif;font-size:16px;
+  width:20px;text-align:center;flex-shrink:0;
+}
+.avd-dot{
+  width:10px;height:10px;border-radius:50%;flex-shrink:0;
+}
+.avd-name{
+  font-weight:700;font-size:15px;flex:1;letter-spacing:.5px;
+}
+.avd-pts{
+  font-family:'Anton',sans-serif;font-size:18px;color:var(--gold);
+}
+.avd-sub{font-size:10px;color:var(--muted);text-align:right}
+
+/* ── GULLTELEFON ──────────────────────────── */
+.phone-section{
+  padding:0 24px;
+  animation:fadeUp .9s .55s ease both;
+}
+.phone-card{
+  background:linear-gradient(135deg,rgba(134,239,172,.06),rgba(249,115,22,.04));
+  border:1px solid rgba(134,239,172,.2);
+  border-radius:12px;
+  padding:18px 20px;
+  display:flex;align-items:center;gap:16px;
+}
+.phone-svg{flex-shrink:0}
+.phone-info{flex:1}
+.phone-label{
+  font-size:9px;font-weight:700;letter-spacing:3px;
+  text-transform:uppercase;color:#86efac;margin-bottom:4px;
+}
+.phone-name{
+  font-family:'Anton',sans-serif;font-size:20px;
+  color:#fff;letter-spacing:.5px;
+}
+.phone-avd{font-size:10px;color:var(--muted);letter-spacing:1px}
+.phone-stat{
+  text-align:right;
+  font-family:'Anton',sans-serif;font-size:22px;color:#86efac;
+}
+.phone-stat-l{font-size:9px;color:var(--muted)}
+
+/* ── HAT TRICKS ───────────────────────────── */
+.hats-section{
+  padding:0 24px;
+  animation:fadeUp .9s .6s ease both;
+}
+.hat-row{
+  display:flex;align-items:center;gap:12px;
+  padding:10px 14px;background:var(--card);
+  border:1px solid var(--b1);border-radius:4px;margin-bottom:1px;
+}
+.hat-photo{
+  width:32px;height:32px;border-radius:50%;overflow:hidden;
+  border:1px solid rgba(251,191,36,.4);flex-shrink:0;
+}
+.hat-photo img{width:100%;height:100%;object-fit:cover;filter:grayscale(100%)}
+.hat-photo-ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;
+  font-size:10px;font-weight:900}
+.hat-name{font-weight:700;font-size:14px;flex:1}
+.hat-sub{font-size:9px;color:var(--muted)}
+.hat-stars{font-size:13px;letter-spacing:1px}
+
+/* ── FOOTER ───────────────────────────────── */
+.footer-section{
+  padding:40px 24px 0;text-align:center;
+  animation:fadeUp .9s .7s ease both;
+}
+.footer-line{
+  height:1px;
+  background:linear-gradient(90deg,transparent,rgba(249,115,22,.4),transparent);
+  margin-bottom:24px;
+}
+.footer-logo{
+  font-family:'Anton',sans-serif;font-size:13px;
+  letter-spacing:5px;color:rgba(249,115,22,.5);
+  text-transform:uppercase;margin-bottom:4px;
+}
+.footer-sub{font-size:10px;color:var(--muted);letter-spacing:2px}
+
+/* ── ANIMASJONER ──────────────────────────── */
+@keyframes fadeDown{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:none}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+
+/* ── PARTICLES ────────────────────────────── */
+.particle{
+  position:fixed;border-radius:50%;
+  pointer-events:none;z-index:0;
+  animation:float linear infinite;
+}
+@keyframes float{
+  0%{transform:translateY(100vh) rotate(0deg);opacity:0}
+  10%{opacity:.6}
+  90%{opacity:.6}
+  100%{transform:translateY(-100px) rotate(720deg);opacity:0}
+}
+.gap{height:24px}
+</style>
+</head>
+<body>
+
+<div class="bg-noise"></div>
+<div class="bg-grid"></div>
+<div class="bg-scanline"></div>
+<div id="particles"></div>
+
+<div class="wrap">
+
+  <!-- INNLEDNING -->
+  <div class="intro-section">
+    <span class="league-label">VCSO OSAT League 2026</span>
+    <div class="trophy-gfx">🏆</div>
+    <div class="main-title">
+      <div class="line1">UKENS</div>
+      <div class="line2">VINNER</div>
+    </div>
+    <div class="week-meta" id="week-meta"></div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- VINNERKORT -->
+  <div class="winner-section">
+    <span class="section-label">&#127942; Ukens vinner</span>
+    <div class="winner-card">
+      <div class="winner-card-top">
+        <div class="winner-card-top-label">&#9733; Champion of the Week</div>
+        <div class="winner-card-top-week" id="wcard-week"></div>
+      </div>
+      <div class="winner-body">
+        <div class="winner-photo" id="winner-photo-wrap">
+          <div class="winner-photo-ph" id="winner-initials"></div>
+        </div>
+        <div class="winner-info">
+          <div class="winner-name" id="winner-name"></div>
+          <div class="winner-avd" id="winner-avd"></div>
+          <div class="winner-stats">
+            <div class="wstat">
+              <div class="wstat-n" id="wstat-pts"></div>
+              <div class="wstat-l">Poeng</div>
+            </div>
+            <div class="wstat">
+              <div class="wstat-n" id="wstat-scores"></div>
+              <div class="wstat-l">Scoringer</div>
+            </div>
+            <div class="wstat">
+              <div class="wstat-n" id="wstat-tens"></div>
+              <div class="wstat-l">10-ere</div>
+            </div>
+            <div class="wstat">
+              <div class="wstat-n" id="wstat-fup"></div>
+              <div class="wstat-l">Fulgt opp</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="badges-row" id="winner-badges"></div>
+    </div>
+  </div>
+
+  <div class="gap"></div>
+
+  <!-- UKESTATISTIKK -->
+  <div class="stats-section">
+    <span class="section-label">&#128200; Ukens tall</span>
+    <div class="stat-row">
+      <div class="stat-box">
+        <div class="stat-box-n" id="total-scores"></div>
+        <div class="stat-box-l">Totale scoringer</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-box-n" id="total-tens"></div>
+        <div class="stat-box-l">10-ere</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-box-n" id="total-fup"></div>
+        <div class="stat-box-l">Fulgt opp</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="gap"></div>
+
+  <!-- AVDELING RESULTATER -->
+  <div class="avd-section">
+    <span class="section-label">&#127960; Avdelinger</span>
+    <div id="avd-list"></div>
+  </div>
+
+  <div class="gap"></div>
+
+  <!-- GULLTELEFON -->
+  <div class="phone-section" id="phone-section" style="display:none">
+    <span class="section-label">Gulltelefon</span>
+    <div class="phone-card">
+      <svg class="phone-svg" width="52" height="52" viewBox="0 0 52 52" fill="none">
+        <circle cx="26" cy="26" r="26" fill="rgba(134,239,172,.1)"/>
+        <circle cx="26" cy="26" r="19" fill="none" stroke="rgba(134,239,172,.25)" stroke-width="1"/>
+        <path d="M18 17C18 17 15.5 18 15.5 21.5C15.5 30 22 36.5 30.5 36.5C34 36.5 35 34 35 34L31.5 30.5C31.5 30.5 30 31.5 29 31.5C25.5 31.5 20.5 26.5 20.5 23C20.5 22 21.5 20.5 21.5 20.5L18 17Z"
+          fill="url(#gp2)" stroke="#86efac" stroke-width=".8" stroke-linejoin="round"/>
+        <defs>
+          <linearGradient id="gp2" x1="15" y1="17" x2="35" y2="37" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#ffd700"/>
+            <stop offset=".5" stop-color="#86efac"/>
+            <stop offset="1" stop-color="#ffd700"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      <div class="phone-info">
+        <div class="phone-label">&#128241; Gulltelefon</div>
+        <div class="phone-name" id="phone-name"></div>
+        <div class="phone-avd" id="phone-avd"></div>
+      </div>
+      <div>
+        <div class="phone-stat" id="phone-fup"></div>
+        <div class="phone-stat-l">fulgt opp</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HAT TRICKS -->
+  <div class="hats-section" id="hats-section" style="display:none">
+    <div class="gap"></div>
+    <span class="section-label">&#11088; Hat Tricks denne uken</span>
+    <div id="hats-list"></div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer-section">
+    <div class="footer-line"></div>
+    <div class="footer-logo">VCSO OSAT League</div>
+    <div class="footer-sub" id="footer-sub"></div>
+  </div>
+
+</div>
+
+<script>
+// ── SUPABASE CONFIG ────────────────────────────────
+var SUPABASE_URL = 'https://aemboxqpaeyfdlzmghxe.supabase.co';
+var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFlbWJveHFwYWV5ZmRsem1naHhlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3OTIzNTQsImV4cCI6MjA5NDM2ODM1NH0.vKRaz0bRJm621eKgtF7iXh23Zqdh0qNuriMgDMhJ8Yw';
+
+// ── SELGERE ────────────────────────────────────────
+var SELGERE = [
+  {navn:'Aldahir Ramirez',             loc:'fornebu', id:'aldahir_ramirez'},
+  {navn:'Aras Fasal Omar',             loc:'fornebu', id:'aras_fasal_omar'},
+  {navn:'Bawar Faraj',                 loc:'fornebu', id:'bawar_faraj'},
+  {navn:'Brage Grammeltvedt Grefstad', loc:'fornebu', id:'brage_grammeltvedt_grefstad'},
+  {navn:'Gjermund Mauland',            loc:'fornebu', id:'gjermund_mauland'},
+  {navn:'Gohar Ehtisham',              loc:'fornebu', id:'gohar_ehtisham'},
+  {navn:'Kaniwar Nassan',              loc:'fornebu', id:'kaniwar_nassan'},
+  {navn:'Marek Zebrowski',             loc:'fornebu', id:'marek_zebrowski'},
+  {navn:'Mathuran Sandrakumar',        loc:'fornebu', id:'mathuran_sandrakumar'},
+  {navn:'Mohammad Sirwan Salar',       loc:'fornebu', id:'mohammad_sirwan_salar'},
+  {navn:'Moosa Butt',                  loc:'fornebu', id:'moosa_butt'},
+  {navn:'Aleksander Pettersen',        loc:'lillestrom', id:'aleksander_pettersen'},
+  {navn:'Christopher Sjøstrøm',        loc:'lillestrom', id:'christopher_sjostrom'},
+  {navn:'Dennis Uggerud',              loc:'lillestrom', id:'dennis_uggerud'},
+  {navn:'George Xheki Hanelli',        loc:'lillestrom', id:'george_xheki_hanelli'},
+  {navn:'Hedvig Øyen Larsen',          loc:'lillestrom', id:'hedvig_oyen_larsen'},
+  {navn:'John Arild Bergengen',        loc:'lillestrom', id:'john_arild_bergengen'},
+  {navn:'Jørn Sørensen',               loc:'lillestrom', id:'jorn_sorensen'},
+  {navn:'Martin Pedersen',             loc:'lillestrom', id:'martin_pedersen'},
+  {navn:'Pavel Jizba',                 loc:'lillestrom', id:'pavel_jizba'},
+  {navn:'Tom Kjetil Sandmoe',          loc:'lillestrom', id:'tom_kjetil_sandmoe'},
+  {navn:'Ali Husseini',                loc:'okern', id:'ali_husseini'},
+  {navn:'Basil Omar',                  loc:'okern', id:'basil_omar'},
+  {navn:'Emirhan Cimen',               loc:'okern', id:'emirhan_cimen'},
+  {navn:'Shezad Masih Azam',           loc:'okern', id:'shezad_masih_azam'},
+  {navn:'Abdulghani Ajjan',            loc:'ryen', id:'abdulghani_ajjan'},
+  {navn:'Algirdas Ambrozaitis',        loc:'ryen', id:'algirdas_ambrozaitis'},
+  {navn:'Biniam Tesfamichael Tekle',   loc:'ryen', id:'biniam_tesfamichael_tekle'},
+  {navn:'Elias Palacios',              loc:'ryen', id:'elias_palacios'},
+  {navn:'Harvinder Singh Kular',       loc:'ryen', id:'harvinder_singh_kular'},
+  {navn:'Joel Andom Jiji',             loc:'ryen', id:'joel_andom_jiji'},
+  {navn:'Kristoffer Langerud',         loc:'ryen', id:'kristoffer_langerud'},
+  {navn:'Marco Bjørnstad',             loc:'ryen', id:'marco_bjornstad'},
+  {navn:'Mohammad Yousaf Ahmed',       loc:'ryen', id:'mohammad_yousaf_ahmed'},
+  {navn:'Sindre Andrè Tømte',          loc:'ryen', id:'sindre_andre_tomte'},
+  {navn:'Sipan Zewki',                 loc:'ryen', id:'sipan_zewki'},
+  {navn:'Vidar Flesvik',               loc:'ryen', id:'vidar_flesvik'},
+  {navn:'Wajahit Elahit',              loc:'ryen', id:'wajahit_elahit'},
+];
+
+var TEAM_COLORS = {
+  okern:'#fca5a5', ryen:'#fde047', lillestrom:'#86efac', fornebu:'#93c5fd'
+};
+var TEAM_NAMES = {
+  okern:'Økern', ryen:'Ryen', lillestrom:'Lillestrøm', fornebu:'Fornebu'
+};
+var PHOTOS = {};
+SELGERE.forEach(function(s){ PHOTOS[s.navn]='photos/'+s.id+'.jpg'; });
+
+// ── UKEBEREGNING ───────────────────────────────────
+function getWeekBounds() {
+  // Finner mandag–søndag for inneværende uke (norsk)
+  var now = new Date();
+  var day = now.getDay(); // 0=sun,1=mon,...,6=sat
+  var diffToMon = (day===0) ? -6 : 1 - day;
+  var mon = new Date(now); mon.setDate(now.getDate() + diffToMon);
+  mon.setHours(0,0,0,0);
+  var sun = new Date(mon); sun.setDate(mon.getDate() + 6);
+  sun.setHours(23,59,59,999);
+
+  function pad(n){ return String(n).padStart(2,'0'); }
+  function fmt(d){ return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
+
+  // Ukenummer (ISO)
+  var tmp = new Date(mon.getTime());
+  tmp.setDate(tmp.getDate() + 3 - ((tmp.getDay()+6)%7));
+  var week1 = new Date(tmp.getFullYear(),0,4);
+  var weekNr = 1 + Math.round(((tmp-week1)/86400000 - 3 + ((week1.getDay()+6)%7))/7);
+
+  var norDays = ['','januar','februar','mars','april','mai','juni','juli','august','september','oktober','november','desember'];
+  var monStr = mon.getDate()+'. '+norDays[mon.getMonth()+1];
+  var sunStr = sun.getDate()+'. '+norDays[sun.getMonth()+1]+' '+sun.getFullYear();
+
+  return { weekNr:weekNr, start:fmt(mon), end:fmt(sun), monStr:monStr, sunStr:sunStr };
+}
+
+// ── HJELPER ────────────────────────────────────────
+function tsDate(ts){ return (ts||'').substring(0,10); }
+
+function sbHeaders(){
+  return {
+    'apikey':SUPABASE_KEY,
+    'Authorization':'Bearer '+SUPABASE_KEY,
+    'Content-Type':'application/json'
+  };
+}
+
+function getShort(navn){
+  var parts = navn.split(' ');
+  if(parts.length<=2) return navn;
+  return parts[0]+' '+parts[1][0]+'. '+parts[parts.length-1];
+}
+
+// ── MAIN ───────────────────────────────────────────
+function showLoading(msg){
+  ['winner-name','winner-avd','wstat-pts','wstat-scores','wstat-tens','wstat-fup',
+   'total-scores','total-tens','total-fup','week-meta','wcard-week','footer-sub']
+  .forEach(function(id){
+    var el=document.getElementById(id);
+    if(el) el.textContent = msg||'Laster...';
+  });
+}
+
+async function loadAndRender(){
+  showLoading('Henter data...');
+  var wb = getWeekBounds();
+
+  // Hent alle scores for denne uken
+  var url = SUPABASE_URL+'/rest/v1/osat_scores'
+    +'?deleted=eq.false'
+    +'&ts=gte.'+wb.start+'T00:00:00'
+    +'&ts=lte.'+wb.end+'T23:59:59'
+    +'&order=ts.asc&limit=2000';
+
+  var res = await fetch(url, {mode:'cors', headers:sbHeaders()});
+  if(!res.ok){ showLoading('Feil ved henting'); return; }
+  var sales = await res.json();
+  if(!Array.isArray(sales)) sales=[];
+
+  // ── BEREGN STATISTIKK PR PST ──
+  var pstStats = {};
+  SELGERE.forEach(function(s){
+    pstStats[s.navn]={navn:s.navn, loc:s.loc, g:0, tens:0, fup:0, pts:0, dayMap:{}};
+  });
+
+  sales.forEach(function(s){
+    if(!pstStats[s.pst]) return;
+    var p = pstStats[s.pst];
+    if(s.score===9||s.score===10){
+      p.g++; p.pts+=3;
+      if(s.score===10) p.tens++;
+      if(s.fulgt_opp) p.fup++;
+      var d=tsDate(s.ts); p.dayMap[d]=(p.dayMap[d]||0)+1;
+    }
+  });
+
+  // Hat trick: dager med 3+ scoringer denne uken
+  Object.keys(pstStats).forEach(function(navn){
+    var p=pstStats[navn];
+    p.hatDays = Object.keys(p.dayMap).filter(function(d){return p.dayMap[d]>=3;}).length;
+  });
+
+  // ── VINNER ──
+  var sorted = Object.values(pstStats).sort(function(a,b){
+    return b.pts-a.pts || b.tens-a.tens || b.fup-a.fup;
+  });
+  var winner = sorted[0];
+  if(!winner || winner.pts===0){ showLoading('Ingen scoringer denne uken ennå'); return; }
+
+  // ── GULLTELEFON ──
+  var gpSorted = Object.values(pstStats).sort(function(a,b){
+    return b.fup-a.fup || b.tens-a.tens;
+  });
+  var gp = gpSorted[0] && gpSorted[0].fup>0 ? gpSorted[0] : null;
+
+  // ── AVDELINGER ──
+  var teamStats = {okern:{g:0,tens:0,pts:0},ryen:{g:0,tens:0,pts:0},lillestrom:{g:0,tens:0,pts:0},fornebu:{g:0,tens:0,pts:0}};
+  Object.values(pstStats).forEach(function(p){
+    if(teamStats[p.loc]){
+      teamStats[p.loc].g+=p.g;
+      teamStats[p.loc].tens+=p.tens;
+      teamStats[p.loc].pts+=p.pts;
+    }
+  });
+  var avd = Object.keys(teamStats).map(function(loc){
+    return Object.assign({loc:loc, navn:TEAM_NAMES[loc], color:TEAM_COLORS[loc]}, teamStats[loc]);
+  }).sort(function(a,b){return b.pts-a.pts||b.tens-a.tens;});
+
+  // ── TOTALS ──
+  var totalScores=0, totalTens=0, totalFup=0;
+  Object.values(pstStats).forEach(function(p){ totalScores+=p.g; totalTens+=p.tens; totalFup+=p.fup; });
+
+  // ── HAT TRICKS ──
+  var hatters = Object.values(pstStats).filter(function(p){return p.hatDays>0;})
+    .sort(function(a,b){return b.hatDays-a.hatDays;});
+
+  // ── RENDER ────────────────────────────────────────
+  var wLoc = winner.loc;
+  var wColor = TEAM_COLORS[wLoc];
+  var wAvdNavn = TEAM_NAMES[wLoc];
+  var medals = ['🥇','🥈','🥉','4.'];
+
+  // Uke-meta
+  document.getElementById('week-meta').textContent =
+    'Uke '+wb.weekNr+' · '+wb.monStr+'–'+wb.sunStr;
+  document.getElementById('wcard-week').textContent =
+    'Uke '+wb.weekNr+' · '+wb.sunStr;
+  document.getElementById('footer-sub').textContent =
+    'Uke '+wb.weekNr+' · '+wb.sunStr+' · VCSO Stor Oslo';
+
+  // Vinnerfoto
+  var photoEl = document.getElementById('winner-photo-wrap');
+  var ini = winner.navn.split(' ').map(function(x){return x[0]}).join('').slice(0,2).toUpperCase();
+  var img = new Image();
+  img.onload = function(){ photoEl.innerHTML='<img src="'+PHOTOS[winner.navn]+'" style="width:100%;height:100%;object-fit:cover;filter:grayscale(20%)">'; };
+  img.onerror = function(){ document.getElementById('winner-initials').textContent=ini; };
+  img.src = PHOTOS[winner.navn];
+
+  // Vinner info
+  document.getElementById('winner-name').textContent = getShort(winner.navn);
+  var avdEl=document.getElementById('winner-avd');
+  avdEl.textContent=wAvdNavn; avdEl.style.color=wColor;
+  document.getElementById('wstat-pts').textContent=winner.pts;
+  document.getElementById('wstat-scores').textContent=winner.g;
+  document.getElementById('wstat-tens').textContent=winner.tens;
+  document.getElementById('wstat-fup').textContent=winner.fup;
+
+  // Badges
+  var badges='';
+  if(winner.hatDays>0) badges+='<div class="badge badge-hat">⭐ Hat Trick</div>';
+  if(winner===gp)      badges+='<div class="badge badge-phone">📞 Gulltelefon</div>';
+  document.getElementById('winner-badges').innerHTML=badges;
+
+  // Totals
+  document.getElementById('total-scores').textContent=totalScores;
+  document.getElementById('total-tens').textContent=totalTens;
+  document.getElementById('total-fup').textContent=totalFup;
+
+  // Avdelinger
+  document.getElementById('avd-list').innerHTML=avd.map(function(a,i){
+    return '<div class="avd-row">'
+      +'<div class="avd-rank" style="color:'+(i===0?'var(--gold2)':i===1?'var(--silver)':i===2?'var(--bronze)':'var(--muted)')+'">'+medals[i]+'</div>'
+      +'<div class="avd-dot" style="background:'+a.color+'"></div>'
+      +'<div style="flex:1">'
+        +'<div class="avd-name" style="color:'+a.color+'">'+a.navn+'</div>'
+        +'<div class="avd-sub">'+a.g+' scoringer · '+a.tens+' tiere</div>'
+      +'</div>'
+      +'<div style="text-align:right">'
+        +'<div class="avd-pts">'+a.pts+'</div>'
+        +'<div style="font-size:9px;color:var(--muted)">poeng</div>'
+      +'</div>'
+      +'</div>';
+  }).join('');
+
+  // Gulltelefon
+  if(gp){
+    document.getElementById('phone-name').textContent=getShort(gp.navn);
+    var gpAvdEl=document.getElementById('phone-avd');
+    gpAvdEl.textContent=TEAM_NAMES[gp.loc]; gpAvdEl.style.color=TEAM_COLORS[gp.loc];
+    document.getElementById('phone-fup').textContent=gp.fup;
+    document.getElementById('phone-section').style.display='block';
+  }
+
+  // Hat tricks
+  if(hatters.length){
+    document.getElementById('hats-list').innerHTML=hatters.map(function(h){
+      var stars=''; for(var i=0;i<h.hatDays;i++) stars+='⭐';
+      var hColor=TEAM_COLORS[h.loc];
+      var hIni=h.navn.split(' ').map(function(x){return x[0]}).join('').slice(0,2).toUpperCase();
+      var avHtml='<div class="hat-photo-ph" style="color:'+hColor+'">'+hIni+'</div>';
+      // Forsøk foto
+      return '<div class="hat-row" data-id="'+h.loc+'">'
+        +'<div class="hat-photo"><img src="'+PHOTOS[h.navn]+'" style="width:100%;height:100%;object-fit:cover;filter:grayscale(100%)" onerror="this.parentNode.innerHTML=\'<div class=hat-photo-ph style=color:'+hColor+'>'+hIni+'</div>\'">'
+        +'</div>'
+        +'<div style="flex:1">'
+          +'<div class="hat-name">'+getShort(h.navn)+'</div>'
+          +'<div class="hat-sub" style="color:'+hColor+'">'+TEAM_NAMES[h.loc]+'</div>'
+        +'</div>'
+        +'<div class="hat-stars">'+stars+'</div>'
+        +'</div>';
+    }).join('');
+    document.getElementById('hats-section').style.display='block';
+  }
+}
+
+// ── PARTIKLER ─────────────────────────────────────
+(function(){
+  var wrap=document.getElementById('particles');
+  var colors=['#f97316','#fbbf24','#fde68a','#86efac','#fff'];
+  for(var i=0;i<18;i++){
+    var p=document.createElement('div');
+    p.className='particle';
+    var sz=2+Math.random()*4;
+    p.style.cssText=['width:'+sz+'px','height:'+sz+'px','left:'+(Math.random()*100)+'%',
+      'background:'+colors[Math.floor(Math.random()*colors.length)],
+      'animation-duration:'+(8+Math.random()*12)+'s',
+      'animation-delay:'+(Math.random()*10)+'s','opacity:0'].join(';');
+    wrap.appendChild(p);
+  }
+})();
+
+// ── AUTO-REFRESH VED UKESLUTT ──────────────────────
+// Sjekker om det er søndag mellom 23:55 og 00:05 — og laster da siden på nytt hvert minutt
+function checkAutoRefresh(){
+  var now=new Date();
+  var isSunday=now.getDay()===0;
+  var h=now.getHours(), m=now.getMinutes();
+  var isWeekend=(isSunday && h===23 && m>=55) || (isSunday && h===0 && m<=5);
+  if(isWeekend) loadAndRender();
+}
+setInterval(checkAutoRefresh, 60000);
+
+// Start
+loadAndRender();
+</script>
+
+</body>
+</html>
