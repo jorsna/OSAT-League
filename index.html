@@ -30,6 +30,7 @@ html,body{background:var(--bg);font-family:'Barlow',sans-serif;color:var(--txt);
 .intro-logo2{font-family:'Anton',sans-serif;font-size:22px;letter-spacing:8px;
   color:#f97316;text-align:center;margin-top:2px;opacity:.95}
 @keyframes logoShine{to{background-position:200% center}}
+.name-short{font-size:13px;font-weight:700;color:var(--txt)}
 .intro-sub{font-size:10px;letter-spacing:4px;text-transform:uppercase;
   color:rgba(255,255,255,.4);margin-top:10px;text-align:center}
 .intro-divider{width:280px;height:2px;
@@ -370,10 +371,15 @@ select:focus,input[type=text]:focus{border-color:#f97316}
   <div class="hdr-in">
     <div class="hdr-top">
       <div class="brand">
-        <div class="crest">&#9733;</div>
+        <div class="crest" style="width:48px;height:48px;font-size:24px">&#9733;</div>
         <div>
-          <div class="t1">VCSO OSAT LEAGUE</div>
-          <div class="t2">Kundetilfredshet 2026
+          <div class="t1" style="font-size:22px;letter-spacing:4px;
+            background:linear-gradient(135deg,#fff 0%,#f97316 40%,#fff 70%,#f97316 100%);
+            background-size:200% auto;
+            -webkit-background-clip:text;background-clip:text;color:transparent;
+            animation:logoShine 3s linear infinite;
+            filter:drop-shadow(0 0 8px rgba(249,115,22,.4))">VCSO OSAT LEAGUE</div>
+          <div class="t2" style="letter-spacing:3px">Kundetilfredshet 2026
             <span class="login-badge" id="role-badge"></span>
           </div>
         </div>
@@ -528,7 +534,18 @@ select:focus,input[type=text]:focus{border-color:#f97316}
         <div style="font-family:'Anton',sans-serif;font-size:13px;color:var(--gold);letter-spacing:1px;margin-bottom:6px">POENGSYSTEM</div>
         <div>&#9733; <strong style="color:var(--txt)">3 poeng</strong> for en 9 eller 10 på kundetilfredshetsmålingen.</div>
         <div style="margin-top:4px">&#9733; <strong style="color:var(--txt)">10-ere teller mest</strong> som tiebreaker — ved likt antall poeng vinner den med flest 10-ere.</div>
-        <div style="margin-top:4px">&#9734; <strong style="color:var(--txt)">Fulgt opp</strong> — antall kunder fulgt opp etter utlevering vises som en "assist"-statistikk og teller ved videre tiebreaker.</div>
+        <div style="margin-top:4px">&#9734; <strong style="color:var(--txt)">Fulgt opp</strong> — antall kunder fulgt opp etter utlevering vises som assist-statistikk og teller ved videre tiebreaker.</div>
+      </div>
+      <div style="padding:10px 0;border-bottom:1px solid var(--b1)">
+        <div style="font-family:'Anton',sans-serif;font-size:13px;color:var(--gold);letter-spacing:1px;margin-bottom:6px">BADGES</div>
+        <div>&#128081; <strong style="color:var(--txt)">MVP</strong> — flest scoringer i dag. Vises øverst på siden.</div>
+        <div style="margin-top:4px">&#128293; <strong style="color:var(--txt)">Streak</strong> — 3 eller flere dager på rad med minst én score.</div>
+        <div style="margin-top:4px">&#11088; <strong style="color:var(--txt)">Hat Trick</strong> — 3 eller flere scoringer på én dag. Samles opp og vises i Hall of Fame.</div>
+        <div style="margin-top:4px">&#128241; <strong style="color:var(--txt)">Gulltelefon</strong> — flest kunder fulgt opp totalt. Vises i Hall of Fame. Ved likt antall teller flest 10-ere.</div>
+      </div>
+      <div style="padding:10px 0;border-bottom:1px solid var(--b1)">
+        <div style="font-family:'Anton',sans-serif;font-size:13px;color:var(--gold);letter-spacing:1px;margin-bottom:6px">UKESVINNER</div>
+        <div>Kåres søndag kl. 23:59. Flest poeng vinner — ved likt antall teller flest 10-ere, deretter flest fulgt opp. Legges i Hall of Fame.</div>
       </div>
       <div style="padding:10px 0;border-bottom:1px solid var(--b1)">
         <div style="font-family:'Anton',sans-serif;font-size:13px;color:var(--gold);letter-spacing:1px;margin-bottom:6px">AVDELINGER</div>
@@ -536,7 +553,7 @@ select:focus,input[type=text]:focus{border-color:#f97316}
       </div>
       <div style="padding:10px 0">
         <div style="font-family:'Anton',sans-serif;font-size:13px;color:var(--gold);letter-spacing:1px;margin-bottom:6px">REGISTRERING</div>
-        <div>1. Velg din PST og måned</div>
+        <div>1. Velg PST</div>
         <div>2. Velg om kunden ga 9 eller 10</div>
         <div>3. Huk av "Fulgt opp" om kunden ble kontaktet etter levering</div>
         <div>4. Trykk registrer!</div>
@@ -621,47 +638,47 @@ var LL = {
 // ─── PST-ER ──────────────────────────────────────────────────
 var SELGERE_RAW = [
   // Fornebu
-  { navn: 'Aldahir Ramirez',              loc: 'fornebu' },
-  { navn: 'Aras Fasal Omar',              loc: 'fornebu' },
-  { navn: 'Bawar Faraj',                  loc: 'fornebu' },
-  { navn: 'Brage Grammeltvedt Grefstad',  loc: 'fornebu' },
-  { navn: 'Gjermund Mauland',             loc: 'fornebu' },
-  { navn: 'Gohar Ehtisham',               loc: 'fornebu' },
-  { navn: 'Kaniwar Nassan',               loc: 'fornebu' },
-  { navn: 'Marek Zebrowski',              loc: 'fornebu' },
-  { navn: 'Mathuran Sandrakumar',         loc: 'fornebu' },
-  { navn: 'Mohammad Sirwan Salar',        loc: 'fornebu' },
-  { navn: 'Moosa Butt',                   loc: 'fornebu' },
+  { navn: 'Aldahir Ramirez',              short: 'Aldahir Ramirez',          loc: 'fornebu' },
+  { navn: 'Aras Fasal Omar',              short: 'Aras F. Omar',             loc: 'fornebu' },
+  { navn: 'Bawar Faraj',                  short: 'Bawar Faraj',              loc: 'fornebu' },
+  { navn: 'Brage Grammeltvedt Grefstad',  short: 'Brage G. Grefstad',        loc: 'fornebu' },
+  { navn: 'Gjermund Mauland',             short: 'Gjermund Mauland',         loc: 'fornebu' },
+  { navn: 'Gohar Ehtisham',               short: 'Gohar Ehtisham',           loc: 'fornebu' },
+  { navn: 'Kaniwar Nassan',               short: 'Kaniwar Nassan',           loc: 'fornebu' },
+  { navn: 'Marek Zebrowski',              short: 'Marek Zebrowski',          loc: 'fornebu' },
+  { navn: 'Mathuran Sandrakumar',         short: 'Mathuran Sandrakumar',     loc: 'fornebu' },
+  { navn: 'Mohammad Sirwan Salar',        short: 'Mohammad S. Salar',        loc: 'fornebu' },
+  { navn: 'Moosa Butt',                   short: 'Moosa Butt',               loc: 'fornebu' },
   // Lillestrøm
-  { navn: 'Aleksander Pettersen',         loc: 'lillestrom' },
-  { navn: 'Christopher Sj\u00f8str\u00f8m', loc: 'lillestrom' },
-  { navn: 'Dennis Uggerud',               loc: 'lillestrom' },
-  { navn: 'George Xheki Hanelli',         loc: 'lillestrom' },
-  { navn: 'Hedvig \u00d8yen Larsen',      loc: 'lillestrom' },
-  { navn: 'John Arild Bergengen',         loc: 'lillestrom' },
-  { navn: 'J\u00f8rn S\u00f8rensen',      loc: 'lillestrom' },
-  { navn: 'Martin Pedersen',              loc: 'lillestrom' },
-  { navn: 'Pavel Jizba',                  loc: 'lillestrom' },
-  { navn: 'Tom Kjetil Sandmoe',           loc: 'lillestrom' },
+  { navn: 'Aleksander Pettersen',         short: 'Aleksander Pettersen',     loc: 'lillestrom' },
+  { navn: 'Christopher Sj\u00f8str\u00f8m', short: 'Christopher Sj\u00f8str\u00f8m', loc: 'lillestrom' },
+  { navn: 'Dennis Uggerud',               short: 'Dennis Uggerud',           loc: 'lillestrom' },
+  { navn: 'George Xheki Hanelli',         short: 'George X. Hanelli',        loc: 'lillestrom' },
+  { navn: 'Hedvig \u00d8yen Larsen',      short: 'Hedvig \u00d8. Larsen',    loc: 'lillestrom' },
+  { navn: 'John Arild Bergengen',         short: 'John A. Bergengen',        loc: 'lillestrom' },
+  { navn: 'J\u00f8rn S\u00f8rensen',      short: 'J\u00f8rn S\u00f8rensen',  loc: 'lillestrom' },
+  { navn: 'Martin Pedersen',              short: 'Martin Pedersen',          loc: 'lillestrom' },
+  { navn: 'Pavel Jizba',                  short: 'Pavel Jizba',              loc: 'lillestrom' },
+  { navn: 'Tom Kjetil Sandmoe',           short: 'Tom K. Sandmoe',           loc: 'lillestrom' },
   // Økern
-  { navn: 'Ali Husseini',                 loc: 'okern' },
-  { navn: 'Basil Omar',                   loc: 'okern' },
-  { navn: 'Emirhan Cimen',                loc: 'okern' },
-  { navn: 'Shezad Masih Azam',            loc: 'okern' },
+  { navn: 'Ali Husseini',                 short: 'Ali Husseini',             loc: 'okern' },
+  { navn: 'Basil Omar',                   short: 'Basil Omar',               loc: 'okern' },
+  { navn: 'Emirhan Cimen',                short: 'Emirhan Cimen',            loc: 'okern' },
+  { navn: 'Shezad Masih Azam',            short: 'Shezad M. Azam',           loc: 'okern' },
   // Ryen
-  { navn: 'Abdulghani Ajjan',             loc: 'ryen' },
-  { navn: 'Algirdas Ambrozaitis',         loc: 'ryen' },
-  { navn: 'Biniam Tesfamichael Tekle',    loc: 'ryen' },
-  { navn: 'Elias Palacios',               loc: 'ryen' },
-  { navn: 'Harvinder Singh Kular',        loc: 'ryen' },
-  { navn: 'Joel Andom Jiji',              loc: 'ryen' },
-  { navn: 'Kristoffer Langerud',          loc: 'ryen' },
-  { navn: 'Marco Bj\u00f8rnstad',         loc: 'ryen' },
-  { navn: 'Mohammad Yousaf Ahmed',        loc: 'ryen' },
-  { navn: 'Sindre Andr\u00e8 T\u00f8mte', loc: 'ryen' },
-  { navn: 'Sipan Zewki',                  loc: 'ryen' },
-  { navn: 'Vidar Flesvik',                loc: 'ryen' },
-  { navn: 'Wajahit Elahit',               loc: 'ryen' },
+  { navn: 'Abdulghani Ajjan',             short: 'Abdulghani Ajjan',         loc: 'ryen' },
+  { navn: 'Algirdas Ambrozaitis',         short: 'Algirdas Ambrozaitis',     loc: 'ryen' },
+  { navn: 'Biniam Tesfamichael Tekle',    short: 'Biniam T. Tekle',          loc: 'ryen' },
+  { navn: 'Elias Palacios',               short: 'Elias Palacios',           loc: 'ryen' },
+  { navn: 'Harvinder Singh Kular',        short: 'Harvinder S. Kular',       loc: 'ryen' },
+  { navn: 'Joel Andom Jiji',              short: 'Joel A. Jiji',             loc: 'ryen' },
+  { navn: 'Kristoffer Langerud',          short: 'Kristoffer Langerud',      loc: 'ryen' },
+  { navn: 'Marco Bj\u00f8rnstad',         short: 'Marco Bj\u00f8rnstad',     loc: 'ryen' },
+  { navn: 'Mohammad Yousaf Ahmed',        short: 'Mohammad Y. Ahmed',        loc: 'ryen' },
+  { navn: 'Sindre Andr\u00e8 T\u00f8mte', short: 'Sindre A. T\u00f8mte',    loc: 'ryen' },
+  { navn: 'Sipan Zewki',                  short: 'Sipan Zewki',              loc: 'ryen' },
+  { navn: 'Vidar Flesvik',                short: 'Vidar Flesvik',            loc: 'ryen' },
+  { navn: 'Wajahit Elahit',               short: 'Wajahit Elahit',           loc: 'ryen' },
 ];
 
 var SELGERE = SELGERE_RAW.map(function(s) {
@@ -675,7 +692,7 @@ var SELGERE = SELGERE_RAW.map(function(s) {
     .replace(/\u00e0/g,'a').replace(/\u00fc/g,'u').replace(/\u00e4/g,'a')
     .replace(/[^a-z0-9_]/g,'');
   var initials = s.navn.split(' ').map(function(x){return x[0]}).join('').slice(0,2).toUpperCase();
-  return { navn:s.navn, loc:s.loc, id:id, initials:initials, color:col,
+  return { navn:s.navn, short:s.short||s.navn, loc:s.loc, id:id, initials:initials, color:col,
     bg:'rgba('+rv+','+gv+','+bv+',.2)' };
 });
 
@@ -829,11 +846,62 @@ function selgerDots(navn) {
   }).join('');
 }
 
+// 🔥 STREAK: minst 3 dager PÅ RAD med score
+function hasStreak(navn) {
+  var streak=0;
+  for(var i=0;i<30;i++){
+    var d=daysAgo(i);
+    var n=sales.filter(function(s){return s.pst===navn && tsDate(s.ts)===d && !s.deleted && (s.score===9||s.score===10)}).length;
+    if(n>0) streak++;
+    else break;
+  }
+  return streak>=3;
+}
+
+// 🎩 HAT TRICK: antall dager med 3+ scoringer
+function hatTrickCount(navn) {
+  var days={};
+  sales.forEach(function(s){
+    if(s.pst===navn && !s.deleted && (s.score===9||s.score===10)){
+      var d=tsDate(s.ts); days[d]=(days[d]||0)+1;
+    }
+  });
+  return Object.keys(days).filter(function(d){return days[d]>=3;}).length;
+}
+
+// 📞 GULLTELEFON: flest fulgt opp totalt
+function goldenPhoneLeader() {
+  var best=null, bestFup=0, bestTens=0;
+  SELGERE.forEach(function(s){
+    var fup=followupFor(s.navn,'all');
+    var tens=tensFor(s.navn,'all');
+    if(fup>bestFup||(fup===bestFup&&tens>bestTens)){
+      best=s; bestFup=fup; bestTens=tens;
+    }
+  });
+  return best && bestFup>0 ? best : null;
+}
+
+// 👑 MVP: flest scoringer i dag
+function todayMVP() {
+  var today=todayStr();
+  var counts={};
+  sales.forEach(function(s){
+    if(!s.deleted && tsDate(s.ts)===today && (s.score===9||s.score===10))
+      counts[s.pst]=(counts[s.pst]||0)+1;
+  });
+  var best=0;
+  Object.keys(counts).forEach(function(n){if(counts[n]>best) best=counts[n];});
+  if(!best) return [];
+  return Object.keys(counts).filter(function(n){return counts[n]===best;});
+}
+
 // ─── RENDER: PST-ER ──────────────────────────────────────────
 function renderInd() {
   var el = document.getElementById('tbl-ind');
   if(!el) return;
   var m = curMonth;
+  var mvpNames = todayMVP();
 
   var rows = SELGERE.map(function(s) {
     var g = goalsFor(s.navn, m);
@@ -844,7 +912,6 @@ function renderInd() {
     return b.pts - a.pts || b.tens - a.tens || b.fup - a.fup || a.navn.localeCompare(b.navn);
   });
 
-  // Rang med deling
   var ranks = [];
   rows.forEach(function(r, i) {
     if(i===0) ranks.push(1);
@@ -866,22 +933,29 @@ function renderInd() {
       ? '<img src="'+SELGER_PHOTOS[r.id]+'" style="width:100%;height:100%;object-fit:cover;filter:grayscale(100%)">'
       : r.initials;
 
-    // Vis 9s og 10s som gylne tall
     var nines = r.g - r.tens;
     var scoreHtml = '<div class="score-display">';
-    if(r.tens>0) scoreHtml += '<span style="font-family:Anton,sans-serif;font-size:11px;background:linear-gradient(135deg,#ffd700,#ffec80);-webkit-background-clip:text;background-clip:text;color:transparent">'+r.tens+'&#10005;10 '+(nines>0?nines+'&#10005;9':'')+'</span>';
-    else if(r.g>0) scoreHtml += '<span style="font-family:Anton,sans-serif;font-size:11px;background:linear-gradient(135deg,#ffd700,#ffec80);-webkit-background-clip:text;background-clip:text;color:transparent">'+r.g+'&#10005;9</span>';
+    if(r.tens>0) scoreHtml += '<span style="font-family:Anton,sans-serif;font-size:11px;color:var(--gold)">'+r.tens+'&#10005;10'+(nines>0?' '+nines+'&#10005;9':'')+'</span>';
+    else if(r.g>0) scoreHtml += '<span style="font-family:Anton,sans-serif;font-size:11px;color:var(--gold)">'+r.g+'&#10005;9</span>';
     scoreHtml += '</div>';
 
-    // Fulgt opp
     var fupHtml = r.fup>0
       ? '<span class="fup-badge">'+r.fup+'&#10022;</span>'
       : '<span style="font-size:9px;color:var(--muted)">-</span>';
 
+    // Badges bak navn
+    var isMVP = mvpNames.indexOf(r.navn)!==-1;
+    var streak = hasStreak(r.navn);
+    var hats = hatTrickCount(r.navn);
+    var badges = '';
+    if(isMVP) badges += ' <span title="MVP i dag" style="font-size:13px">&#128081;</span>';
+    if(streak) badges += ' <span title="3+ dager på rad!" style="font-size:13px">&#128293;</span>';
+    if(hats>0) for(var h=0;h<hats;h++) badges += '<span title="Hat Trick!" style="font-size:11px">&#11088;</span>';
+
     return '<div class="trow zm" data-navn="'+r.navn+'" style="animation-delay:'+(i*0.03)+'s">'
       + '<div class="pos-n" style="color:'+pc+';font-size:'+(isTied?'11px':'13px')+'">'+rankLabel+'</div>'
       + '<div><div class="av" style="background:'+r.bg+';color:'+r.color+';overflow:hidden;padding:0">'+avHtml+'</div></div>'
-      + '<div class="name-c"><div class="name-main">'+r.navn+'</div><div class="name-sub" style="color:'+r.color+'">'+(LL[r.loc]||r.loc)+'</div></div>'
+      + '<div class="name-c"><div class="name-main">'+r.short+badges+'</div><div class="name-sub" style="color:'+r.color+'">'+(LL[r.loc]||r.loc)+'</div></div>'
       + '<div class="sc pts">'+r.pts+'</div>'
       + scoreHtml
       + '<div><div class="form-dots">'+selgerDots(r.navn)+'</div></div>'
@@ -951,28 +1025,69 @@ function renderHoF() {
     .sort(function(a,b){return b.g-a.g||b.tens-a.tens||b.fup-a.fup;})
     .slice(0,3);
 
-  if(!topPst.length){ hof.innerHTML='<div style="color:var(--muted);font-size:13px;font-style:italic;padding:20px">Ingen scoringer registrert enn\u00e5</div>'; return; }
+  var html = '';
 
-  hof.innerHTML = topPst.map(function(x,i){
-    var medals = ['&#127947;','&#129352;','&#129353;'];
-    var s = x.s;
-    var hasPhoto = SELGER_PHOTOS[s.id];
-    var avHtml = hasPhoto
-      ? '<img src="'+SELGER_PHOTOS[s.id]+'" style="width:100%;height:100%;object-fit:cover">'
-      : '<div style="font-size:16px;font-weight:900;color:'+s.color+'">'+s.initials+'</div>';
-    return '<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--b1)">'
-      +'<div style="font-size:24px">'+medals[i]+'</div>'
-      +'<div style="width:44px;height:44px;border-radius:50%;overflow:hidden;border:2px solid var(--gold);flex-shrink:0">'+avHtml+'</div>'
-      +'<div style="flex:1">'
-        +'<div style="font-family:Anton,sans-serif;font-size:15px">'+s.navn+'</div>'
+  // Toppscorere
+  if(!topPst.length){
+    html += '<div style="color:var(--muted);font-size:13px;font-style:italic;padding:12px 0">Ingen scoringer registrert ennå</div>';
+  } else {
+    html += '<div style="font-family:Anton,sans-serif;font-size:11px;color:var(--gold);letter-spacing:2px;margin-bottom:8px;text-transform:uppercase">Toppscorere</div>';
+    html += topPst.map(function(x,i){
+      var medals=['&#127947;','&#129352;','&#129353;'];
+      var s=x.s;
+      var hasPhoto=SELGER_PHOTOS[s.id];
+      var avHtml=hasPhoto?'<img src="'+SELGER_PHOTOS[s.id]+'" style="width:100%;height:100%;object-fit:cover">':'<div style="font-size:16px;font-weight:900;color:'+s.color+'">'+s.initials+'</div>';
+      return '<div style="display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--b1)">'
+        +'<div style="font-size:22px">'+medals[i]+'</div>'
+        +'<div style="width:40px;height:40px;border-radius:50%;overflow:hidden;border:2px solid var(--gold);flex-shrink:0">'+avHtml+'</div>'
+        +'<div style="flex:1"><div style="font-family:Anton,sans-serif;font-size:14px;color:var(--txt)">'+s.short+'</div>'
+          +'<div style="font-size:9px;color:'+s.color+'">'+( LL[s.loc]||s.loc)+'</div></div>'
+        +'<div style="text-align:right">'
+          +'<div style="font-family:Anton,sans-serif;font-size:17px;color:var(--gold)">'+x.g*PTS+' p</div>'
+          +'<div style="font-size:9px;color:var(--muted)">'+x.tens+' &#10005; 10</div>'
+        +'</div></div>';
+    }).join('');
+  }
+
+  // Hat Tricks
+  var hatters = SELGERE.map(function(s){
+    return {s:s, hats:hatTrickCount(s.navn)};
+  }).filter(function(x){return x.hats>0;})
+    .sort(function(a,b){return b.hats-a.hats;});
+
+  if(hatters.length){
+    html += '<div style="font-family:Anton,sans-serif;font-size:11px;color:var(--gold);letter-spacing:2px;margin:16px 0 8px;text-transform:uppercase">&#11088; Hat Tricks</div>';
+    html += hatters.map(function(x){
+      var s=x.s;
+      var stars='';
+      for(var h=0;h<x.hats;h++) stars+='&#11088;';
+      return '<div style="display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid var(--b1)">'
+        +'<div style="font-family:Anton,sans-serif;font-size:13px;color:var(--txt);flex:1">'+s.short+'</div>'
         +'<div style="font-size:9px;color:'+s.color+'">'+( LL[s.loc]||s.loc)+'</div>'
-      +'</div>'
+        +'<div style="font-size:14px;letter-spacing:1px">'+stars+'</div>'
+        +'</div>';
+    }).join('');
+  }
+
+  // Gulltelefon
+  var gpLeader = goldenPhoneLeader();
+  if(gpLeader){
+    var gpFup = followupFor(gpLeader.navn,'all');
+    html += '<div style="font-family:Anton,sans-serif;font-size:11px;color:var(--gold);letter-spacing:2px;margin:16px 0 8px;text-transform:uppercase">&#128241; Gulltelefon</div>';
+    var hasPhoto=SELGER_PHOTOS[gpLeader.id];
+    var gpAv=hasPhoto?'<img src="'+SELGER_PHOTOS[gpLeader.id]+'" style="width:100%;height:100%;object-fit:cover">':'<div style="font-size:14px;font-weight:900;color:'+gpLeader.color+'">'+gpLeader.initials+'</div>';
+    html += '<div style="display:flex;align-items:center;gap:12px;padding:8px 0">'
+      +'<div style="font-size:22px">&#128241;</div>'
+      +'<div style="width:40px;height:40px;border-radius:50%;overflow:hidden;border:2px solid var(--gold);flex-shrink:0">'+gpAv+'</div>'
+      +'<div style="flex:1"><div style="font-family:Anton,sans-serif;font-size:14px;color:var(--txt)">'+gpLeader.short+'</div>'
+        +'<div style="font-size:9px;color:'+gpLeader.color+'">'+( LL[gpLeader.loc]||gpLeader.loc)+'</div></div>'
       +'<div style="text-align:right">'
-        +'<div style="font-family:Anton,sans-serif;font-size:18px;color:var(--gold)">'+x.g*PTS+' p</div>'
-        +'<div style="font-size:9px;color:var(--muted)">'+x.tens+' &#10005; 10</div>'
-      +'</div>'
-      +'</div>';
-  }).join('');
+        +'<div style="font-family:Anton,sans-serif;font-size:17px;color:var(--gold)">'+gpFup+' &#10022;</div>'
+        +'<div style="font-size:9px;color:var(--muted)">fulgt opp</div>'
+      +'</div></div>';
+  }
+
+  hof.innerHTML = html;
 }
 
 // ─── RENDER: STATISTIKK ──────────────────────────────────────
@@ -1137,29 +1252,23 @@ function setLocFilter(f, btn) {
 
 // ─── TOP BANNER ──────────────────────────────────────────────
 function updateTopBanner() {
-  var today=todayStr();
-  var todaySales=sales.filter(function(s){return !s.deleted && tsDate(s.ts)===today && (s.score===9||s.score===10);});
+  var mvpNames = todayMVP();
   var banner=document.getElementById('top-banner');
   if(!banner) return;
-  if(!todaySales.length){ banner.style.display='none'; return; }
-
-  var counts={};
-  todaySales.forEach(function(s){ counts[s.pst]=(counts[s.pst]||0)+1; });
-  var best=0;
-  Object.keys(counts).forEach(function(n){ if(counts[n]>best) best=counts[n]; });
-  var tied=Object.keys(counts).filter(function(n){ return counts[n]===best; });
+  if(!mvpNames.length){ banner.style.display='none'; return; }
 
   banner.style.display='flex';
-  banner.innerHTML='<div style="font-size:20px;flex-shrink:0">&#9733;</div>';
-  tied.forEach(function(navn){
+  banner.innerHTML='<div style="font-size:20px;flex-shrink:0">&#128081;</div>';
+  mvpNames.forEach(function(navn){
     var sObj=SELGERE.find(function(x){return x.navn===navn})||{};
     var hasPhoto=SELGER_PHOTOS[sObj.id];
     var avHtml=hasPhoto?'<img src="'+SELGER_PHOTOS[sObj.id]+'" style="width:100%;height:100%;object-fit:cover;filter:grayscale(100%)">':sObj.initials;
+    var cnt=sales.filter(function(s){return s.pst===navn&&!s.deleted&&tsDate(s.ts)===todayStr()&&(s.score===9||s.score===10)}).length;
     banner.innerHTML+='<div style="display:flex;align-items:center;gap:8px;margin-right:14px;flex-shrink:0">'
       +'<div style="width:34px;height:34px;border-radius:50%;overflow:hidden;border:2px solid var(--gold);flex-shrink:0">'+avHtml+'</div>'
-      +'<div><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--gold)">Dagens topp</div>'
-      +'<div style="font-size:14px;font-weight:700;color:var(--txt)">'+navn+'</div>'
-      +'<div style="font-size:11px;color:var(--muted)">'+best+' score i dag</div></div>'
+      +'<div><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--gold)">&#128081; MVP i dag</div>'
+      +'<div style="font-size:14px;font-weight:700;color:var(--txt)">'+sObj.short+'</div>'
+      +'<div style="font-size:11px;color:var(--muted)">'+cnt+' score i dag</div></div>'
       +'</div>';
   });
 }
