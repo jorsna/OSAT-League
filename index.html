@@ -154,7 +154,7 @@ html,body{background:var(--bg);font-family:'Barlow',sans-serif;color:var(--txt);
 /* FORM DOTS */
 .form-dots{display:flex;gap:3px;justify-content:center;align-items:center}
 .fd{width:13px;height:13px;border-radius:50%;cursor:default;flex-shrink:0}
-.fd.sold{background:var(--g)}.fd.empty{background:#ddd}
+.fd.sold{background:var(--g)}.fd.empty{background:#ef4444}
 
 .form-legend{display:flex;gap:12px;padding:8px 12px;background:var(--card2);
   border-top:1px solid var(--b1);font-size:9px;color:var(--muted);flex-wrap:wrap}
@@ -334,7 +334,7 @@ select:focus,input[type=text]:focus{border-color:#f97316}
   <div class="login-section">
 
     <!-- Hovedknapp: Se resultater (ingen passord) -->
-    <button class="btn-pst" onclick="enterAsGuest()">&#128065;&nbsp; Se resultater</button>
+    <button class="btn-pst" onclick="enterAsGuest()">&#128065;&nbsp; Oversikt</button>
 
     <!-- Admin-seksjon: liten diskret knapp -->
     <div id="admin-toggle" style="margin-top:6px">
@@ -460,17 +460,9 @@ select:focus,input[type=text]:focus{border-color:#f97316}
 <div class="reg-outer" id="reg-outer" style="display:none">
   <div class="reg-card">
     <input type="hidden" id="sel-loc" value="">
-    <div class="fg2">
-      <select id="sel-pst"><option value="">PST...</option></select>
-      <select id="sel-mnd">
-        <option value="">Måned...</option>
-        <option value="jan">Januar</option><option value="feb">Februar</option>
-        <option value="mar">Mars</option><option value="apr">April</option>
-        <option value="mai">Mai</option><option value="jun">Juni</option>
-        <option value="jul">Juli</option><option value="aug">August</option>
-        <option value="sep">September</option><option value="okt">Oktober</option>
-        <option value="nov">November</option><option value="des">Desember</option>
-      </select>
+    <input type="hidden" id="sel-mnd" value="all">
+    <div style="margin-bottom:6px">
+      <select id="sel-pst"><option value="">Velg PST...</option></select>
     </div>
 
     <!-- Velg 9 eller 10 -->
@@ -603,7 +595,7 @@ const SELGER_PHOTOS = {
 
 // ─── KONFIGURASJON ───────────────────────────────────────────
 // BYTT UT disse med dine egne Supabase-verdier
-var SUPABASE_URL = 'https://aemboxqpaeyfdzlmghxe.supabase.co';
+var SUPABASE_URL = 'https://aemboxqpaeyfdlzmghxe.supabase.co';
 var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFlbWJveHFwYWV5ZmRsem1naHhlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3OTIzNTQsImV4cCI6MjA5NDM2ODM1NH0.vKRaz0bRJm621eKgtF7iXh23Zqdh0qNuriMgDMhJ8Yw';
 var API = SUPABASE_URL + '/rest/v1/osat_scores';
 
@@ -715,10 +707,14 @@ function sbH() {
 
 function fetchSales() {
   showStatus('Henter data...');
-  fetch(API + '?deleted=eq.false&order=ts.desc&limit=2000', { headers: sbH() })
+  fetch(API + '?deleted=eq.false&order=ts.desc&limit=2000', {
+    method: 'GET',
+    mode: 'cors',
+    headers: sbH()
+  })
     .then(function(r){
       if(r.status === 404) { sales=[]; hideStatus(); renderAll(); return null; }
-      if(!r.ok) return r.text().then(function(t){ throw new Error('HTTP '+r.status+': '+t.slice(0,80)); });
+      if(!r.ok) return r.text().then(function(t){ throw new Error('HTTP '+r.status+': '+t.slice(0,120)); });
       return r.json();
     })
     .then(function(data){
@@ -728,21 +724,36 @@ function fetchSales() {
       renderAll();
     })
     .catch(function(e){
-      showStatus('Feil: '+e.message+' — sjekk at Supabase-tabellen er opprettet', true);
+      var msg = e.message || 'Ukjent feil';
+      if(msg.indexOf('fetch')!==-1 || msg.indexOf('Load')!==-1 || msg.indexOf('network')!==-1) {
+        showStatus('Nettverksfeil — er Supabase-prosjektet aktivt? Sjekk at tabellen er opprettet og at siden kjøres over https://', true);
+      } else {
+        showStatus('Feil: ' + msg, true);
+      }
       sales=[];
       renderAll();
     });
 }
 
 function insertSale(obj, cb) {
-  fetch(API, { method:'POST', headers:sbH(), body:JSON.stringify(obj) })
-    .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+  fetch(API, {
+    method: 'POST',
+    mode: 'cors',
+    headers: sbH(),
+    body: JSON.stringify(obj)
+  })
+    .then(function(r){ if(!r.ok) return r.text().then(function(t){ throw new Error('HTTP '+r.status+': '+t.slice(0,120)); }); return r.json(); })
     .then(function(d){ var ins = Array.isArray(d)?d[0]:d; if(ins) sales.unshift(ins); cb(null); })
     .catch(function(e){ cb(e); });
 }
 
 function deleteSale(id, cb) {
-  fetch(API+'?id=eq.'+id, { method:'PATCH', headers:sbH(), body:JSON.stringify({deleted:true}) })
+  fetch(API+'?id=eq.'+id, {
+    method: 'PATCH',
+    mode: 'cors',
+    headers: sbH(),
+    body: JSON.stringify({deleted:true})
+  })
     .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); sales=sales.filter(function(s){return s.id!==id}); cb(null); })
     .catch(function(e){ cb(e); });
 }
@@ -1206,10 +1217,11 @@ function toggleFup() {
 // ─── REGISTRER SCORE ─────────────────────────────────────────
 function reg() {
   var pst = document.getElementById('sel-pst').value;
-  var mnd = document.getElementById('sel-mnd').value;
   if(!pst){ toast('Velg PST!'); return; }
-  if(!mnd){ toast('Velg måned!'); return; }
   if(!selScore){ toast('Velg 9 eller 10!'); return; }
+
+  var mndMap = ['jan','feb','mar','apr','mai','jun','jul','aug','sep','okt','nov','des'];
+  var mnd = mndMap[new Date().getMonth()];
 
   var sObj = SELGERE.find(function(x){return x.navn===pst})||{};
   var now = new Date();
@@ -1225,7 +1237,6 @@ function reg() {
 
     // Reset
     document.getElementById('sel-pst').value='';
-    document.getElementById('sel-mnd').value='';
     document.getElementById('chk-fup').checked=false;
     selScore=null;
     document.getElementById('btn-score-9').classList.remove('selected');
@@ -1320,7 +1331,7 @@ function updateRoleBadge() {
     b.style.color='#f97316';
     b.style.border='1px solid rgba(249,115,22,.35)';  } else {
     b.className='login-badge badge-tilskuer';
-    b.textContent='\uD83D\uDC41 Tilskuer';
+    b.textContent='\uD83D\uDC41 Oversikt';
   }
 }
 
