@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VCSO OSAT League 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@300;400;700;900&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --gold: #f97316;
+  --gold2: #fbbf24;
+  --okern: #fca5a5;
+  --ryen: #fde047;
+  --lillestrom: #86efac;
+  --fornebu: #93c5fd;
+}
+
+html, body {
+  width: 100%; height: 100%;
+  background: #000;
+  font-family: 'Montserrat', sans-serif;
+  overflow-x: hidden;
+}
+
+/* ── CANVAS BAKGRUNN ── */
+#bg-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+}
+
+/* ── HJØRNEDEKOR ── */
+.corner {
+  position: fixed;
+  width: 48px; height: 48px;
+  z-index: 10;
+  pointer-events: none;
+  opacity: 0.5;
+}
+.corner-tl { top: 18px; left: 18px; border-top: 1px solid var(--gold); border-left: 1px solid var(--gold); }
+.corner-tr { top: 18px; right: 18px; border-top: 1px solid var(--gold); border-right: 1px solid var(--gold); }
+.corner-bl { bottom: 18px; left: 18px; border-bottom: 1px solid var(--gold); border-left: 1px solid var(--gold); }
+.corner-br { bottom: 18px; right: 18px; border-bottom: 1px solid var(--gold); border-right: 1px solid var(--gold); }
+
+.scanline {
+  position: fixed;
+  left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(249,115,22,0.5), transparent);
+  animation: scan 6s linear infinite;
+  z-index: 10;
+  pointer-events: none;
+  top: 0;
+}
+@keyframes scan {
+  0%   { top: -2px; opacity: 0; }
+  4%   { opacity: 1; }
+  96%  { opacity: 1; }
+  100% { top: 100vh; opacity: 0; }
+}
+
+/* ── HOVED-SCENE ── */
+.scene {
+  position: relative;
+  z-index: 2;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 60px 20px 80px;
+}
+
+/* ── EMBLEM ── */
+.emblem-wrap {
+  position: relative;
+  width: 130px; height: 130px;
+  margin-bottom: 36px;
+  animation: emblemFloat 4s ease-in-out infinite;
+}
+@keyframes emblemFloat {
+  0%, 100% { transform: translateY(0); filter: drop-shadow(0 0 22px rgba(249,115,22,0.5)); }
+  50%       { transform: translateY(-6px); filter: drop-shadow(0 0 48px rgba(249,115,22,0.9)); }
+}
+.emblem-ring-anim {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba(249,115,22,0.3);
+  animation: ringPulse 3s ease-out infinite;
+}
+.emblem-ring-anim:nth-child(1) { inset: -16px; animation-delay: 0s; }
+.emblem-ring-anim:nth-child(2) { inset: -34px; animation-delay: 1s; }
+.emblem-ring-anim:nth-child(3) { inset: -52px; animation-delay: 2s; }
+@keyframes ringPulse {
+  0%   { opacity: 0.7; transform: scale(0.92); }
+  100% { opacity: 0;   transform: scale(1.25); }
+}
+.emblem-circle {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at 38% 32%, rgba(255,255,255,0.1), transparent 55%),
+              linear-gradient(145deg, #1c0900, #080300);
+  border: 1.5px solid rgba(249,115,22,0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── TITTEL ── */
+.title-block {
+  text-align: center;
+  margin-bottom: 28px;
+  opacity: 0;
+  animation: fadeUp 1s ease forwards 0.4s;
+}
+.eyebrow {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 6px;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 14px;
+  opacity: 0.8;
+}
+.main-title {
+  font-family: 'Anton', sans-serif;
+  font-size: clamp(80px, 22vw, 130px);
+  letter-spacing: 16px;
+  line-height: 0.9;
+  background: linear-gradient(150deg,
+    #fff 0%, #f97316 18%, #fbbf24 40%, #f97316 60%, #fff 78%, #f97316 100%);
+  background-size: 300% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shine 4.5s linear infinite;
+  display: block;
+}
+@keyframes shine { to { background-position: 300% center; } }
+.sub-title {
+  font-size: clamp(10px, 2.5vw, 14px);
+  font-weight: 300;
+  letter-spacing: 10px;
+  color: rgba(249,115,22,0.7);
+  text-transform: uppercase;
+  margin-top: 10px;
+}
+
+/* ── DIVIDER ── */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  max-width: 500px;
+  margin: 20px 0;
+  opacity: 0;
+  animation: fadeUp 1s ease forwards 0.8s;
+}
+.div-line {
+  flex: 1; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(249,115,22,0.55), transparent);
+}
+.div-gem {
+  width: 7px; height: 7px;
+  background: var(--gold);
+  transform: rotate(45deg);
+  box-shadow: 0 0 10px rgba(249,115,22,0.9);
+}
+
+/* ── TAGLINE ── */
+.tagline {
+  font-size: clamp(10px, 2.5vw, 13px);
+  font-weight: 300;
+  letter-spacing: 4px;
+  color: rgba(255,255,255,0.4);
+  text-transform: uppercase;
+  text-align: center;
+  margin-bottom: 56px;
+  opacity: 0;
+  animation: fadeUp 1s ease forwards 1s;
+}
+
+/* ════════════════════════════════════════
+   AVDELINGSEKSJONER
+   ════════════════════════════════════════ */
+.avd-sections {
+  width: 100%;
+  max-width: 1100px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  opacity: 0;
+  animation: fadeUp 1s ease forwards 1.2s;
+}
+
+.avd-section {
+  position: relative;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  padding: 28px 0 20px;
+}
+.avd-section:last-child { border-bottom: 1px solid rgba(255,255,255,0.06); }
+
+/* Forhandlernavn */
+.avd-label {
+  font-family: 'Anton', sans-serif;
+  font-size: clamp(36px, 10vw, 72px);
+  letter-spacing: 8px;
+  line-height: 1;
+  text-transform: uppercase;
+  opacity: 0.12;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  user-select: none;
+  white-space: nowrap;
+  transition: opacity 0.4s;
+}
+.avd-section.active .avd-label { opacity: 0.22; }
+
+/* Bilderekke */
+.faces-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: flex-end;
+  padding: 0 4px;
+  position: relative;
+  z-index: 2;
+  min-height: 90px;
+}
+
+/* Enkelt ansikt */
+.face {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  opacity: 0;
+  transform: translateY(30px) scale(0.85);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.face.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+.face:hover .face-img-wrap {
+  transform: scale(1.12) translateY(-4px);
+  box-shadow: 0 0 0 3px var(--avd-color), 0 8px 24px rgba(0,0,0,0.7);
+}
+.face:hover .face-name {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.face-img-wrap {
+  width: 64px; height: 64px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid var(--avd-color);
+  background: #1a0a00;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 0 0 0 var(--avd-color);
+  flex-shrink: 0;
+}
+.face-img-wrap img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  filter: grayscale(60%);
+  transition: filter 0.3s;
+}
+.face:hover .face-img-wrap img { filter: grayscale(0%); }
+
+.face-initials {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Anton', sans-serif;
+  font-size: 18px;
+  color: var(--avd-color);
+}
+
+.face-name {
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: rgba(255,255,255,0.7);
+  text-align: center;
+  text-transform: uppercase;
+  max-width: 68px;
+  line-height: 1.3;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.25s, transform 0.25s;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Avdelingsmerke */
+.avd-badge {
+  font-family: 'Anton', sans-serif;
+  font-size: 11px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  padding: 5px 14px;
+  border-left: 3px solid var(--avd-color);
+  color: var(--avd-color);
+  margin-bottom: 14px;
+  display: inline-block;
+  opacity: 0.85;
+}
+
+/* Antall-pill */
+.avd-count {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: rgba(255,255,255,0.3);
+  margin-left: 8px;
+  vertical-align: middle;
+  text-transform: uppercase;
+}
+
+/* ── BADGES ROW ── */
+.badges-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 56px;
+  opacity: 0;
+  animation: fadeUp 1s ease forwards 1.6s;
+}
+.badge {
+  border: 1px solid rgba(249,115,22,0.3);
+  border-radius: 2px;
+  padding: 7px 16px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: rgba(249,115,22,0.75);
+  background: rgba(249,115,22,0.05);
+  transition: all 0.3s;
+}
+.badge:hover {
+  border-color: rgba(249,115,22,0.7);
+  background: rgba(249,115,22,0.1);
+  color: var(--gold);
+}
+
+/* ── FOOTER ── */
+.footer-strip {
+  margin-top: 60px;
+  display: flex;
+  gap: 0;
+  opacity: 0;
+  animation: fadeUp 1s ease forwards 1.9s;
+}
+.footer-avd {
+  padding: 10px 20px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  border-top: 2px solid;
+}
+
+.year-line {
+  font-size: 10px;
+  letter-spacing: 5px;
+  color: rgba(255,255,255,0.15);
+  text-align: center;
+  margin-top: 28px;
+  text-transform: uppercase;
+  opacity: 0;
+  animation: fadeUp 1s ease forwards 2.1s;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(22px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+</style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+
+<div class="corner corner-tl"></div>
+<div class="corner corner-tr"></div>
+<div class="corner corner-bl"></div>
+<div class="corner corner-br"></div>
+<div class="scanline"></div>
+
+<div class="scene">
+
+  <!-- EMBLEM -->
+  <div class="emblem-wrap">
+    <div class="emblem-ring-anim"></div>
+    <div class="emblem-ring-anim"></div>
+    <div class="emblem-ring-anim"></div>
+    <div class="emblem-circle">
+      <svg width="68" height="68" viewBox="0 0 68 68" fill="none">
+        <path d="M34 9L42 27L62 21L49 41L54 57H14L19 41L6 21L26 27L34 9Z"
+          fill="url(#cg2)" stroke="rgba(249,115,22,0.15)" stroke-width="0.5"/>
+        <rect x="29.5" y="55" width="9" height="5" rx="1" fill="rgba(249,115,22,0.5)"/>
+        <rect x="25" y="59" width="18" height="4" rx="2" fill="rgba(249,115,22,0.6)"/>
+        <circle cx="34" cy="9" r="3" fill="#fbbf24" opacity="0.9"/>
+        <circle cx="6" cy="21" r="2.5" fill="#f97316" opacity="0.8"/>
+        <circle cx="62" cy="21" r="2.5" fill="#f97316" opacity="0.8"/>
+        <defs>
+          <linearGradient id="cg2" x1="6" y1="9" x2="62" y2="57" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#fde68a"/>
+            <stop offset="0.4" stop-color="#f97316"/>
+            <stop offset="1" stop-color="#fbbf24"/>
+          </linearGradient>
+        </defs>
+      </svg>
+    </div>
+  </div>
+
+  <!-- TITTEL -->
+  <div class="title-block">
+    <div class="eyebrow">Volvo Car Stor Oslo &nbsp;·&nbsp; 2026</div>
+    <span class="main-title">VCSO</span>
+    <div class="sub-title">OSAT &nbsp;&nbsp; LEAGUE</div>
+  </div>
+
+  <div class="divider">
+    <div class="div-line"></div>
+    <div class="div-gem"></div>
+    <div class="div-line"></div>
+  </div>
+
+  <div class="tagline">Kundetilfredshet &nbsp;·&nbsp; Ære &nbsp;·&nbsp; Konkurranse</div>
+
+  <!-- AVDELINGER MED BILDER -->
+  <div class="avd-sections" id="avd-sections"></div>
+
+  <!-- BADGES -->
+  <div class="badges-row">
+    <div class="badge">👑 MVP</div>
+    <div class="badge">🔥 Streak</div>
+    <div class="badge">⭐ Hat Trick</div>
+    <div class="badge">📞 Gulltelefon</div>
+  </div>
+
+  <!-- FOOTER AVDELINGSSTRIPE -->
+  <div class="footer-strip">
+    <div class="footer-avd" style="color:#fca5a5;border-color:#fca5a5;">Økern</div>
+    <div class="footer-avd" style="color:#fde047;border-color:#fde047;">Ryen</div>
+    <div class="footer-avd" style="color:#86efac;border-color:#86efac;">Lillestrøm</div>
+    <div class="footer-avd" style="color:#93c5fd;border-color:#93c5fd;">Fornebu</div>
+  </div>
+
+  <div class="year-line">Season 2026 &nbsp;·&nbsp; Fire avdelinger &nbsp;·&nbsp; Ett trofé</div>
+
+</div><!-- /scene -->
+
+<script>
+// ══════════════════════════════════════════
+//  DATA
+// ══════════════════════════════════════════
+var AVDELINGER = [
+  {
+    id: 'fornebu',
+    navn: 'Fornebu',
+    color: '#93c5fd',
+    selgere: [
+      { id: 'aldahir_ramirez',             navn: 'Aldahir Ramirez' },
+      { id: 'aras_fasal_omar',             navn: 'Aras Fasal Omar' },
+      { id: 'bawar_faraj',                 navn: 'Bawar Faraj' },
+      { id: 'brage_grammeltvedt_grefstad', navn: 'Brage Grefstad' },
+      { id: 'gjermund_mauland',            navn: 'Gjermund Mauland' },
+      { id: 'gohar_ehtisham',              navn: 'Gohar Ehtisham' },
+      { id: 'kaniwar_nassan',              navn: 'Kaniwar Nassan' },
+      { id: 'marek_zebrowski',             navn: 'Marek Zebrowski' },
+      { id: 'mathuran_sandrakumar',        navn: 'Mathuran Sandrakumar' },
+      { id: 'mohammad_sirwan_salar',       navn: 'M. Sirwan Salar' },
+      { id: 'moosa_butt',                  navn: 'Moosa Butt' }
+    ]
+  },
+  {
+    id: 'lillestrom',
+    navn: 'Lillestrøm',
+    color: '#86efac',
+    selgere: [
+      { id: 'aleksander_pettersen',  navn: 'Aleksander Pettersen' },
+      { id: 'christopher_sjostrom',  navn: 'Christopher Sjøstrøm' },
+      { id: 'dennis_uggerud',        navn: 'Dennis Uggerud' },
+      { id: 'george_xheki_hanelli',  navn: 'George Xheki Hanelli' },
+      { id: 'hedvig_oyen_larsen',    navn: 'Hedvig Øyen Larsen' },
+      { id: 'john_arild_bergengen',  navn: 'John A. Bergengen' },
+      { id: 'jorn_sorensen',         navn: 'Jørn Sørensen' },
+      { id: 'martin_pedersen',       navn: 'Martin Pedersen' },
+      { id: 'pavel_jizba',           navn: 'Pavel Jizba' },
+      { id: 'tom_kjetil_sandmoe',    navn: 'Tom K. Sandmoe' }
+    ]
+  },
+  {
+    id: 'okern',
+    navn: 'Økern',
+    color: '#fca5a5',
+    selgere: [
+      { id: 'ali_husseini',      navn: 'Ali Husseini' },
+      { id: 'basil_omar',        navn: 'Basil Omar' },
+      { id: 'emirhan_cimen',     navn: 'Emirhan Cimen' },
+      { id: 'shezad_masih_azam', navn: 'Shezad Masih Azam' }
+    ]
+  },
+  {
+    id: 'ryen',
+    navn: 'Ryen',
+    color: '#fde047',
+    selgere: [
+      { id: 'abdulghani_ajjan',           navn: 'Abdulghani Ajjan' },
+      { id: 'algirdas_ambrozaitis',       navn: 'Algirdas Ambrozaitis' },
+      { id: 'biniam_tesfamichael_tekle',  navn: 'Biniam T. Tekle' },
+      { id: 'elias_palacios',             navn: 'Elias Palacios' },
+      { id: 'harvinder_singh_kular',      navn: 'Harvinder S. Kular' },
+      { id: 'joel_andom_jiji',            navn: 'Joel Andom Jiji' },
+      { id: 'kristoffer_langerud',        navn: 'Kristoffer Langerud' },
+      { id: 'marco_bjornstad',            navn: 'Marco Bjørnstad' },
+      { id: 'mohammad_yousaf_ahmed',      navn: 'Mohammad Y. Ahmed' },
+      { id: 'sindre_andre_tomte',         navn: 'Sindre A. Tømte' },
+      { id: 'sipan_zewki',                navn: 'Sipan Zewki' },
+      { id: 'vidar_flesvik',              navn: 'Vidar Flesvik' },
+      { id: 'wajahit_elahit',             navn: 'Wajahit Elahit' }
+    ]
+  }
+];
+
+// ══════════════════════════════════════════
+//  BYGG HTML
+// ══════════════════════════════════════════
+function initials(id) {
+  return id.replace(/_/g,' ').split(' ')
+    .map(function(w){ return w[0] ? w[0].toUpperCase() : ''; })
+    .join('').slice(0,2);
+}
+
+var container = document.getElementById('avd-sections');
+
+AVDELINGER.forEach(function(avd) {
+  var section = document.createElement('div');
+  section.className = 'avd-section';
+  section.id = 'avd-' + avd.id;
+
+  var label = document.createElement('div');
+  label.className = 'avd-label';
+  label.style.color = avd.color;
+  label.textContent = avd.navn.toUpperCase();
+  section.appendChild(label);
+
+  var badge = document.createElement('div');
+  badge.className = 'avd-badge';
+  badge.style.setProperty('--avd-color', avd.color);
+  badge.style.borderColor = avd.color;
+  badge.style.color = avd.color;
+  badge.innerHTML = avd.navn + '<span class="avd-count">' + avd.selgere.length + ' PST-er</span>';
+  section.appendChild(badge);
+
+  var row = document.createElement('div');
+  row.className = 'faces-row';
+
+  avd.selgere.forEach(function(s, idx) {
+    var face = document.createElement('div');
+    face.className = 'face';
+    face.style.setProperty('--avd-color', avd.color);
+    face.style.transitionDelay = (idx * 60) + 'ms';
+
+    var imgWrap = document.createElement('div');
+    imgWrap.className = 'face-img-wrap';
+    imgWrap.style.borderColor = avd.color;
+
+    var img = document.createElement('img');
+    img.src = 'photos/' + s.id + '.jpg';
+    img.alt = s.navn;
+    img.onerror = function() {
+      imgWrap.innerHTML = '<div class="face-initials" style="color:' + avd.color + '">' + initials(s.id) + '</div>';
+    };
+    imgWrap.appendChild(img);
+
+    var name = document.createElement('div');
+    name.className = 'face-name';
+    name.textContent = s.navn;
+
+    face.appendChild(imgWrap);
+    face.appendChild(name);
+    row.appendChild(face);
+  });
+
+  section.appendChild(row);
+  container.appendChild(section);
+});
+
+// ══════════════════════════════════════════
+//  SCROLL / INTERSECTION ANIMATION
+// ══════════════════════════════════════════
+function animateSection(section) {
+  var faces = section.querySelectorAll('.face');
+  section.classList.add('active');
+  faces.forEach(function(face, i) {
+    setTimeout(function() {
+      face.classList.add('visible');
+    }, i * 65);
+  });
+}
+
+// Start alle synlige seksjoner på load (etter intro-animasjon)
+setTimeout(function() {
+  var sections = document.querySelectorAll('.avd-section');
+  sections.forEach(function(section, si) {
+    var rect = section.getBoundingClientRect();
+    if (rect.top < window.innerHeight + 100) {
+      setTimeout(function() {
+        animateSection(section);
+      }, si * 180);
+    }
+  });
+
+  // IntersectionObserver for scroll
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          animateSection(entry.target);
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+
+    sections.forEach(function(s) {
+      if (!s.classList.contains('active')) io.observe(s);
+    });
+  }
+}, 1400);
+
+// ══════════════════════════════════════════
+//  CANVAS BAKGRUNN – PARTIKLER + GLOW
+// ══════════════════════════════════════════
+(function() {
+  var canvas = document.getElementById('bg-canvas');
+  var ctx = canvas.getContext('2d');
+  var W, H;
+
+  function resize() {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = Math.max(window.innerHeight, document.body.scrollHeight);
+  }
+  resize();
+  window.addEventListener('resize', resize);
+  window.addEventListener('scroll', resize);
+
+  var N = 110;
+  var particles = [];
+  for (var i = 0; i < N; i++) {
+    particles.push({
+      x: Math.random() * window.innerWidth,
+      y: Math.random() * window.innerHeight,
+      vx: (Math.random() - 0.5) * 0.35,
+      vy: (Math.random() - 0.5) * 0.35 - 0.15,
+      r: Math.random() * 1.6 + 0.3,
+      base: Math.random() * 0.5 + 0.1,
+      twinkle: Math.random() * Math.PI * 2,
+      hue: Math.random() > 0.55 ? 0 : (Math.random() > 0.5 ? 1 : 2)
+    });
+  }
+
+  var COLORS = [
+    [249, 115, 22],
+    [251, 191, 36],
+    [255, 255, 255]
+  ];
+
+  var t = 0;
+  function draw() {
+    t += 0.015;
+    ctx.clearRect(0, 0, W, H);
+
+    // svart bakgrunn
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, W, H);
+
+    // senter-glow
+    var gx = W / 2, gy = H * 0.3;
+    var gr = ctx.createRadialGradient(gx, gy, 0, gx, gy, H * 0.65);
+    gr.addColorStop(0, 'rgba(249,115,22,0.07)');
+    gr.addColorStop(0.5, 'rgba(120,40,0,0.03)');
+    gr.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = gr;
+    ctx.fillRect(0, 0, W, H);
+
+    // ambient glows
+    [[0.15, 0.2], [0.5, 0.45], [0.85, 0.25]].forEach(function(p, i) {
+      var lx = W * p[0], ly = H * (p[1] + Math.sin(t + i * 1.2) * 0.03);
+      var lg = ctx.createRadialGradient(lx, ly, 0, lx, ly, 140);
+      lg.addColorStop(0, 'rgba(249,115,22,0.05)');
+      lg.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = lg;
+      ctx.fillRect(lx - 140, ly - 140, 280, 280);
+    });
+
+    // partikler
+    particles.forEach(function(p) {
+      p.x += p.vx;
+      p.y += p.vy;
+      p.twinkle += 0.04;
+
+      if (p.x < 0) p.x = window.innerWidth;
+      if (p.x > window.innerWidth) p.x = 0;
+      if (p.y < 0) p.y = window.innerHeight;
+      if (p.y > window.innerHeight) p.y = 0;
+
+      var a = p.base * (0.5 + 0.5 * Math.sin(p.twinkle));
+      var c = COLORS[p.hue];
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',' + a + ')';
+      ctx.fill();
+    });
+
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+</script>
+</body>
+</html>
