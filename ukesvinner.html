@@ -460,9 +460,9 @@ html,body{
 
   <!-- GULLTELEFON -->
   <div class="phone-section" id="phone-section" style="display:none">
-    <span class="section-label">Gulltelefon</span>
+    <span class="section-label" id="phone-section-label">📞 Gulltelefon</span>
     <div class="phone-card">
-      <img src="photos/Gulltelefon.png" class="phone-svg" width="64" height="64" style="object-fit:contain;filter:drop-shadow(0 0 8px rgba(255,215,0,.8)) drop-shadow(0 0 20px rgba(255,215,0,.4));">
+      <img src="photos/Gulltelefon.png" class="phone-svg" width="72" height="72" style="object-fit:contain;filter:drop-shadow(0 0 10px rgba(255,215,0,.9)) drop-shadow(0 0 24px rgba(255,215,0,.5));">
       <div class="phone-info">
         <div class="phone-label">&#128241; Gulltelefon</div>
         <div class="phone-name" id="phone-name"></div>
@@ -549,11 +549,11 @@ SELGERE.forEach(function(s){ PHOTOS[s.navn]='photos/'+s.id+'.jpg'; });
 
 // ── UKEBEREGNING ───────────────────────────────────
 function getWeekBounds() {
-  // Finner mandag–søndag for inneværende uke (norsk)
+  // Finner mandag–søndag for FORRIGE uke (norsk)
   var now = new Date();
   var day = now.getDay(); // 0=sun,1=mon,...,6=sat
   var diffToMon = (day===0) ? -6 : 1 - day;
-  var mon = new Date(now); mon.setDate(now.getDate() + diffToMon);
+  var mon = new Date(now); mon.setDate(now.getDate() + diffToMon - 7); // -7 = forrige uke
   mon.setHours(0,0,0,0);
   var sun = new Date(mon); sun.setDate(mon.getDate() + 6);
   sun.setHours(23,59,59,999);
@@ -734,6 +734,7 @@ async function loadAndRender(){
 
   // Gulltelefon
   if(gp){
+    document.getElementById('phone-section-label').textContent='📞 Gulltelefon · Uke '+wb.weekNr;
     document.getElementById('phone-name').textContent=getShort(gp.navn);
     var gpAvdEl=document.getElementById('phone-avd');
     gpAvdEl.textContent=TEAM_NAMES[gp.loc]; gpAvdEl.style.color=TEAM_COLORS[gp.loc];
@@ -779,19 +780,28 @@ async function loadAndRender(){
   }
 })();
 
-// ── AUTO-REFRESH VED UKESLUTT ──────────────────────
-// Sjekker om det er søndag mellom 23:55 og 00:05 — og laster da siden på nytt hvert minutt
-function checkAutoRefresh(){
-  var now=new Date();
-  var isSunday=now.getDay()===0;
-  var h=now.getHours(), m=now.getMinutes();
-  var isWeekend=(isSunday && h===23 && m>=55) || (isSunday && h===0 && m<=5);
-  if(isWeekend) loadAndRender();
+// ── SØNDAG-BLOKKERING ─────────────────────────────
+// Siden vises kun mandag–lørdag. På søndag er uken ikke ferdig enda.
+function isSunday(){
+  return new Date().getDay() === 0;
 }
-setInterval(checkAutoRefresh, 60000);
+
+function showSundayMessage(){
+  document.getElementById('week-meta').textContent = '⏳ Resultater klare fra mandag morgen';
+  document.getElementById('wcard-week').textContent = '—';
+  document.getElementById('footer-sub').textContent = 'Kom tilbake på mandag!';
+  ['winner-name','winner-avd','wstat-pts','wstat-scores','wstat-tens','wstat-fup',
+   'total-scores','total-tens','total-fup'].forEach(function(id){
+    var el=document.getElementById(id); if(el) el.textContent='—';
+  });
+}
 
 // Start
-loadAndRender();
+if(isSunday()){
+  showSundayMessage();
+} else {
+  loadAndRender();
+}
 </script>
 
 </body>
