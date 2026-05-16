@@ -1392,12 +1392,8 @@ function renderHoF() {
   var hof = document.getElementById('hof-container');
   if(!hof) return;
 
-  // Gulltelefon SVG
-  var gpSvg = '<svg width="16" height="16" viewBox="0 0 28 28" fill="none" style="flex-shrink:0;vertical-align:middle">'
-    +'<path d="M9.5 8C9.5 8 8 8.5 8 10.5C8 15.5 12.5 20 17.5 20C19.5 20 20 18.5 20 18.5L18 16.5C18 16.5 17 17 16.5 17C14.5 17 11 13.5 11 11.5C11 11 11.5 10 11.5 10L9.5 8Z"'
-    +' fill="url(#gps)" stroke="#f97316" stroke-width=".8"/>'
-    +'<defs><linearGradient id="gps" x1="8" y1="8" x2="20" y2="20"><stop stop-color="#ffd700"/><stop offset="1" stop-color="#f97316"/></linearGradient></defs>'
-    +'</svg>';
+  // Gulltelefon PNG
+  var gpSvg = '<img src="photos/Gulltelefon.png" width="20" height="20" style="object-fit:contain;vertical-align:middle;flex-shrink:0;filter:drop-shadow(0 0 4px rgba(255,215,0,.7))">';
 
   // Hent ISO ukenummer for i dag
   function getWeekNr(d) {
