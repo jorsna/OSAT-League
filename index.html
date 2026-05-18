@@ -595,6 +595,36 @@ select:focus,input[type=text]:focus{border-color:#f97316}
   </div>
 </div>
 
+<!-- NEDTELLING TIL SLUTTEN AV JUNI -->
+<div id="countdown-bar" style="background:rgba(249,115,22,.07);border-bottom:1px solid rgba(249,115,22,.18);padding:8px 16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px">
+  <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(249,115,22,.7)">⏳ Ligaen avsluttes</div>
+  <div id="countdown-display" style="display:flex;gap:10px;align-items:center"></div>
+</div>
+<script>
+(function(){
+  function updateCountdown(){
+    var now=new Date();
+    var end=new Date(now.getFullYear(),5,30,23,59,59); // 30. juni
+    if(now>end){ document.getElementById('countdown-bar').style.display='none'; return; }
+    var diff=end-now;
+    var d=Math.floor(diff/864e5);
+    var h=Math.floor((diff%864e5)/36e5);
+    var m=Math.floor((diff%36e5)/6e4);
+    var s=Math.floor((diff%6e4)/1e3);
+    function unit(v,l){
+      return '<div style="text-align:center">'
+        +'<div style="font-family:Anton,sans-serif;font-size:18px;line-height:1;color:#f97316">'+String(v).padStart(2,'0')+'</div>'
+        +'<div style="font-size:8px;color:rgba(249,115,22,.5);letter-spacing:1px;text-transform:uppercase">'+l+'</div>'
+        +'</div>';
+    }
+    var el=document.getElementById('countdown-display');
+    if(el) el.innerHTML=unit(d,'dager')+unit(h,'timer')+unit(m,'min')+unit(s,'sek');
+  }
+  updateCountdown();
+  setInterval(updateCountdown,1000);
+})();
+</script>
+
 <!-- TABS -->
 <div class="tabs" style="flex-wrap:wrap">
   <button class="tab on" onclick="setTab('ind',this)" style="flex:1 1 25%">&#128100; PST-er</button>
