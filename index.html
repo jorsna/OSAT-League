@@ -265,13 +265,13 @@ html,body{background:var(--bg);font-family:'Barlow',sans-serif;color:var(--txt);
 
 /* ─── TABLE ─────────────────────────────────────────────── */
 .tbl-head{display:grid;
-  grid-template-columns:26px 28px 1fr 36px 60px 70px 40px;
+  grid-template-columns:26px 40px 1fr 36px 60px 70px 40px;
   padding:7px 12px;font-size:8.5px;font-weight:700;color:var(--muted);
   text-transform:uppercase;letter-spacing:.6px;background:var(--card2);border-bottom:1px solid var(--b1)}
 .tbl-head>*{text-align:center}
 .tbl-head>*:nth-child(3){text-align:left}
 .trow{display:grid;
-  grid-template-columns:26px 28px 1fr 36px 60px 70px 40px;
+  grid-template-columns:26px 40px 1fr 36px 60px 70px 40px;
   padding:8px 12px;align-items:center;border-bottom:1px solid var(--b1);
   background:var(--card);
   transition:background .15s;animation:fadeIn .35s ease both}
@@ -281,7 +281,7 @@ html,body{background:var(--bg);font-family:'Barlow',sans-serif;color:var(--txt);
 .trow:hover{background:var(--faint)}
 .trow.zm{border-left:3px solid transparent}
 .pos-n{font-family:'Anton',sans-serif;font-size:13px;line-height:1}
-.av{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;
+.av{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;
   justify-content:center;font-size:9px;font-weight:700;overflow:hidden;padding:0}
 .av img{width:100%;height:100%;object-fit:cover;filter:grayscale(100%)}
 .name-c{display:flex;flex-direction:column;gap:1px;padding:0 6px;align-items:flex-start}
@@ -987,7 +987,7 @@ const SELGER_PHOTOS = {
   "sipan_zewki":                "photos/sipan_zewki.jpg",
   "vidar_flesvik":              "photos/vidar_flesvik.jpg",
   "wajahit_elahit":             "photos/wajahit_elahit.jpg",
-  "leon_pettersen":             "photos/leon_pettersen-Ryen.jpg",
+  "leon_pettersen":             "photos/leon_pettersen.jpg",
 };
 
 // ─── KONFIGURASJON ───────────────────────────────────────────
@@ -1332,7 +1332,7 @@ function renderInd() {
 
     return '<div class="trow zm" data-navn="'+r.navn+'" style="animation-delay:'+(i*0.03)+'s">'
       + '<div class="pos-n" style="color:'+pc+';font-size:'+(isTied?'11px':'13px')+'">'+rankLabel+'</div>'
-      + '<div><div class="av" style="background:'+r.bg+';color:'+r.color+';overflow:hidden;padding:0">'+avHtml+'</div></div>'
+      + '<div><div class="av" style="background:'+r.bg+';color:'+r.color+';overflow:hidden;padding:0'+(rank===1?';width:44px;height:44px':'')+'">'+avHtml+'</div></div>'
       + '<div class="name-c"><div class="name-main">'+r.short+badges+'</div><div class="name-sub" style="color:'+r.color+'">'+(LL[r.loc]||r.loc)+'</div></div>'
       + '<div class="sc pts">'+r.pts+'</div>'
       + scoreHtml
