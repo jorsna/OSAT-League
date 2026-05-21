@@ -499,13 +499,14 @@ function genererGazzetta() {
     .then(function(r) { return r.json(); })
     .then(function(allSalg) {
       if (!Array.isArray(allSalg)) allSalg = [];
+      allSalg = allSalg.filter(function(s){ return s.score===9||s.score===10; });
       var salg = allSalg.filter(function(s) {
         if (!s.ts) return false;
         var d = new Date(s.ts);
         var norskDatoStr = d.toLocaleDateString('sv-SE', {timeZone: 'Europe/Oslo'});
         return norskDatoStr === igaar;
       });
-      console.log('Salg hentet for ' + igaar + ':', salg.length, salg.map(function(s){ return s.selger + ' ' + s.modell; }));
+      console.log('OSAT hentet for ' + igaar + ':', salg.length, salg.map(function(s){ return (s.pst||'?') + ' score:' + s.score; }));
       btn.innerHTML = '<span class="spinner"></span>Skriver artikkel...';
       statusEl.textContent = 'Henter salgsdata og sender til AI...';
       return genererTekst(salg, igaar, allSalg);
@@ -624,8 +625,19 @@ function genererTekst(salg, dato, alleSalg) {
 
   var selgerListe = Object.keys(selgerTelling).sort(function(a,b){return selgerTelling[b]-selgerTelling[a];}).map(function(n){
     var avd = SELGER_AVD[n]||'ukjent';
-    return '- '+n+' ('+avd+'): '+selgerTelling[n]+' oppfølging'+(selgerTelling[n]>1?'er':'');
+    return '- '+n+' ('+avd+'): '+selgerTelling[n]+' fornøyd'+(selgerTelling[n]>1?' kunder':' kunde')+' (score 9/10)';
   }).join('\n');
+
+  var mvpTekst = mvpListe.length > 1
+    ? 'DELT MVP: ' + mvpListe.map(function(n){return n+' ('+(SELGER_AVD[n]||'ukjent')+', '+selgerTelling[n]+' kunder)';}).join(' og ')
+    : 'MVP: ' + mvpListe[0] + ' (' + (SELGER_AVD[mvpListe[0]]||'ukjent') + ') med ' + maxSalg + ' fornøyd'+(maxSalg>1?' kunder':' kunde');
+
+  var hatTrickTekst = hatTrickNavn.map(function(n){return n+' ('+(SELGER_AVD[n]||'ukjent')+')';}).join(', ');
+
+  var totalOppsummering = alleSalg && alleSalg.length > 0
+    ? '\nSESONGTOTAL (til og med i går):\n- Totalt fornøyde kunder hele sesongen: '+totalSesongen+'\n- Avdelinger totalt: Ryen '+totalAvd.ryen+', Fornebu '+totalAvd.fornebu+', Lillestrøm '+totalAvd.lillestrom+', Økern '+totalAvd.okern+'\n- Ledende PST totalt: '+(totalLeder||'ingen')+' ('+(totalSelger[totalLeder]||0)+' kunder)' : '';
+
+  var prompt = 'Du er La Gazzetta dello VCSO OSAT – en dramatisk italiensk-inspirert sportsavis for VCSO OSAT League 2026.\n\nKONTEKST: Deltakerne er PST-er (Personlige Serviceteknikere) som jobber på verksted hos Volvo Car Service Oslo. De fikser biler og ringer kunder etterpå for å høre om de er fornøyde. Kunder som gir score 9 eller 10 teller som poeng. Det handler om skiftenøkler, motorolje og fornøyde bilkunder – ikke bilsalg.\n\nKAMPRAPPORT – ' + norskDato(dato) + '\n\nFORNØYDE KUNDER (score 9/10) PER PST DENNE DAGEN:\n' + selgerListe + '\n\nSAMMENDRAG DENNE DAGEN:\n- Totalt fornøyde kunder: ' + totalt + '\n- ' + mvpTekst + '\n- Avdelinger: Ryen ' + avdTelling.ryen + ', Fornebu ' + avdTelling.fornebu + ', Lillestrøm ' + avdTelling.lillestrom + ', Økern ' + avdTelling.okern + '\n' + (hatTrickNavn.length?'- HAT-TRICK (3+ fornøyde kunder på én dag): '+hatTrickTekst+'\n':'') + totalOppsummering + '\n\nVIKTIG: Disse er teknikere på verksted, ikke selgere. Skriv med verksted-stemning – skiftenøkler, motorolje, vel utført reparasjon og fornøyde kunder som kjører hjem. Bruk eksakt riktig avdeling per PST.\n\nSkriv en dramatisk avisartikkel på NORSK:\n1. Dramatisk overskrift (maks 10 ord)\n2. Kort ingress (1 setning)\n3. 4-5 avsnitt ca 270 ord. Avsnitt skilles av \\n\\n. Siste avsnitt = sesongtotal. Inkluder et sitat i anførselstegn.\n\nSvar KUN med gyldig JSON:\n{"overskrift":"...","ingress":"...","tekst":"avsnitt1\\n\\navsnitt2\\n\\n\\"Sitat\\"\\n\\navsnitt3\\n\\nSesongtotal-avsnitt"}';
 
   return fetch('https://aemboxqpaeyfdlzmghxe.supabase.co/functions/v1/swift-api', {
     method: 'POST',
