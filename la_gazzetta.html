@@ -639,11 +639,11 @@ function genererTekst(salg, dato, alleSalg) {
 
   var prompt = 'Du er La Gazzetta dello VCSO OSAT – en dramatisk italiensk-inspirert sportsavis for VCSO OSAT League 2026.\n\nKONTEKST: Deltakerne er PST-er (Personlige Serviceteknikere) som jobber på verksted hos Volvo Car Service Oslo. De fikser biler og ringer kunder etterpå for å høre om de er fornøyde. Kunder som gir score 9 eller 10 teller som poeng. Det handler om skiftenøkler, motorolje og fornøyde bilkunder – ikke bilsalg.\n\nKAMPRAPPORT – ' + norskDato(dato) + '\n\nFORNØYDE KUNDER (score 9/10) PER PST DENNE DAGEN:\n' + selgerListe + '\n\nSAMMENDRAG DENNE DAGEN:\n- Totalt fornøyde kunder: ' + totalt + '\n- ' + mvpTekst + '\n- Avdelinger: Ryen ' + avdTelling.ryen + ', Fornebu ' + avdTelling.fornebu + ', Lillestrøm ' + avdTelling.lillestrom + ', Økern ' + avdTelling.okern + '\n' + (hatTrickNavn.length?'- HAT-TRICK (3+ fornøyde kunder på én dag): '+hatTrickTekst+'\n':'') + totalOppsummering + '\n\nVIKTIG: Disse er teknikere på verksted, ikke selgere. Skriv med verksted-stemning – skiftenøkler, motorolje, vel utført reparasjon og fornøyde kunder som kjører hjem. Bruk eksakt riktig avdeling per PST.\n\nSkriv en dramatisk avisartikkel på NORSK:\n1. Dramatisk overskrift (maks 10 ord)\n2. Kort ingress (1 setning)\n3. 4-5 avsnitt ca 270 ord. Avsnitt skilles av \\n\\n. Siste avsnitt = sesongtotal. Inkluder et sitat i anførselstegn.\n\nSvar KUN med gyldig JSON:\n{"overskrift":"...","ingress":"...","tekst":"avsnitt1\\n\\navsnitt2\\n\\n\\"Sitat\\"\\n\\navsnitt3\\n\\nSesongtotal-avsnitt"}';
 
-  return fetch('https://aemboxqpaeyfdlzmghxe.supabase.co/functions/v1/swift-api', {
+  return fetch('https://resrjvztsqdxzqgiffeg.supabase.co/functions/v1/swift-api', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + SB_KEY
+      'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJlc3Jqdnp0c3FkeHpxZ2lmZmVnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgxNzg0MTMsImV4cCI6MjA5Mzc1NDQxM30.ouYcq-2hIUkqkn395Q5us5jYqa9JDVbOjJzORDBM72Y'
     },
     body: JSON.stringify({ prompt: prompt })
   })
