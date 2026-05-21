@@ -495,7 +495,7 @@ function genererGazzetta() {
   // Hent gårsdagens salg fra Supabase
   var igaar = igar();
 
-  fetch(SB_URL + '/rest/v1/pst?select=*&deleted=eq.false&order=ts.asc', { headers: sbH() })
+  fetch(SB_URL + '/rest/v1/osat_scores?select=*&deleted=is.false&order=ts.asc', { headers: sbH() })
     .then(function(r) { return r.json(); })
     .then(function(allSalg) {
       if (!Array.isArray(allSalg)) allSalg = [];
