@@ -472,13 +472,89 @@ select:focus,input[type=text]:focus{border-color:#f97316}
 
 /* ─── RESPONSIV ─────────────────────────────────────────── */
 @media(max-width:420px){
-  .tbl-head,.trow{grid-template-columns:20px 22px 1fr 30px 48px 56px 32px}
+  .tbl-head,.trow{grid-template-columns:20px 36px 1fr 30px 48px 56px 32px}
+  .av{width:32px;height:32px}
   .name-main{font-size:11px}
   .score-sel-btn .score-label{font-size:26px}
 }
 #view-team .tbl-head,#view-team .trow{
   grid-template-columns:26px 28px 1fr 50px 60px 60px;
 }
+
+/* ── GAZZETTA TICKER ── */
+#gazzetta-ticker {
+  position: relative;
+  width: 100%;
+  height: 32px;
+  background: linear-gradient(90deg, #0a0a0a 0%, #111 50%, #0a0a0a 100%);
+  border-top: 1px solid rgba(255,215,0,.3);
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  z-index: 9999;
+  box-shadow: 0 -2px 12px rgba(0,0,0,.5);
+}
+#gazzetta-ticker .ticker-label {
+  flex-shrink: 0;
+  padding: 0 10px;
+  font-family: Anton, sans-serif;
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: #0a0a0a;
+  background: linear-gradient(135deg, #ffd700, #c8960c);
+  height: 100%;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  border-right: 1px solid rgba(255,215,0,.4);
+}
+#gazzetta-ticker .ticker-track-wrap {
+  flex: 1;
+  overflow: hidden;
+  height: 100%;
+  position: relative;
+}
+#gazzetta-ticker .ticker-track {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  white-space: nowrap;
+  animation: tickerScroll 40s linear infinite;
+  will-change: transform;
+}
+#gazzetta-ticker .ticker-track:hover { animation-play-state: paused; }
+#gazzetta-ticker .ticker-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 28px;
+  border-right: 1px solid rgba(255,215,0,.15);
+  cursor: pointer;
+}
+#gazzetta-ticker .ticker-date {
+  font-size: 8px;
+  color: rgba(255,215,0,.6);
+  font-family: Anton, sans-serif;
+  letter-spacing: 1px;
+  flex-shrink: 0;
+}
+#gazzetta-ticker .ticker-headline {
+  font-size: 11px;
+  font-weight: 700;
+  color: #f0f0f0;
+  letter-spacing: .3px;
+}
+#gazzetta-ticker .ticker-ingress {
+  font-size: 10px;
+  color: rgba(255,255,255,.45);
+  font-style: italic;
+}
+@keyframes tickerScroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+
 </style>
 </head>
 <body>
@@ -584,9 +660,9 @@ select:focus,input[type=text]:focus{border-color:#f97316}
   <div class="hdr-in">
     <div class="hdr-top">
       <div class="brand">
-        <div class="crest" style="width:48px;height:48px;font-size:24px">&#9733;</div>
+        <div class="crest" style="width:60px;height:60px;font-size:30px">&#9733;</div>
         <div>
-          <div class="t1" style="font-size:22px;letter-spacing:4px;
+          <div class="t1" style="font-size:26px;letter-spacing:5px;
             background:linear-gradient(135deg,#fff 0%,#f97316 40%,#fff 70%,#f97316 100%);
             background-size:200% auto;
             -webkit-background-clip:text;background-clip:text;color:transparent;
@@ -604,6 +680,16 @@ select:focus,input[type=text]:focus{border-color:#f97316}
     </div>
   </div>
 </div>
+<!-- GAZZETTA TICKER -->
+<div id="gazzetta-ticker">
+  <div class="ticker-label">&#128240; LA GAZZETTA</div>
+  <div class="ticker-track-wrap">
+    <div class="ticker-track" id="ticker-track">
+      <span style="font-size:10px;color:rgba(255,255,255,.3);padding:0 20px">Laster nyheter...</span>
+    </div>
+  </div>
+</div>
+
 
 <!-- NEDTELLING TIL SLUTTEN AV JUNI -->
 <div id="countdown-bar" style="background:rgba(249,115,22,.07);border-bottom:1px solid rgba(249,115,22,.18);padding:8px 16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px">
@@ -2327,6 +2413,46 @@ function switchHofTab(tab) {
     if (el && (el.innerHTML.trim() === '' || el.innerHTML.indexOf('Laster') !== -1)) renderLegender();
   }
 }
+
+// ── GAZZETTA TICKER ──────────────────────────────────────────────
+(function initTicker() {
+  setTimeout(function() {
+    var url = SUPABASE_URL + '/rest/v1/osat_gazzetta?order=created_at.desc&limit=12&select=dato,overskrift,ingress';
+    fetch(url, { mode:'cors', headers: sbH() })
+      .then(function(r){ return r.ok ? r.json() : []; })
+      .then(function(data) { buildTicker(data); })
+      .catch(function() { buildTicker([]); });
+  }, 1500);
+})();
+
+
+function buildTicker(data) {
+  var track = document.getElementById('ticker-track');
+  if (!track) return;
+  if (!data || !data.length) {
+    track.innerHTML = '<span style="font-size:10px;color:rgba(255,255,255,.3);padding:0 20px">La Gazzetta — ingen utgaver ennå</span>';
+    return;
+  }
+  var ukedager = ['søn','man','tir','ons','tor','fre','lør'];
+  var mnd = ['jan','feb','mar','apr','mai','jun','jul','aug','sep','okt','nov','des'];
+  function fmtDato(d) {
+    if (!d) return '';
+    var dt = new Date(d);
+    return ukedager[dt.getDay()] + ' ' + dt.getDate() + '. ' + mnd[dt.getMonth()];
+  }
+  var items = data.map(function(row) {
+    return '<div class="ticker-item" onclick="window.open('la_gazzetta.html','_blank')">'
+      + '<span class="ticker-date">' + fmtDato(row.dato) + '</span>'
+      + '<span class="ticker-headline">' + (row.overskrift||'') + '</span>'
+      + (row.ingress ? '<span class="ticker-ingress">— ' + row.ingress + '</span>' : '')
+      + '</div>';
+  }).join('');
+  track.innerHTML = items + items;
+  var totalW = track.scrollWidth / 2;
+  var speed = Math.max(30, Math.min(80, totalW / 8));
+  track.style.animationDuration = speed + 's';
+}
 </script>
+
 </body>
 </html>
