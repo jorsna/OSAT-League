@@ -1243,6 +1243,7 @@ function fetchSales() {
       sales = Array.isArray(data) ? data : [];
       hideStatus();
       renderAll();
+      autoSaveWeeklyWinner();
     })
     .catch(function(e){
       var msg = e.message || 'Ukjent feil';
@@ -1254,6 +1255,107 @@ function fetchSales() {
       sales=[];
       renderAll();
     });
+}
+
+// ─── AUTO-LAGRE UKESVINNER ────────────────────────────────────────────
+function getIsoWeek(d) {
+  var date = new Date(d);
+  date.setHours(0,0,0,0);
+  date.setDate(date.getDate() + 3 - (date.getDay()+6)%7);
+  var week1 = new Date(date.getFullYear(),0,4);
+  return 1 + Math.round(((date-week1)/86400000 - 3 + (week1.getDay()+6)%7)/7);
+}
+function getIsoYear(d) {
+  var date = new Date(d);
+  date.setDate(date.getDate() + 3 - (date.getDay()+6)%7);
+  return date.getFullYear();
+}
+function getPrevWeekBounds() {
+  var now = new Date();
+  var day = now.getDay();
+  var diffToMon = (day===0) ? -6 : 1 - day;
+  var mon = new Date(now); mon.setDate(now.getDate() + diffToMon - 7); mon.setHours(0,0,0,0);
+  var sun = new Date(mon); sun.setDate(mon.getDate()+6); sun.setHours(23,59,59,999);
+  function fmt(d){ return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
+  return { start:fmt(mon), end:fmt(sun), weekNr:getIsoWeek(mon), weekYear:getIsoYear(mon) };
+}
+
+function autoSaveWeeklyWinner() {
+  var wb = getPrevWeekBounds();
+
+  // Sjekk om denne uken allerede er lagret
+  fetch(SUPABASE_URL+'/rest/v1/weekly_winners?week_nr=eq.'+wb.weekNr+'&week_year=eq.'+wb.weekYear+'&limit=1', {
+    mode:'cors', headers:sbH()
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(existing){
+    if(existing && existing.length > 0) return; // allerede lagret
+
+    // Hent scoringer for forrige uke
+    fetch(API+'?deleted=eq.false&ts=gte.'+wb.start+'T00:00:00&ts=lte.'+wb.end+'T23:59:59&order=ts.asc&limit=2000', {
+      mode:'cors', headers:sbH()
+    })
+    .then(function(r){ return r.json(); })
+    .then(function(weekSales){
+      if(!Array.isArray(weekSales) || !weekSales.length) return;
+
+      // Beregn statistikk per PST
+      var stats = {};
+      weekSales.forEach(function(s){
+        if(s.score!==9 && s.score!==10) return;
+        if(!stats[s.pst]) stats[s.pst] = { pst:s.pst, loc:s.loc, g:0, tens:0, fup:0, pts:0, days:{} };
+        var p = stats[s.pst];
+        p.g++; p.pts+=3;
+        if(s.score===10) p.tens++;
+        if(s.fulgt_opp) p.fup++;
+        var d = tsDate(s.ts);
+        p.days[d] = (p.days[d]||0)+1;
+      });
+
+      var rows = Object.values(stats);
+      if(!rows.length) return;
+
+      // Finn vinner (høyest pts, tiebreaker: tens, fup)
+      rows.sort(function(a,b){ return b.pts-a.pts || b.tens-a.tens || b.fup-a.fup; });
+      var bestPts = rows[0].pts;
+      var bestTens = rows[0].tens;
+      var winners = rows.filter(function(r){ return r.pts===bestPts && r.tens===bestTens; });
+
+      // Hat tricks — PST-er med 3+ scoringer på én dag
+      var hatTricks = [];
+      rows.forEach(function(p){
+        var hasHat = Object.keys(p.days).some(function(d){ return p.days[d]>=3; });
+        if(hasHat) hatTricks.push(p.pst);
+      });
+
+      // Bygg rader for weekly_winners (én per vinner)
+      var inserts = winners.map(function(w){
+        return {
+          week_nr:    wb.weekNr,
+          week_year:  wb.weekYear,
+          week_start: wb.start,
+          week_end:   wb.end,
+          selger:     w.pst,
+          loc:        w.loc,
+          pts:        w.pts,
+          salg:       w.g,
+          finansiert: w.fup,
+          tens:       w.tens,
+          fup:        w.fup,
+          hat_tricks: hatTricks
+        };
+      });
+
+      // Lagre til weekly_winners
+      fetch(SUPABASE_URL+'/rest/v1/weekly_winners', {
+        method:'POST',
+        mode:'cors',
+        headers: Object.assign({}, sbH(), {'Prefer':'resolution=ignore-duplicates'}),
+        body: JSON.stringify(inserts)
+      }).catch(function(e){ console.warn('autoSave weekly_winners feil:', e); });
+    });
+  })
+  .catch(function(e){ console.warn('autoSave sjekk feil:', e); });
 }
 
 function insertSale(obj, cb) {
