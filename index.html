@@ -1317,9 +1317,10 @@ function autoSaveWeeklyWinner() {
 
       // Finn vinner (høyest pts, tiebreaker: tens, fup)
       rows.sort(function(a,b){ return b.pts-a.pts || b.tens-a.tens || b.fup-a.fup; });
-      var bestPts = rows[0].pts;
+      var bestPts  = rows[0].pts;
       var bestTens = rows[0].tens;
-      var winners = rows.filter(function(r){ return r.pts===bestPts && r.tens===bestTens; });
+      var bestFup  = rows[0].fup;
+      var winners = rows.filter(function(r){ return r.pts===bestPts && r.tens===bestTens && r.fup===bestFup; });
 
       // Hat tricks — PST-er med 3+ scoringer på én dag
       var hatTricks = [];
@@ -1724,7 +1725,7 @@ function renderHoF() {
     + '<div style="font-size:11px;color:var(--muted);font-style:italic;padding:8px 0">Laster tidligere uker...</div>'
     + '</div>';
 
-  fetch(SUPABASE_URL + '/rest/v1/weekly_winners?order=week_nr.desc&limit=30', {
+  fetch(SUPABASE_URL + '/rest/v1/weekly_winners?order=week_year.desc,week_nr.desc&limit=30', {
     mode:'cors', headers: sbH()
   }).then(function(r){
     if(!r.ok) throw new Error('feil');
