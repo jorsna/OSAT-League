@@ -437,7 +437,7 @@ async function loadAndRender(){
     phoneHTML = '<div class="sec r5"><div class="sec-top" style="background:linear-gradient(90deg,transparent,rgba(134,239,172,0.4),transparent);"></div>'
       +'<div class="sec-title">📞 Gulltelefon · Uke '+wb.weekNr+'</div>'
       +'<div class="phone-row">'
-        +'<div class="phone-icon-wrap"><img src="photos/Gulltelefon.png" width="42" height="42" style="object-fit:contain;filter:drop-shadow(0 0 8px rgba(255,215,0,.8));"></div>'
+        +'<div class="phone-icon-wrap"><img src="photos/Gulltelefon.png?v="+Date.now()+"" width="42" height="42" style="object-fit:contain;filter:drop-shadow(0 0 8px rgba(255,215,0,.8));"></div>'
         +'<div style="flex:1">'
           +'<div class="phone-nm">'+getShort(gp.navn)+'</div>'
           +'<div class="phone-avd" style="color:'+gpColor+'">'+TEAM_NAMES[gp.loc]+'</div>'
