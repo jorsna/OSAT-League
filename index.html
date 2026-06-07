@@ -566,6 +566,30 @@ select:focus,input[type=text]:focus{border-color:#f97316}
 }
 
 
+
+/* ── AVDELINGSRACE ── */
+.race-wrap{background:linear-gradient(160deg,var(--card),var(--card2));border:1px solid var(--b1);border-radius:16px;padding:18px 16px 14px;margin:0 0 14px;overflow:hidden}
+.race-header{margin-bottom:16px}
+.race-title{font-family:'Anton',sans-serif;font-size:15px;letter-spacing:2px;color:var(--gold)}
+.race-sub{font-size:9px;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;margin-top:2px}
+.race-lane{display:flex;align-items:center;gap:10px;margin-bottom:12px;opacity:0;animation:raceIn .6s cubic-bezier(.16,1,.3,1) forwards}
+@keyframes raceIn{from{opacity:0;transform:translateX(-12px)}to{opacity:1;transform:translateX(0)}}
+.race-lane-label{display:flex;align-items:center;gap:5px;width:42px;flex-shrink:0}
+.race-pos-badge{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;font-family:'Anton',sans-serif}
+.race-track{position:relative;flex:1;height:26px;background:repeating-linear-gradient(90deg,var(--faint) 0,var(--faint) 14px,transparent 14px,transparent 28px);border-radius:13px;overflow:visible;border:1px solid var(--b1)}
+.race-trail{position:absolute;top:0;bottom:0;left:0;border-radius:13px;opacity:.7;transition:width 1.4s cubic-bezier(.4,0,.2,1)}
+.race-car{position:absolute;top:50%;transform:translate(-50%,-50%);transition:left 1.4s cubic-bezier(.4,0,.2,1);display:flex;align-items:center;justify-content:center;z-index:2}
+.race-car-svg{display:block;animation:orbPulse 2.2s ease-in-out infinite}
+@keyframes orbPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
+.race-crown{position:absolute;top:-14px;left:50%;transform:translateX(-50%);font-size:11px}
+.race-finish{position:absolute;right:-1px;top:-3px;bottom:-3px;width:7px;background:repeating-linear-gradient(45deg,#fff 0,#fff 3px,#000 3px,#000 6px);border-radius:2px;opacity:.7}
+.race-stats{width:48px;flex-shrink:0;text-align:right}
+.race-pps{font-family:'Anton',sans-serif;font-size:18px;line-height:1}
+.race-pps-lbl{font-size:7px;color:var(--muted);letter-spacing:.5px;text-transform:uppercase}
+.race-legend{margin-top:14px;padding-top:12px;border-top:1px solid var(--b1);display:flex;flex-direction:column;gap:4px}
+.race-legend-item{font-size:11px;color:var(--txt);opacity:.85}
+.race-legend-item b{color:var(--txt)}
+
 </style>
 </head>
 <body>
@@ -771,6 +795,7 @@ select:focus,input[type=text]:focus{border-color:#f97316}
 
 <!-- AVDELINGER VIEW -->
 <div class="view" id="view-team">
+  <div id="team-race"></div>
   <div id="tbl-team-cards"></div>
   <div class="tbl-head" style="margin-top:1px">
     <div>#</div><div></div><div>Avdeling</div><div>P</div><div>9s/10s</div><div>Fulgt opp</div>
@@ -1036,7 +1061,7 @@ select:focus,input[type=text]:focus{border-color:#f97316}
 
       <div style="padding:10px 0;border-bottom:1px solid var(--b1)">
         <div style="font-family:'Anton',sans-serif;font-size:12px;color:var(--gold);letter-spacing:1px;margin-bottom:6px">AVDELINGER</div>
-        <div>Konkurransen måles på tvers av <strong style="color:var(--txt)">Økern, Ryen, Lillestrøm og Fornebu</strong> — både individuelt og per avdeling.</div>
+        <div>Avdelingsrace! Hver avdeling er en lysende orb som kj&#248;rer mot m&#229;lstreken (m&#229;nedsslutt). Rangeringen er <strong style="color:var(--txt)">poeng per PST</strong> &#8211; s&#229; en liten avdeling kan sl&#229; en stor. Lederen ligger forrest med gull. Gjelder &#216;kern, Ryen, Lillestr&#248;m og Fornebu.</div>
       </div>
 
       <div style="padding:10px 0;border-bottom:1px solid var(--b1)">
@@ -1244,7 +1269,6 @@ function fetchSales() {
       hideStatus();
       renderAll();
       autoSaveWeeklyWinner();
-      autoSaveSeasonArchive();
     })
     .catch(function(e){
       var msg = e.message || 'Ukjent feil';
@@ -1358,97 +1382,6 @@ function autoSaveWeeklyWinner() {
     });
   })
   .catch(function(e){ console.warn('autoSave sjekk feil:', e); });
-}
-
-
-// ─── AUTO-LAGRE SESONGARKIV ──────────────────────────────────────────
-function autoSaveSeasonArchive() {
-  var now = new Date();
-  var seasonEnd = new Date('2026-07-01T00:00:00');
-  if (now < seasonEnd) return;
-
-  var seasonYear = 2026;
-  var seasonLabel = 'Mai–Juni 2026';
-
-  fetch(SUPABASE_URL+'/rest/v1/season_archive?season_year=eq.'+seasonYear+'&limit=1', {
-    mode:'cors', headers: sbH()
-  })
-  .then(function(r){ return r.json(); })
-  .then(function(existing){
-    if (existing && existing.length > 0) return;
-
-    fetch(API+'?deleted=eq.false&ts=gte.2026-05-01T00:00:00&ts=lte.2026-06-30T23:59:59&order=ts.asc&limit=5000', {
-      mode:'cors', headers: sbH()
-    })
-    .then(function(r){ return r.json(); })
-    .then(function(allScores){
-      if (!Array.isArray(allScores) || !allScores.length) return;
-
-      var stats = {};
-      allScores.forEach(function(s){
-        if (!stats[s.pst]) stats[s.pst] = { loc:s.loc, scores:0, tiere:0, fulgt_opp:0, days:{} };
-        stats[s.pst].scores++;
-        if (s.score===10) stats[s.pst].tiere++;
-        if (s.fulgt_opp) stats[s.pst].fulgt_opp++;
-        var d = (s.ts||'').substring(0,10);
-        stats[s.pst].days[d] = (stats[s.pst].days[d]||0)+1;
-      });
-
-      fetch(SUPABASE_URL+'/rest/v1/weekly_winners?week_year=eq.'+seasonYear+'&limit=100', {
-        mode:'cors', headers: sbH()
-      })
-      .then(function(r){ return r.json(); })
-      .then(function(weekRows){
-        var winCount = {}, hatCount = {};
-        var byWeek = {};
-        (weekRows||[]).forEach(function(w){
-          if (!byWeek[w.week_nr]) byWeek[w.week_nr] = [];
-          byWeek[w.week_nr].push(w);
-        });
-        Object.keys(byWeek).forEach(function(wk){
-          var sorted = byWeek[wk].sort(function(a,b){
-            return b.pts-a.pts || (b.tens||0)-(a.tens||0) || (b.fup||0)-(a.fup||0);
-          });
-          var bestPts=sorted[0].pts, bestTens=sorted[0].tens||0, bestFup=sorted[0].fup||0;
-          sorted.filter(function(r){ return r.pts===bestPts&&(r.tens||0)===bestTens&&(r.fup||0)===bestFup; })
-            .forEach(function(w){
-              var navn=w.pst||w.selger||'';
-              if (!winCount[navn]) winCount[navn]={wins:0,firstWeek:parseInt(wk)};
-              winCount[navn].wins++;
-            });
-          (sorted[0].hat_tricks||[]).forEach(function(navn){
-            if (!hatCount[navn]) hatCount[navn]={count:0};
-            hatCount[navn].count++;
-          });
-        });
-
-        var inserts = Object.keys(stats).map(function(navn){
-          return {
-            season_year:     seasonYear,
-            season_label:    seasonLabel,
-            selger:          navn,
-            loc:             stats[navn].loc,
-            total_scores:    stats[navn].scores,
-            total_tiere:     stats[navn].tiere,
-            total_fulgt_opp: stats[navn].fulgt_opp,
-            total_poeng:     stats[navn].scores * 3,
-            uke_seiere:      winCount[navn] ? winCount[navn].wins : 0,
-            hat_tricks:      hatCount[navn] ? hatCount[navn].count : 0
-          };
-        });
-
-        if (!inserts.length) return;
-        fetch(SUPABASE_URL+'/rest/v1/season_archive', {
-          method:'POST',
-          mode:'cors',
-          headers: Object.assign({}, sbH(), {'Prefer':'resolution=merge-duplicates'}),
-          body: JSON.stringify(inserts)
-        }).then(function(){ console.log('OSAT sesongarkiv lagret!'); })
-          .catch(function(e){ console.warn('OSAT sesongarkiv feil:', e); });
-      });
-    });
-  })
-  .catch(function(e){ console.warn('Sesongarkiv sjekk feil:', e); });
 }
 
 function insertSale(obj, cb) {
@@ -1671,10 +1604,96 @@ function renderInd() {
 }
 
 // ─── RENDER: AVDELINGER ──────────────────────────────────────
+
+// Lysende orb (SVG) i avdelingsfarge
+function raceCarSvg(color, isLeader) {
+  var glow = isLeader ? '#ffd24a' : color;
+  return ''
+    + '<svg class="race-car-svg" width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">'
+    + '<defs>'
+      + '<radialGradient id="orb-'+color.replace("#","")+(isLeader?"-L":"")+'" cx="40%" cy="38%" r="65%">'
+        + '<stop offset="0%" stop-color="#ffffff"/>'
+        + '<stop offset="35%" stop-color="'+glow+'"/>'
+        + '<stop offset="100%" stop-color="'+glow+'" stop-opacity="0.85"/>'
+      + '</radialGradient>'
+    + '</defs>'
+    + '<circle cx="11" cy="11" r="9" fill="'+glow+'" opacity="0.25"/>'
+    + '<circle cx="11" cy="11" r="6.5" fill="url(#orb-'+color.replace("#","")+(isLeader?"-L":"")+')"/>'
+    + '<circle cx="8.8" cy="8.6" r="1.8" fill="#fff" opacity="0.9"/>'
+    + '</svg>';
+}
+
+// ─── AVDELINGSRACE (OSAT: poeng per PST) ─────────────────────────────
+function renderRace() {
+  var el = document.getElementById('team-race');
+  if (!el) return;
+  var m = curMonth;
+
+  var data = TEAMS.map(function(t) {
+    var g = teamGoalsFor(t.id, m);
+    var members = SELGERE.filter(function(s){ return s.loc===t.id; }).length || 1;
+    var pts = g * PTS;
+    return { id:t.id, navn:t.navn, color:t.color, initials:t.initials, g:g, members:members, pts:pts, pps: pts/members };
+  }).sort(function(a,b){ return b.pps-a.pps || b.pts-a.pts || b.g-a.g; });
+
+  var leaderPps = data[0] ? data[0].pps : 0;
+  var now = new Date();
+  var daysInMonth = new Date(now.getFullYear(), now.getMonth()+1, 0).getDate();
+  var dayProgress = Math.min(now.getDate()/daysInMonth, 1);
+  var fieldSpread = 0.55 + 0.45*dayProgress;
+
+  var carsHtml = data.map(function(r, i) {
+    var rel = leaderPps > 0 ? (r.pps/leaderPps) : 0;
+    var pos = 10 + rel*80*fieldSpread + (80*(1-fieldSpread))*rel;
+    if (pos > 90) pos = 90;
+    if (pos < 10) pos = 10;
+    var isLeader = i === 0;
+    var trail = isLeader
+      ? 'linear-gradient(90deg, transparent, rgba(255,210,74,.4), #ffd24a)'
+      : 'linear-gradient(90deg, transparent, '+r.color+'44, '+r.color+')';
+
+    return ''
+      + '<div class="race-lane" style="animation-delay:'+(i*0.12)+'s">'
+        + '<div class="race-lane-label">'
+          + '<span class="race-pos-badge" style="background:'+(isLeader?'#ffd24a':'var(--faint)')+';color:'+(isLeader?'#000':r.color)+'">'+(i+1)+'</span>'
+          + '<span style="color:'+r.color+';font-weight:700">'+r.initials+'</span>'
+        + '</div>'
+        + '<div class="race-track">'
+          + '<div class="race-trail" style="width:'+pos+'%;background:'+trail+';'+(isLeader?'box-shadow:0 0 12px rgba(255,210,74,.5);opacity:.9':'')+'"></div>'
+          + '<div class="race-car" style="left:'+pos+'%;'+(isLeader?'filter:drop-shadow(0 0 10px #ffd24a)':'filter:drop-shadow(0 1px 3px rgba(0,0,0,.5))')+'">'
+            + (isLeader?'<span class="race-crown">&#128081;</span>':'')
+            + raceCarSvg(r.color, isLeader)
+          + '</div>'
+          + '<div class="race-finish"></div>'
+        + '</div>'
+        + '<div class="race-stats">'
+          + '<div class="race-pps" style="color:'+(isLeader?'#ffd24a':r.color)+'">'+r.pps.toFixed(1)+'</div>'
+          + '<div class="race-pps-lbl">pr.&nbsp;PST</div>'
+        + '</div>'
+      + '</div>';
+  }).join('');
+
+  el.innerHTML = ''
+    + '<div class="race-wrap">'
+      + '<div class="race-header">'
+        + '<div class="race-title">&#127937; AVDELINGSRACE</div>'
+        + '<div class="race-sub">M&#229;lstreken = m&#229;nedsslutt &middot; rangert p&#229; poeng per PST</div>'
+      + '</div>'
+      + carsHtml
+      + '<div class="race-legend">'
+        + data.map(function(r){
+            return '<div class="race-legend-item"><span style="color:'+r.color+'">&#9679;</span> '
+              + r.navn + ' &mdash; <b>'+r.pts+'</b> p &middot; '+r.g+' scoringer &middot; '+r.members+' PST-er</div>';
+          }).join('')
+      + '</div>'
+    + '</div>';
+}
+
 function renderTeam() {
   var el = document.getElementById('tbl-team');
   var cardsEl = document.getElementById('tbl-team-cards');
   var m = curMonth;
+  renderRace();
 
   var rows = TEAMS.map(function(t) {
     var g = teamGoalsFor(t.id, m);
@@ -1685,9 +1704,10 @@ function renderTeam() {
       var sObj=SELGERE.find(function(x){return x.navn===s.pst});
       return sObj && sObj.loc===t.id && s.score===10;
     }).length;
-    var members = SELGERE.filter(function(s){return s.loc===t.id;}).length;
-    return Object.assign({},t,{g:g, pts:g*PTS, tens:tens, fup:fup, members:members});
-  }).sort(function(a,b){ return b.pts-a.pts||b.tens-a.tens||b.fup-a.fup; });
+    var members = SELGERE.filter(function(s){return s.loc===t.id;}).length || 1;
+    var pts = g*PTS;
+    return Object.assign({},t,{g:g, pts:pts, tens:tens, fup:fup, members:members, pps:pts/members});
+  }).sort(function(a,b){ return b.pps-a.pps||b.pts-a.pts||b.tens-a.tens||b.fup-a.fup; });
 
   var ranks=[];
   rows.forEach(function(r,i){
