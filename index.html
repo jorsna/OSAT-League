@@ -1510,6 +1510,18 @@ function hatTrickCount(navn) {
   return Object.keys(days).filter(function(d){return days[d]>=3;}).length;
 }
 
+// Hat-tricks kun innenfor en datoperiode (for inneværende uke)
+function hatTrickCountInRange(navn, startStr, endStr) {
+  var days={};
+  sales.forEach(function(s){
+    if(s.pst===navn && !s.deleted && (s.score===9||s.score===10)){
+      var d=tsDate(s.ts);
+      if(d>=startStr && d<=endStr) days[d]=(days[d]||0)+1;
+    }
+  });
+  return Object.keys(days).filter(function(d){return days[d]>=3;}).length;
+}
+
 function goldenPhoneLeader() {
   var best=null, bestFup=0, bestTens=0;
   SELGERE.forEach(function(s){
@@ -1797,7 +1809,7 @@ function renderHoF() {
   var curSunStr = fmtDate(curSunDate);
 
   var hatters = SELGERE.map(function(s){
-    return {s:s, hats:hatTrickCount(s.navn)};
+    return {s:s, hats:hatTrickCountInRange(s.navn, curMonStr, curSunStr)};
   }).filter(function(x){return x.hats>0;})
     .sort(function(a,b){return b.hats-a.hats;});
 
