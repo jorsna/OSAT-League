@@ -3,13 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VCSO OSAT League — Ukesvinner</title>
+<title>VCSO OSAT League 2026 – Ukens PST</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Cinzel:wght@400;600;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --gold:#c9a84c; --gold2:#f0c96e; --gold3:#8a6414; --gold-bright:#ffe98a;
-  --okern:#fca5a5; --ryen:#fde047; --lillestrom:#86efac; --fornebu:#93c5fd;
-  --bg:#03080f; --surface:#070d18; --surface2:#0b1220;
+  --gold:#f97316; --gold2:#fb923c; --gold3:#9a3412; --gold-bright:#fef3c7;
+  --ryen:#f97316; --fornebu:#27c98a; --lillestrom:#e8a020;
+  --bg:#0c0704; --surface:#170d09; --surface2:#1e120b;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;}
@@ -20,16 +23,16 @@ body{background:var(--bg);font-family:'Rajdhani',sans-serif;color:#fff;overflow-
 .bg-deep{
   position:fixed;inset:0;z-index:0;pointer-events:none;
   background:
-    radial-gradient(ellipse 130% 70% at 15% 5%, rgba(201,168,76,0.07) 0%, transparent 55%),
-    radial-gradient(ellipse 90% 90% at 85% 90%, rgba(201,168,76,0.07) 0%, transparent 55%),
-    radial-gradient(ellipse 70% 50% at 50% 50%, rgba(201,168,76,0.03) 0%, transparent 65%),
-    #03080f;
+    radial-gradient(ellipse 130% 70% at 15% 5%, rgba(249,115,22,0.07) 0%, transparent 55%),
+    radial-gradient(ellipse 90% 90% at 85% 90%, rgba(251,191,36,0.07) 0%, transparent 55%),
+    radial-gradient(ellipse 70% 50% at 50% 50%, rgba(252,165,165,0.035) 0%, transparent 65%),
+    #0c0704;
 }
 .bg-grid{
   position:fixed;inset:0;z-index:0;pointer-events:none;
   background-image:
-    linear-gradient(rgba(201,168,76,0.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(201,168,76,0.025) 1px, transparent 1px);
+    linear-gradient(rgba(249,115,22,0.028) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(249,115,22,0.028) 1px, transparent 1px);
   background-size:70px 70px;
   mask-image:radial-gradient(ellipse 90% 90% at 50% 40%, black, transparent);
 }
@@ -37,16 +40,18 @@ body{background:var(--bg);font-family:'Rajdhani',sans-serif;color:#fff;overflow-
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)'/%3E%3C/svg%3E");}
 
 @keyframes shimmer{0%{background-position:200% center;}100%{background-position:-200% center;}}
-@keyframes crownFloat{0%,100%{transform:translateY(0) scale(1) rotate(-3deg);filter:drop-shadow(0 0 24px rgba(201,168,76,0.6));}50%{transform:translateY(-16px) scale(1.06) rotate(3deg);filter:drop-shadow(0 0 50px rgba(201,168,76,1));}}
-@keyframes revealUp{from{opacity:0;transform:translateY(60px) scale(0.95);}to{opacity:1;transform:translateY(0) scale(1);}}
+@keyframes float{0%,100%{transform:translateY(0) rotate(-2deg);}50%{transform:translateY(-14px) rotate(2deg);}}
+@keyframes crownFloat{0%,100%{transform:translateY(0) scale(1) rotate(-4deg);filter:drop-shadow(0 0 24px rgba(251,191,36,0.6));}50%{transform:translateY(-18px) scale(1.07) rotate(4deg);filter:drop-shadow(0 0 50px rgba(251,191,36,1));}}
+@keyframes revealUp{from{opacity:0;transform:translateY(70px) scale(0.94);}to{opacity:1;transform:translateY(0) scale(1);}}
 @keyframes revealFade{from{opacity:0;}to{opacity:1;}}
 @keyframes scanDown{0%{top:-4px;opacity:1;}80%{opacity:1;}100%{top:100vh;opacity:0;}}
+@keyframes tickerMove{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+@keyframes spin{to{transform:rotate(360deg);}}
 @keyframes statPop{0%{transform:scale(0.6);opacity:0;}75%{transform:scale(1.06);}100%{transform:scale(1);opacity:1;}}
 @keyframes glowPulse{0%,100%{opacity:0.5;}50%{opacity:1;}}
-@keyframes haloGlow{0%,100%{opacity:0.25;transform:scale(1);}50%{opacity:0.55;transform:scale(1.04);}}
 @keyframes orbitSpin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
 @keyframes orbitSpinCCW{from{transform:rotate(0deg);}to{transform:rotate(-360deg);}}
-@keyframes spin{to{transform:rotate(360deg);}}
+@keyframes haloGlow{0%,100%{opacity:0.25;transform:scale(1);}50%{opacity:0.55;transform:scale(1.04);}}
 
 .r1{animation:revealUp 1s cubic-bezier(.16,1,.3,1) 0.08s both;}
 .r2{animation:revealUp 1s cubic-bezier(.16,1,.3,1) 0.22s both;}
@@ -62,120 +67,113 @@ body{background:var(--bg);font-family:'Rajdhani',sans-serif;color:#fff;overflow-
   animation:shimmer 4s linear infinite;
 }
 
-.scan{position:fixed;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,rgba(201,168,76,0.9),rgba(240,201,110,0.9),transparent);z-index:999;pointer-events:none;animation:scanDown 2s cubic-bezier(.4,0,.2,1) 0.05s forwards;}
+.scan{position:fixed;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,rgba(249,115,22,0.9),rgba(251,191,36,0.9),transparent);z-index:999;pointer-events:none;animation:scanDown 2s cubic-bezier(.4,0,.2,1) 0.05s forwards;}
+.spin-ring{width:44px;height:44px;border-radius:50%;border:2px solid rgba(249,115,22,0.1);border-top-color:var(--gold);animation:spin 0.85s linear infinite;}
 
 /* HEADER */
 .header{position:relative;text-align:center;padding:72px 24px 56px;overflow:hidden;}
-.header::after{content:'';position:absolute;bottom:0;left:5%;right:5%;height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,0.5),rgba(240,201,110,0.8),rgba(201,168,76,0.5),transparent);}
-.eyebrow{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.55em;text-transform:uppercase;color:rgba(201,168,76,0.45);margin-bottom:22px;display:block;}
-.trophy-icon{font-size:72px;display:inline-block;animation:crownFloat 2.8s ease-in-out infinite;margin-bottom:20px;}
-.header-title{font-family:'Playfair Display',serif;font-weight:900;font-size:clamp(52px,14vw,96px);line-height:0.9;letter-spacing:-0.02em;margin-bottom:8px;}
-.header-sub{font-family:'Playfair Display',serif;font-style:italic;font-weight:400;font-size:clamp(18px,4.5vw,28px);color:rgba(255,255,255,0.22);letter-spacing:0.06em;margin-bottom:32px;}
-.week-badge{display:inline-flex;align-items:center;gap:10px;background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.22);border-radius:100px;padding:10px 26px;font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.22em;color:rgba(201,168,76,0.65);}
+.header::after{content:'';position:absolute;bottom:0;left:5%;right:5%;height:1px;background:linear-gradient(90deg,transparent,rgba(249,115,22,0.3),rgba(251,191,36,0.7),rgba(249,115,22,0.3),transparent);}
+.eyebrow{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.55em;text-transform:uppercase;color:rgba(251,191,36,0.4);margin-bottom:22px;}
+.header-num{font-family:'Playfair Display',serif;font-weight:900;font-size:clamp(72px,18vw,130px);line-height:0.85;letter-spacing:-0.03em;margin-bottom:4px;}
+.header-word{font-family:'Playfair Display',serif;font-style:italic;font-weight:400;font-size:clamp(20px,5vw,34px);color:rgba(255,255,255,0.2);letter-spacing:0.06em;margin-bottom:32px;}
+.week-badge{display:inline-flex;align-items:center;gap:10px;background:rgba(249,115,22,0.06);border:1px solid rgba(249,115,22,0.2);border-radius:100px;padding:10px 26px;font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.22em;color:rgba(251,191,36,0.65);}
 .badge-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);box-shadow:0 0 10px var(--gold);animation:glowPulse 2s ease-in-out infinite;}
 
 /* TICKER */
-.ticker-wrap{overflow:hidden;white-space:nowrap;border-top:1px solid rgba(201,168,76,0.07);border-bottom:1px solid rgba(201,168,76,0.07);padding:12px 0;background:rgba(201,168,76,0.015);}
+.ticker-wrap{overflow:hidden;white-space:nowrap;border-top:1px solid rgba(249,115,22,0.08);border-bottom:1px solid rgba(249,115,22,0.08);padding:12px 0;background:rgba(249,115,22,0.018);}
 .ticker-inner{display:inline-block;animation:tickerMove 40s linear infinite;}
-@keyframes tickerMove{from{transform:translateX(0);}to{transform:translateX(-50%);}}
-.ticker-chunk{display:inline-block;font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.28em;color:rgba(201,168,76,0.32);padding:0 40px;}
+.ticker-chunk{display:inline-block;font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.28em;color:rgba(251,191,36,0.38);padding:0 40px;}
 
 /* WINNER CARD */
-.w-wrap{margin:28px 16px 20px;position:relative;}
-.w-glow{position:absolute;inset:-30px;border-radius:60px;background:radial-gradient(ellipse at 50% 30%,rgba(201,168,76,0.12),rgba(201,168,76,0.06),transparent 65%);pointer-events:none;animation:haloGlow 3s ease-in-out infinite;}
-.w-card{background:linear-gradient(155deg,#0d1008,#03080a,#0a0e06);border-radius:28px;padding:48px 28px 40px;position:relative;overflow:hidden;
-  box-shadow:0 0 0 1px rgba(201,168,76,0.22),0 0 0 2px rgba(201,168,76,0.06),0 0 60px rgba(201,168,76,0.07),0 30px 80px rgba(0,0,0,0.7);}
-.w-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(201,168,76,0.4),rgba(240,201,110,1),rgba(255,233,138,1),rgba(240,201,110,1),rgba(201,168,76,0.4),transparent);}
-.w-card::after{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:60%;height:200px;background:radial-gradient(ellipse,rgba(201,168,76,0.07),rgba(201,168,76,0.03),transparent 70%);pointer-events:none;}
+.w-wrap{margin:0 16px 20px;position:relative;}
+.w-glow{position:absolute;inset:-30px;border-radius:60px;background:radial-gradient(ellipse at 50% 30%,rgba(249,115,22,0.1),rgba(251,191,36,0.08),transparent 65%);pointer-events:none;animation:haloGlow 3s ease-in-out infinite;}
+.w-card{background:linear-gradient(155deg,#1a0f08,#0c0704,#160d07);border-radius:28px;padding:48px 28px 40px;position:relative;overflow:hidden;
+  box-shadow:0 0 0 1px rgba(249,115,22,0.2),0 0 0 2px rgba(251,191,36,0.08),0 0 60px rgba(249,115,22,0.08),0 30px 80px rgba(0,0,0,0.7);}
+.w-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(249,115,22,0.3),rgba(251,191,36,0.9),rgba(251,146,60,1),rgba(251,191,36,0.9),rgba(249,115,22,0.3),transparent);}
+.w-card::after{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:60%;height:200px;background:radial-gradient(ellipse,rgba(249,115,22,0.06),rgba(251,191,36,0.04),transparent 70%);pointer-events:none;}
 
 /* AVATAR */
 .avatar-stage{display:flex;justify-content:center;align-items:center;position:relative;margin-bottom:32px;}
 .avatar-svg{position:absolute;top:0;left:50%;transform:translateX(-50%);pointer-events:none;}
 .avatar-center{position:relative;z-index:10;border-radius:50%;overflow:hidden;}
 .avatar-center img{width:100%;height:100%;object-fit:cover;}
-.avatar-initials{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:40px;font-weight:700;color:var(--gold);}
+.avatar-initials{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:40px;font-weight:700;}
 
-.winner-eyebrow{font-family:'Cinzel',serif;font-size:11px;letter-spacing:0.32em;text-transform:uppercase;color:rgba(201,168,76,0.6);text-align:center;margin-bottom:28px;display:flex;align-items:center;gap:14px;font-weight:600;}
+.winner-eyebrow{font-family:'Cinzel',serif;font-size:11px;letter-spacing:0.32em;text-transform:uppercase;color:rgba(251,191,36,0.6);text-align:center;margin-bottom:28px;display:flex;align-items:center;gap:14px;font-weight:600;}
 .winner-eyebrow::before,.winner-eyebrow::after{content:'';flex:1;height:1px;}
-.winner-eyebrow::before{background:linear-gradient(90deg,transparent,rgba(201,168,76,0.35));}
-.winner-eyebrow::after{background:linear-gradient(90deg,rgba(201,168,76,0.35),transparent);}
+.winner-eyebrow::before{background:linear-gradient(90deg,transparent,rgba(251,191,36,0.35));}
+.winner-eyebrow::after{background:linear-gradient(90deg,rgba(251,191,36,0.35),transparent);}
 
-.winner-name{font-family:'Playfair Display',serif;font-weight:900;font-size:clamp(36px,9vw,60px);line-height:1.05;letter-spacing:-0.01em;text-align:center;margin-bottom:16px;}
+.winner-name{font-family:'Playfair Display',serif;font-weight:900;font-size:clamp(38px,9vw,64px);line-height:1.1;letter-spacing:-0.01em;text-align:center;margin-bottom:18px;padding-bottom:6px;overflow:visible;}
 .dept-pill{display:inline-flex;align-items:center;gap:9px;padding:8px 22px;border-radius:100px;font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.2em;font-weight:600;}
 
-/* STATS GRID */
-.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:28px 0 24px;}
-.stat-card{background:rgba(0,0,0,0.4);border-radius:16px;padding:18px 8px 14px;text-align:center;position:relative;overflow:hidden;animation:statPop 0.7s cubic-bezier(.16,1,.3,1) both;transition:transform 0.2s;}
+/* STATS */
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:30px;}
+.stat-card{background:rgba(0,0,0,0.4);border-radius:20px;padding:22px 10px 18px;text-align:center;position:relative;overflow:hidden;animation:statPop 0.7s cubic-bezier(.16,1,.3,1) both;transition:transform 0.2s,box-shadow 0.2s;}
 .stat-card:hover{transform:translateY(-3px);}
-.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,0.5),transparent);}
-.stat-num{font-family:'Playfair Display',serif;font-weight:900;font-size:42px;line-height:1;margin-bottom:5px;}
-.stat-lbl{font-family:'Cinzel',serif;font-size:6.5px;letter-spacing:0.28em;text-transform:uppercase;color:rgba(255,255,255,0.18);}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(251,191,36,0.5),transparent);}
+.stat-card::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% -10%,rgba(249,115,22,0.05),transparent 60%);}
+.stat-num{font-family:'Playfair Display',serif;font-weight:900;font-size:52px;line-height:1;margin-bottom:6px;}
+.stat-lbl{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.3em;text-transform:uppercase;color:rgba(255,255,255,0.18);}
 
-/* BADGES */
-.badges-row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:20px;}
-.badge{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:100px;font-family:'Cinzel',serif;font-size:8px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;}
-.badge-hat{background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.38);color:var(--gold2);}
-.badge-phone{background:rgba(134,239,172,0.08);border:1px solid rgba(134,239,172,0.3);color:#86efac;}
-.badge-star{background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.38);color:var(--gold2);}
+/* RANKING */
+.rank-title{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.35em;color:rgba(251,191,36,0.32);text-align:center;display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+.rank-title::before,.rank-title::after{content:'';flex:1;height:1px;background:rgba(251,191,36,0.1);}
+.rank-row{display:flex;align-items:center;gap:14px;padding:13px 16px;border-radius:14px;margin-bottom:6px;background:rgba(255,255,255,0.018);border:1px solid rgba(255,255,255,0.035);transition:all 0.22s;}
+.rank-row:hover{background:rgba(249,115,22,0.04);border-color:rgba(249,115,22,0.15);transform:translateX(5px);}
+.rank-num{font-family:'Playfair Display',serif;font-weight:700;font-size:22px;color:rgba(255,255,255,0.1);width:28px;text-align:center;flex-shrink:0;}
+.rank-name{flex:1;font-size:14px;font-weight:600;color:rgba(255,255,255,0.7);}
+.rank-dept-lbl{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.1em;margin-top:2px;}
+.rank-pts{font-family:'Playfair Display',serif;font-weight:700;font-size:24px;}
 
 /* SECONDARY CARDS */
-.sec{margin:0 16px 14px;background:linear-gradient(160deg,#0a0e06,#030808);border-radius:24px;border:1px solid rgba(201,168,76,0.1);padding:28px 26px;position:relative;overflow:hidden;transition:border-color 0.3s;}
-.sec:hover{border-color:rgba(201,168,76,0.22);}
+.sec{margin:0 16px 14px;background:linear-gradient(160deg,#170d09,#0a0604);border-radius:24px;border:1px solid rgba(249,115,22,0.1);padding:28px 26px;position:relative;overflow:hidden;transition:border-color 0.3s;}
+.sec:hover{border-color:rgba(249,115,22,0.2);}
 .sec-top{position:absolute;top:0;left:0;right:0;height:2px;}
-.sec-title{font-family:'Cinzel',serif;font-size:12px;letter-spacing:0.22em;color:rgba(201,168,76,0.72);margin-bottom:22px;display:flex;align-items:center;gap:12px;font-weight:600;}
-.sec-title::after{content:'';flex:1;height:1px;background:rgba(201,168,76,0.12);}
+.sec-title{font-family:'Cinzel',serif;font-size:12px;letter-spacing:0.22em;color:rgba(251,191,36,0.72);margin-bottom:22px;display:flex;align-items:center;gap:12px;font-weight:600;}
+.sec-title::after{content:'';flex:1;height:1px;background:rgba(249,115,22,0.1);}
 .sec-name{font-family:'Playfair Display',serif;font-weight:700;font-size:30px;line-height:1;}
 .sec-sub{font-size:11px;font-weight:600;letter-spacing:0.12em;margin-top:6px;}
 
-/* STATS ROW (ukens tall) */
-.week-stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
-.week-stat-box{background:rgba(0,0,0,0.35);border-radius:16px;padding:20px 12px;text-align:center;border:1px solid rgba(201,168,76,0.09);position:relative;overflow:hidden;}
-.week-stat-box::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,0.35),transparent);}
-.week-stat-n{font-family:'Playfair Display',serif;font-weight:900;font-size:44px;line-height:1;margin-bottom:5px;}
-.week-stat-l{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.28em;color:rgba(255,255,255,0.2);}
+.mvp-days{display:flex;gap:6px;margin-top:16px;}
+.mvp-day{flex:1;border-radius:10px;padding:9px 4px;text-align:center;transition:all 0.2s;}
+.mvp-day.on{background:rgba(251,191,36,0.14);border:1px solid rgba(251,191,36,0.42);box-shadow:0 0 14px rgba(251,191,36,0.15);color:var(--gold2);}
+.mvp-day.off{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.04);color:rgba(255,255,255,0.14);}
+.mvp-day-lbl{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.1em;font-weight:600;}
 
-/* AVDELINGER */
-.rank-title{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.35em;color:rgba(201,168,76,0.32);text-align:center;display:flex;align-items:center;gap:12px;margin-bottom:14px;}
-.rank-title::before,.rank-title::after{content:'';flex:1;height:1px;background:rgba(201,168,76,0.1);}
-.rank-row{display:flex;align-items:center;gap:14px;padding:13px 16px;border-radius:14px;margin-bottom:6px;background:rgba(255,255,255,0.018);border:1px solid rgba(255,255,255,0.035);transition:all 0.22s;}
-.rank-row:hover{background:rgba(201,168,76,0.04);border-color:rgba(201,168,76,0.15);transform:translateX(5px);}
-.rank-num{font-family:'Playfair Display',serif;font-weight:700;font-size:22px;color:rgba(255,255,255,0.1);width:28px;text-align:center;flex-shrink:0;}
-.rank-name{flex:1;font-size:14px;font-weight:600;color:rgba(255,255,255,0.72);}
-.rank-dept-lbl{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.1em;margin-top:2px;}
-.rank-pts{font-family:'Playfair Display',serif;font-weight:700;font-size:24px;}
-.rank-pts-lbl{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.15em;color:rgba(255,255,255,0.2);}
+.ht-row{display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:12px;margin-bottom:8px;background:rgba(39,201,138,0.05);border:1px solid rgba(39,201,138,0.14);}
+.ht-dot{width:8px;height:8px;border-radius:50%;background:#27c98a;box-shadow:0 0 10px #27c98a;flex-shrink:0;}
+.ht-ct{color:#27c98a;font-weight:700;font-size:14px;}
+.ht-dt{color:rgba(255,255,255,0.38);font-size:12px;}
 
-/* GULLTELEFON */
-.phone-row{display:flex;align-items:center;gap:18px;}
-.phone-icon-wrap{width:66px;height:66px;border-radius:50%;background:rgba(134,239,172,0.08);border:1px solid rgba(134,239,172,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.phone-nm{font-family:'Playfair Display',serif;font-weight:700;font-size:28px;line-height:1;}
-.phone-avd{font-size:11px;font-weight:600;letter-spacing:0.12em;margin-top:4px;}
-.phone-stat-n{font-family:'Playfair Display',serif;font-weight:700;font-size:36px;line-height:1;color:#86efac;}
-.phone-stat-l{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.2em;color:rgba(255,255,255,0.2);}
+.dept-row{display:flex;align-items:center;gap:18px;}
+.dept-circle{width:66px;height:66px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:22px;font-weight:700;flex-shrink:0;}
+.dept-nm{font-family:'Playfair Display',serif;font-weight:700;font-size:40px;line-height:1;}
 
-/* HAT TRICKS */
-.ht-row{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:12px;margin-bottom:8px;background:rgba(201,168,76,0.04);border:1px solid rgba(201,168,76,0.14);}
-.ht-photo{width:36px;height:36px;border-radius:50%;overflow:hidden;border:1px solid rgba(201,168,76,0.3);flex-shrink:0;}
-.ht-photo img{width:100%;height:100%;object-fit:cover;filter:grayscale(60%);}
-.ht-photo-ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:11px;font-weight:700;}
-.ht-name{flex:1;font-size:14px;font-weight:600;color:rgba(255,255,255,0.8);}
-.ht-sub{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.1em;}
-.ht-stars{font-size:14px;letter-spacing:2px;}
+.sale-row{display:flex;align-items:center;gap:12px;padding:11px 16px;border-radius:12px;margin-bottom:3px;transition:background 0.15s;}
+.sale-row:nth-child(odd){background:rgba(255,255,255,0.016);}
+.sale-row:hover{background:rgba(249,115,22,0.04);}
+.sale-pip{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.sale-nm{flex:1;font-size:13px;font-weight:600;color:rgba(255,255,255,0.68);}
+.sale-mod{font-size:11px;color:rgba(255,255,255,0.26);font-style:italic;}
+.sale-fin{font-family:'Cinzel',serif;font-size:7px;font-weight:700;color:var(--gold2);letter-spacing:0.18em;}
+.sale-dt{font-size:10px;color:rgba(255,255,255,0.17);font-weight:500;}
 
-/* FOOTER */
 .footer{text-align:center;padding:44px 24px 28px;}
-.footer-line{height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,0.25),transparent);margin-bottom:22px;}
-.footer-txt{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.4em;color:rgba(201,168,76,0.2);}
+.footer-line{height:1px;background:linear-gradient(90deg,transparent,rgba(251,191,36,0.2),transparent);margin-bottom:22px;}
+.footer-txt{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.4em;color:rgba(251,191,36,0.18);}
 
 .loading{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;}
-.loading-lbl{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.4em;color:rgba(201,168,76,0.28);}
-.spin-ring{width:44px;height:44px;border-radius:50%;border:2px solid rgba(201,168,76,0.1);border-top-color:var(--gold);animation:spin 0.85s linear infinite;}
+.loading-lbl{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.4em;color:rgba(251,191,36,0.28);}
 .page{position:relative;z-index:2;min-height:100vh;}
 .content{max-width:520px;margin:0 auto;}
+
+/* OSAT: 4 vinner-stats i 2x2 */
+.stats-4{grid-template-columns:repeat(2,1fr);}
+.stats-4 .stat-num{font-size:46px;}
 </style>
 </head>
 <body>
-
 <canvas id="particles"></canvas>
 <div class="bg-deep"></div>
 <div class="bg-grid"></div>
@@ -184,17 +182,17 @@ body{background:var(--bg);font-family:'Rajdhani',sans-serif;color:#fff;overflow-
 <div id="root" class="page"></div>
 
 <script>
-/* PARTICLE SYSTEM – gold/warm OSAT */
+/* PARTICLE SYSTEM – warm OSAT mix (oransje/amber/soft red) */
 (function(){
   const c=document.getElementById('particles'),ctx=c.getContext('2d');
   let W,H,pts=[];
   function resize(){W=c.width=innerWidth;H=c.height=innerHeight;}
   resize();window.addEventListener('resize',resize);
-  const COLS=[[201,168,76],[240,201,110],[255,233,138],[134,239,172],[255,220,100]];
-  for(let i=0;i<110;i++){
+  const COLS=[[249,115,22],[251,146,60],[253,186,116],[251,191,36],[252,165,165]];
+  for(let i=0;i<130;i++){
     const col=COLS[Math.floor(Math.random()*COLS.length)];
-    pts.push({x:Math.random()*9999,y:Math.random()*9999,r:Math.random()*1.5+0.2,
-      vx:(Math.random()-0.5)*0.18,vy:-(Math.random()*0.35+0.05),
+    pts.push({x:Math.random()*9999,y:Math.random()*9999,r:Math.random()*1.6+0.2,
+      vx:(Math.random()-0.5)*0.22,vy:-(Math.random()*0.4+0.05),
       life:Math.random(),maxLife:Math.random()*0.6+0.4,col,
       drift:Math.random()*Math.PI*2,driftS:Math.random()*0.01+0.003});
   }
@@ -203,11 +201,11 @@ body{background:var(--bg);font-family:'Rajdhani',sans-serif;color:#fff;overflow-
     pts.forEach(p=>{
       p.life+=0.0025;p.drift+=p.driftS;
       if(p.life>p.maxLife){p.life=0;p.x=Math.random()*W;p.y=H+10;}
-      p.x+=p.vx+Math.sin(p.drift)*0.3;p.y+=p.vy;
+      p.x+=p.vx+Math.sin(p.drift)*0.4;p.y+=p.vy;
       const t=p.life/p.maxLife,a=t<0.15?t/0.15:t>0.8?(1-t)/0.2:1;
-      ctx.save();ctx.globalAlpha=a*0.5;
+      ctx.save();ctx.globalAlpha=a*0.55;
       ctx.fillStyle=`rgb(${p.col.join(',')})`;
-      ctx.shadowBlur=10;ctx.shadowColor=`rgba(${p.col.join(',')},0.9)`;
+      ctx.shadowBlur=12;ctx.shadowColor=`rgba(${p.col.join(',')},0.9)`;
       ctx.beginPath();ctx.arc(p.x%W,p.y,p.r,0,Math.PI*2);ctx.fill();
       ctx.restore();
     });
@@ -217,359 +215,444 @@ body{background:var(--bg);font-family:'Rajdhani',sans-serif;color:#fff;overflow-
 })();
 </script>
 
-<script>
-// ── SUPABASE CONFIG ────────────────────────────────
-var SUPABASE_URL = 'https://aemboxqpaeyfdlzmghxe.supabase.co';
-var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFlbWJveHFwYWV5ZmRsem1naHhlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3OTIzNTQsImV4cCI6MjA5NDM2ODM1NH0.vKRaz0bRJm621eKgtF7iXh23Zqdh0qNuriMgDMhJ8Yw';
+<script type="text/babel">
+const {useState,useEffect}=React;
 
-var SELGERE = [
-  {navn:'Abishan Balasegar',           loc:'fornebu', id:'abishan_balasegar'},
-  {navn:'Ameer Hawary',                loc:'fornebu', id:'ameer_hawary'},
-  {navn:'Bawar Faraj',                 loc:'fornebu', id:'bawar_faraj'},
-  {navn:'Brage Grammeltvedt Grefstad', loc:'fornebu', id:'brage_grammeltvedt_grefstad'},
-  {navn:'Elias Lieberg',               loc:'fornebu', id:'elias_lieberg'},
-  {navn:'Fabian Leyell Finstad',       loc:'fornebu', id:'fabian_leyell_finstad'},
-  {navn:'Kristoffer H. Gravdal',       loc:'fornebu', id:'kristoffer_h_gravdal'},
-  {navn:'Mathuran Sandrakumar',        loc:'fornebu', id:'mathuran_sandrakumar'},
-  {navn:'Matilde R. Ojala-Andskog',    loc:'fornebu', id:'matilde_r_ojalaandskog'},
-  {navn:'Mohammed Salou',              loc:'fornebu', id:'mohammed_salou'},
-  {navn:'Mohammad Sirwan Salar',       loc:'fornebu', id:'mohammad_sirwan_salar'},
-  {navn:'Moosa Butt',                  loc:'fornebu', id:'moosa_butt'},
-  {navn:'Aleksander Pettersen',        loc:'lillestrom', id:'aleksander_pettersen'},
-  {navn:'Christopher Sjøstrøm',        loc:'lillestrom', id:'christopher_sjostrom'},
-  {navn:'Dennis Uggerud',              loc:'lillestrom', id:'dennis_uggerud'},
-  {navn:'George Xheki Hanelli',        loc:'lillestrom', id:'george_xheki_hanelli'},
-  {navn:'Hedvig Øyen Larsen',          loc:'lillestrom', id:'hedvig_oyen_larsen'},
-  {navn:'John Arild Bergengen',        loc:'lillestrom', id:'john_arild_bergengen'},
-  {navn:'Jørn Sørensen',               loc:'lillestrom', id:'jorn_sorensen'},
-  {navn:'Martin Pedersen',             loc:'lillestrom', id:'martin_pedersen'},
-  {navn:'Pavel Jizba',                 loc:'lillestrom', id:'pavel_jizba'},
-  {navn:'Tom Kjetil Sandmoe',          loc:'lillestrom', id:'tom_kjetil_sandmoe'},
-  {navn:'Ali Husseini',                loc:'okern', id:'ali_husseini'},
-  {navn:'Basil Omar',                  loc:'okern', id:'basil_omar'},
-  {navn:'Emirhan Cimen',               loc:'okern', id:'emirhan_cimen'},
-  {navn:'Shezad Masih Azam',           loc:'okern', id:'shezad_masih_azam'},
-  {navn:'Abdulghani Ajjan',            loc:'ryen', id:'abdulghani_ajjan'},
-  {navn:'Algirdas Ambrozaitis',        loc:'ryen', id:'algirdas_ambrozaitis'},
-  {navn:'Biniam Tesfamichael Tekle',   loc:'ryen', id:'biniam_tesfamichael_tekle'},
-  {navn:'Elias Palacios',              loc:'ryen', id:'elias_palacios'},
-  {navn:'Harvinder Singh Kular',       loc:'ryen', id:'harvinder_singh_kular'},
-  {navn:'Joel Andom Jiji',             loc:'ryen', id:'joel_andom_jiji'},
-  {navn:'Kristoffer Langerud',         loc:'ryen', id:'kristoffer_langerud'},
-  {navn:'Marco Bjørnstad',             loc:'ryen', id:'marco_bjornstad'},
-  {navn:'Mohammad Yousaf Ahmed',       loc:'ryen', id:'mohammad_yousaf_ahmed'},
-  {navn:'Sindre Andrè Tømte',          loc:'ryen', id:'sindre_andre_tomte'},
-  {navn:'Sipan Zewki',                 loc:'ryen', id:'sipan_zewki'},
-  {navn:'Vidar Flesvik',               loc:'ryen', id:'vidar_flesvik'},
-  {navn:'Wajahit Elahit',              loc:'ryen', id:'wajahit_elahit'},
-  {navn:'Leon Pettersen',              loc:'ryen', id:'leon_pettersen'},
+/* ── OSAT PST-roster ── */
+const PST=[
+  {name:'Abishan Balasegar',           loc:'fornebu', id:'abishan_balasegar'},
+  {name:'Ameer Hawary',                loc:'fornebu', id:'ameer_hawary'},
+  {name:'Bawar Faraj',                 loc:'fornebu', id:'bawar_faraj'},
+  {name:'Brage Grammeltvedt Grefstad', loc:'fornebu', id:'brage_grammeltvedt_grefstad'},
+  {name:'Elias Lieberg',               loc:'fornebu', id:'elias_lieberg'},
+  {name:'Fabian Leyell Finstad',       loc:'fornebu', id:'fabian_leyell_finstad'},
+  {name:'Kristoffer H. Gravdal',       loc:'fornebu', id:'kristoffer_h_gravdal'},
+  {name:'Mathuran Sandrakumar',        loc:'fornebu', id:'mathuran_sandrakumar'},
+  {name:'Matilde R. Ojala-Andskog',    loc:'fornebu', id:'matilde_r_ojalaandskog'},
+  {name:'Mohammed Salou',              loc:'fornebu', id:'mohammed_salou'},
+  {name:'Mohammad Sirwan Salar',       loc:'fornebu', id:'mohammad_sirwan_salar'},
+  {name:'Moosa Butt',                  loc:'fornebu', id:'moosa_butt'},
+  {name:'Aleksander Pettersen',        loc:'lillestrom', id:'aleksander_pettersen'},
+  {name:'Christopher Sjøstrøm',        loc:'lillestrom', id:'christopher_sjostrom'},
+  {name:'Dennis Uggerud',              loc:'lillestrom', id:'dennis_uggerud'},
+  {name:'George Xheki Hanelli',        loc:'lillestrom', id:'george_xheki_hanelli'},
+  {name:'Hedvig Øyen Larsen',          loc:'lillestrom', id:'hedvig_oyen_larsen'},
+  {name:'John Arild Bergengen',        loc:'lillestrom', id:'john_arild_bergengen'},
+  {name:'Jørn Sørensen',               loc:'lillestrom', id:'jorn_sorensen'},
+  {name:'Martin Pedersen',             loc:'lillestrom', id:'martin_pedersen'},
+  {name:'Pavel Jizba',                 loc:'lillestrom', id:'pavel_jizba'},
+  {name:'Tom Kjetil Sandmoe',          loc:'lillestrom', id:'tom_kjetil_sandmoe'},
+  {name:'Ali Husseini',                loc:'okern', id:'ali_husseini'},
+  {name:'Basil Omar',                  loc:'okern', id:'basil_omar'},
+  {name:'Emirhan Cimen',               loc:'okern', id:'emirhan_cimen'},
+  {name:'Shezad Masih Azam',           loc:'okern', id:'shezad_masih_azam'},
+  {name:'Abdulghani Ajjan',            loc:'ryen', id:'abdulghani_ajjan'},
+  {name:'Algirdas Ambrozaitis',        loc:'ryen', id:'algirdas_ambrozaitis'},
+  {name:'Biniam Tesfamichael Tekle',   loc:'ryen', id:'biniam_tesfamichael_tekle'},
+  {name:'Elias Palacios',              loc:'ryen', id:'elias_palacios'},
+  {name:'Harvinder Singh Kular',       loc:'ryen', id:'harvinder_singh_kular'},
+  {name:'Joel Andom Jiji',             loc:'ryen', id:'joel_andom_jiji'},
+  {name:'Kristoffer Langerud',         loc:'ryen', id:'kristoffer_langerud'},
+  {name:'Marco Bjørnstad',             loc:'ryen', id:'marco_bjornstad'},
+  {name:'Mohammad Yousaf Ahmed',       loc:'ryen', id:'mohammad_yousaf_ahmed'},
+  {name:'Sindre Andrè Tømte',          loc:'ryen', id:'sindre_andre_tomte'},
+  {name:'Sipan Zewki',                 loc:'ryen', id:'sipan_zewki'},
+  {name:'Vidar Flesvik',               loc:'ryen', id:'vidar_flesvik'},
+  {name:'Wajahit Elahit',              loc:'ryen', id:'wajahit_elahit'},
 ];
+const PHOTOS={}; PST.forEach(p=>{PHOTOS[p.name]='photos/'+p.id+'.jpg';});
+const LOC_OF={}; PST.forEach(p=>{LOC_OF[p.name]=p.loc;});
 
-var TEAM_COLORS = {
-  okern:'#fca5a5', ryen:'#fde047', lillestrom:'#86efac', fornebu:'#93c5fd'
+/* ── OSAT Supabase ── */
+const SB_URL="https://aemboxqpaeyfdlzmghxe.supabase.co";
+const SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFlbWJveHFwYWV5ZmRsem1naHhlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3OTIzNTQsImV4cCI6MjA5NDM2ODM1NH0.vKRaz0bRJm621eKgtF7iXh23Zqdh0qNuriMgDMhJ8Yw";
+
+/* ── OSAT avdelinger ── */
+const DEPT={
+  okern:     {label:"Økern",     color:"#fca5a5", bg:"rgba(252,165,165,0.12)"},
+  ryen:      {label:"Ryen",      color:"#fde047", bg:"rgba(253,224,71,0.12)"},
+  lillestrom:{label:"Lillestrøm",color:"#86efac", bg:"rgba(134,239,172,0.12)"},
+  fornebu:   {label:"Fornebu",   color:"#93c5fd", bg:"rgba(147,197,253,0.12)"},
 };
-var TEAM_NAMES = {
-  okern:'Økern', ryen:'Ryen', lillestrom:'Lillestrøm', fornebu:'Fornebu'
-};
-var PHOTOS = {};
-SELGERE.forEach(function(s){ PHOTOS[s.navn]='photos/'+s.id+'.jpg'; });
+const dc=loc=>DEPT[loc]?.color||"#f97316";
+const dl=loc=>DEPT[loc]?.label||loc;
 
-// ── UKEBEREGNING ───────────────────────────────────
-function getWeekBounds() {
-  var now = new Date();
-  var day = now.getDay();
-  var diffToMon = (day===0) ? -6 : 1 - day;
-  var mon = new Date(now); mon.setDate(now.getDate() + diffToMon - 7);
-  mon.setHours(0,0,0,0);
-  var sun = new Date(mon); sun.setDate(mon.getDate() + 6);
-  sun.setHours(23,59,59,999);
-  function pad(n){ return String(n).padStart(2,'0'); }
-  function fmt(d){ return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
-  var tmp = new Date(mon.getTime());
-  tmp.setDate(tmp.getDate() + 3 - ((tmp.getDay()+6)%7));
-  var week1 = new Date(tmp.getFullYear(),0,4);
-  var weekNr = 1 + Math.round(((tmp-week1)/86400000 - 3 + ((week1.getDay()+6)%7))/7);
-  var norDays = ['','januar','februar','mars','april','mai','juni','juli','august','september','oktober','november','desember'];
-  var monStr = mon.getDate()+'. '+norDays[mon.getMonth()+1];
-  var sunStr = sun.getDate()+'. '+norDays[sun.getMonth()+1]+' '+sun.getFullYear();
-  return { weekNr:weekNr, start:fmt(mon), end:fmt(sun), monStr:monStr, sunStr:sunStr };
+/* ── Dato-logikk (identisk med Championship/Selekt) ── */
+function isoWeek(d){
+  const u=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()));
+  const day=u.getUTCDay()||7;u.setUTCDate(u.getUTCDate()+4-day);
+  const y1=new Date(Date.UTC(u.getUTCFullYear(),0,1));
+  return Math.ceil((((u-y1)/86400000)+1)/7);
 }
-
-function tsDate(ts){ return (ts||'').substring(0,10); }
-function sbHeaders(){
-  return {'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json'};
+function weekDates(year,week){
+  const jan4=new Date(Date.UTC(year,0,4));
+  const w1s=new Date(jan4);w1s.setUTCDate(jan4.getUTCDate()-((jan4.getUTCDay()||7)-1));
+  const s=new Date(w1s);s.setUTCDate(w1s.getUTCDate()+(week-1)*7);
+  const e=new Date(s);e.setUTCDate(s.getUTCDate()+6);
+  return{
+    start:new Date(Date.UTC(s.getUTCFullYear(),s.getUTCMonth(),s.getUTCDate(),0,0,0)),
+    end:  new Date(Date.UTC(e.getUTCFullYear(),e.getUTCMonth(),e.getUTCDate(),23,59,59,999))
+  };
 }
-function getShort(navn){
-  var parts = navn.split(' ');
-  if(parts.length<=2) return navn;
-  return parts[0]+' '+parts[1][0]+'. '+parts[parts.length-1];
+function getDisplayWeek(){
+  const now=new Date();
+  const thisWeek=isoWeek(now);
+  const thisYear=now.getFullYear();
+  if(thisWeek>1)return{year:thisYear,week:thisWeek-1};
+  const dec28=new Date(Date.UTC(thisYear-1,11,28));
+  return{year:thisYear-1,week:isoWeek(dec28)};
 }
+function fmtDate(d){return d.toLocaleDateString("no-NO",{day:"numeric",month:"long"});}
 
-// ── AVATAR SVG-RING ────────────────────────────────
-function buildAvatarHTML(navn, loc, size){
-  size = size || 120;
-  var color = TEAM_COLORS[loc] || '#c9a84c';
-  var svgW = size + 120, svgH = size + 120;
-  var cx = svgW/2, cy = svgH/2;
-  var r1 = size/2 + 10, r2 = size/2 + 28;
-  var ini = navn.split(' ').map(function(x){return x[0];}).join('').slice(0,2).toUpperCase();
-  var photoSrc = PHOTOS[navn];
-  var imgId = 'avatar-img-'+Math.random().toString(36).slice(2);
-
-  var svg = '<svg width="'+svgW+'" height="'+svgH+'" style="position:absolute;top:0;left:50%;transform:translateX(-50%);pointer-events:none;">'
-    +'<circle cx="'+cx+'" cy="'+cy+'" r="'+r2+'" fill="none" stroke="'+color+'" stroke-width="0.8" stroke-opacity="0.2" stroke-dasharray="4 8"/>'
-    +'<circle cx="'+cx+'" cy="'+cy+'" r="'+r1+'" fill="none" stroke="'+color+'" stroke-width="1.5" stroke-opacity="0.55"/>'
-    +'</svg>';
-
-  var wrap = '<div class="avatar-stage" style="height:'+(svgH)+'px;">'
-    + svg
-    + '<div class="avatar-center" style="width:'+size+'px;height:'+size+'px;background:rgba(201,168,76,0.07);border:2px solid rgba(201,168,76,0.3);">'
-    + '<img id="'+imgId+'" src="'+photoSrc+'" style="width:100%;height:100%;object-fit:cover;display:none;" onload="this.style.display=\'block\';document.getElementById(\''+imgId+'-ph\').style.display=\'none\';" onerror="this.style.display=\'none\';">'
-    + '<div id="'+imgId+'-ph" class="avatar-initials" style="color:'+color+';">'+ini+'</div>'
-    + '</div>'
-    + '</div>';
-  return wrap;
-}
-
-// ── LOADING ────────────────────────────────────────
-function showLoading(){
-  document.getElementById('root').innerHTML =
-    '<div class="loading"><div class="spin-ring"></div><div class="loading-lbl">Henter data</div></div>';
-}
-
-// ── MAIN ───────────────────────────────────────────
-async function loadAndRender(){
-  showLoading();
-  var wb = getWeekBounds();
-
-  var url = SUPABASE_URL+'/rest/v1/osat_scores'
-    +'?deleted=eq.false'
-    +'&ts=gte.'+wb.start+'T00:00:00'
-    +'&ts=lte.'+wb.end+'T23:59:59'
-    +'&order=ts.asc&limit=2000';
-
-  var res = await fetch(url, {mode:'cors', headers:sbHeaders()});
-  if(!res.ok){ document.getElementById('root').innerHTML='<div class="loading"><div class="loading-lbl">Feil ved henting</div></div>'; return; }
-  var sales = await res.json();
-  if(!Array.isArray(sales)) sales=[];
-
-  var pstStats = {};
-  SELGERE.forEach(function(s){
-    pstStats[s.navn]={navn:s.navn, loc:s.loc, g:0, tens:0, nines:0, fup:0, pts:0, dayMap:{}};
-  });
-
-  sales.forEach(function(s){
-    if(!pstStats[s.pst]) return;
-    var p = pstStats[s.pst];
-    if(s.score===9||s.score===10){
-      p.g++; p.pts+=3;
-      if(s.score===10) p.tens++;
-      if(s.score===9) p.nines++;
-      if(s.fulgt_opp) p.fup++;
-      var d=tsDate(s.ts); p.dayMap[d]=(p.dayMap[d]||0)+1;
+/* ── AnimNum ── */
+function AnimNum({value,color}){
+  const[n,setN]=useState(0);
+  useEffect(()=>{
+    if(!value){setN(0);return;}let start=null;
+    function step(ts){
+      if(!start)start=ts;
+      const p=Math.min((ts-start)/900,1),ease=1-Math.pow(1-p,4);
+      setN(Math.round(ease*value));
+      if(p<1)requestAnimationFrame(step);
     }
-  });
-
-  Object.keys(pstStats).forEach(function(navn){
-    var p=pstStats[navn];
-    p.hatDays = Object.keys(p.dayMap).filter(function(d){return p.dayMap[d]>=3;}).length;
-  });
-
-  var sorted = Object.values(pstStats).sort(function(a,b){
-    return b.pts-a.pts || b.tens-a.tens || b.fup-a.fup;
-  });
-  var winner = sorted[0];
-  if(!winner || winner.pts===0){
-    document.getElementById('root').innerHTML='<div class="loading"><div class="loading-lbl">Ingen scoringer denne uken ennå</div></div>';
-    return;
-  }
-
-  // Gulltelefon – høyest fulgt opp
-  var gpSorted = Object.values(pstStats).sort(function(a,b){ return b.fup-a.fup || b.tens-a.tens; });
-  var gp = gpSorted[0] && gpSorted[0].fup>0 ? gpSorted[0] : null;
-
-  // Avdelinger
-  var teamStats = {okern:{g:0,tens:0,pts:0},ryen:{g:0,tens:0,pts:0},lillestrom:{g:0,tens:0,pts:0},fornebu:{g:0,tens:0,pts:0}};
-  Object.values(pstStats).forEach(function(p){
-    if(teamStats[p.loc]){ teamStats[p.loc].g+=p.g; teamStats[p.loc].tens+=p.tens; teamStats[p.loc].pts+=p.pts; }
-  });
-  var avd = Object.keys(teamStats).map(function(loc){
-    return Object.assign({loc:loc, navn:TEAM_NAMES[loc], color:TEAM_COLORS[loc]}, teamStats[loc]);
-  }).sort(function(a,b){return b.pts-a.pts||b.tens-a.tens;});
-
-  var totalScores=0, totalTens=0, totalFup=0;
-  Object.values(pstStats).forEach(function(p){ totalScores+=p.g; totalTens+=p.tens; totalFup+=p.fup; });
-
-  var hatters = Object.values(pstStats).filter(function(p){return p.hatDays>0;})
-    .sort(function(a,b){return b.hatDays-a.hatDays;});
-
-  // ── RENDER ─────────────────────────────────────
-  var wColor = TEAM_COLORS[winner.loc];
-  var wAvdNavn = TEAM_NAMES[winner.loc];
-
-  // Badges
-  var badges = '';
-  if(winner.hatDays>0) badges += '<div class="badge badge-hat">⭐ Hat Trick</div>';
-  if(winner===gp)      badges += '<div class="badge badge-phone">📞 Gulltelefon</div>';
-  if(winner.tens>=5)   badges += '<div class="badge badge-star">💎 Toppscorer</div>';
-
-  // Avdeling-rader
-  var rankMedals = ['🥇','🥈','🥉','4'];
-  var avdHTML = '';
-  avd.forEach(function(a,i){
-    avdHTML += '<div class="rank-row">'
-      +'<div class="rank-num">'+rankMedals[i]+'</div>'
-      +'<div style="flex:1">'
-        +'<div class="rank-name" style="color:'+a.color+'">'+a.navn+'</div>'
-        +'<div class="rank-dept-lbl" style="color:rgba(255,255,255,0.3)">'+a.g+' scoringer · '+a.tens+' tiere</div>'
-      +'</div>'
-      +'<div style="text-align:right">'
-        +'<div class="rank-pts" style="color:'+a.color+'">'+a.pts+'</div>'
-        +'<div class="rank-pts-lbl">poeng</div>'
-      +'</div>'
-      +'</div>';
-  });
-
-  // Gulltelefon-seksjon
-  var phoneHTML = '';
-  if(gp){
-    var gpColor = TEAM_COLORS[gp.loc];
-    phoneHTML = '<div class="sec r5"><div class="sec-top" style="background:linear-gradient(90deg,transparent,rgba(134,239,172,0.4),transparent);"></div>'
-      +'<div class="sec-title">📞 Gulltelefon · Uke '+wb.weekNr+'</div>'
-      +'<div class="phone-row">'
-        +'<div class="phone-icon-wrap"><img src="photos/Gulltelefon.png?v="+Date.now()+"" width="42" height="42" style="object-fit:contain;filter:drop-shadow(0 0 8px rgba(255,215,0,.8));"></div>'
-        +'<div style="flex:1">'
-          +'<div class="phone-nm">'+getShort(gp.navn)+'</div>'
-          +'<div class="phone-avd" style="color:'+gpColor+'">'+TEAM_NAMES[gp.loc]+'</div>'
-        +'</div>'
-        +'<div style="text-align:right">'
-          +'<div class="phone-stat-n">'+gp.fup+'</div>'
-          +'<div class="phone-stat-l">fulgt opp</div>'
-        +'</div>'
-      +'</div>'
-      +'</div>';
-  }
-
-  // Hat tricks-seksjon
-  var hatsHTML = '';
-  if(hatters.length){
-    var hatsRows = hatters.map(function(h){
-      var hColor = TEAM_COLORS[h.loc];
-      var hIni = h.navn.split(' ').map(function(x){return x[0];}).join('').slice(0,2).toUpperCase();
-      var stars = '';
-      for(var i=0;i<h.hatDays;i++) stars+='⭐';
-      return '<div class="ht-row">'
-        +'<div class="ht-photo"><img src="'+PHOTOS[h.navn]+'" onerror="this.parentNode.innerHTML=\'<div class=ht-photo-ph style=color:'+hColor+'>'+hIni+'</div>\'">'
-        +'</div>'
-        +'<div style="flex:1">'
-          +'<div class="ht-name">'+getShort(h.navn)+'</div>'
-          +'<div class="ht-sub" style="color:'+hColor+'">'+TEAM_NAMES[h.loc]+'</div>'
-        +'</div>'
-        +'<div class="ht-stars">'+stars+'</div>'
-        +'</div>';
-    }).join('');
-
-    hatsHTML = '<div class="sec r6"><div class="sec-top" style="background:linear-gradient(90deg,transparent,rgba(201,168,76,0.4),transparent);"></div>'
-      +'<div class="sec-title">⭐ Hat Tricks denne uken</div>'
-      + hatsRows
-      +'</div>';
-  }
-
-  // Ticker-tekst
-  var tickerItems = ['VCSO OSAT LEAGUE 2026','UKE '+wb.weekNr,'SERVICE & KUNDETILFREDSHET','UKENS VINNER','VCSO STOR OSLO'];
-  var tickerHTML = tickerItems.concat(tickerItems).map(function(t){
-    return '<span class="ticker-chunk">'+t+' &nbsp;·&nbsp;</span>';
-  }).join('');
-
-  document.getElementById('root').innerHTML =
-    '<div class="content">'
-
-    // HEADER
-    +'<div class="header r1">'
-      +'<span class="eyebrow">VCSO OSAT League 2026</span>'
-      +'<div class="trophy-icon">🏆</div>'
-      +'<div class="header-title gold-text">UKENS<br>VINNER</div>'
-      +'<div class="header-sub">Service &amp; Kundetilfredshet</div>'
-      +'<div class="week-badge"><div class="badge-dot"></div>Uke '+wb.weekNr+' &nbsp;·&nbsp; '+wb.monStr+'–'+wb.sunStr+'</div>'
-    +'</div>'
-
-    // TICKER
-    +'<div class="ticker-wrap rf"><div class="ticker-inner">'+tickerHTML+'</div></div>'
-
-    // VINNERKORT
-    +'<div class="w-wrap r2">'
-      +'<div class="w-glow"></div>'
-      +'<div class="w-card">'
-        + buildAvatarHTML(winner.navn, winner.loc, 120)
-        +'<div class="winner-eyebrow">Ukens Vinner</div>'
-        +'<div class="winner-name gold-text">'+getShort(winner.navn)+'</div>'
-        +'<div style="text-align:center;margin-bottom:28px;">'
-          +'<span class="dept-pill" style="background:rgba('+hexToRgb(wColor)+',0.1);border:1px solid rgba('+hexToRgb(wColor)+',0.35);color:'+wColor+'">'+wAvdNavn+'</span>'
-        +'</div>'
-        +'<div class="stats-grid">'
-          +'<div class="stat-card" style="animation-delay:0.4s"><div class="stat-num gold-text">'+winner.pts+'</div><div class="stat-lbl">Poeng</div></div>'
-          +'<div class="stat-card" style="animation-delay:0.5s"><div class="stat-num" style="color:#fff">'+winner.g+'</div><div class="stat-lbl">Scoringer</div></div>'
-          +'<div class="stat-card" style="animation-delay:0.6s"><div class="stat-num gold-text">'+winner.tens+'</div><div class="stat-lbl">10-ere</div></div>'
-          +'<div class="stat-card" style="animation-delay:0.7s"><div class="stat-num" style="color:#86efac">'+winner.fup+'</div><div class="stat-lbl">Fulgt opp</div></div>'
-        +'</div>'
-        +(badges ? '<div class="badges-row">'+badges+'</div>' : '')
-      +'</div>'
-    +'</div>'
-
-    // UKENS TALL
-    +'<div class="sec r3"><div class="sec-top" style="background:linear-gradient(90deg,transparent,rgba(201,168,76,0.4),transparent);"></div>'
-      +'<div class="sec-title">📊 Ukens tall</div>'
-      +'<div class="week-stats-grid">'
-        +'<div class="week-stat-box"><div class="week-stat-n" style="color:#fff">'+totalScores+'</div><div class="week-stat-l">Scoringer</div></div>'
-        +'<div class="week-stat-box"><div class="week-stat-n gold-text">'+totalTens+'</div><div class="week-stat-l">10-ere</div></div>'
-        +'<div class="week-stat-box"><div class="week-stat-n" style="color:#86efac">'+totalFup+'</div><div class="week-stat-l">Fulgt opp</div></div>'
-      +'</div>'
-    +'</div>'
-
-    // AVDELINGER
-    +'<div class="sec r4"><div class="sec-top" style="background:linear-gradient(90deg,transparent,rgba(201,168,76,0.4),transparent);"></div>'
-      +'<div class="sec-title">🏢 Avdelinger</div>'
-      +'<div class="rank-title">Ukens rangering</div>'
-      + avdHTML
-    +'</div>'
-
-    // GULLTELEFON
-    + phoneHTML
-
-    // HAT TRICKS
-    + hatsHTML
-
-    // FOOTER
-    +'<div class="footer">'
-      +'<div class="footer-line"></div>'
-      +'<div class="footer-txt">VCSO OSAT LEAGUE &nbsp;·&nbsp; UKE '+wb.weekNr+' &nbsp;·&nbsp; '+wb.sunStr+'</div>'
-    +'</div>'
-
-    +'</div>';
+    requestAnimationFrame(step);
+  },[value]);
+  return <span style={{color}}>{n}</span>;
 }
 
-function hexToRgb(hex){
-  var r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);
-  return r+','+g+','+b;
+/* ── AvatarHero med SVG-ringer i OSAT-farger ── */
+function AvatarHero({name,loc,size=130}){
+  const photo=PHOTOS[name];
+  const init=name.split(" ").map(p=>p[0]).join("").slice(0,2).toUpperCase();
+  const col=dc(loc);
+  const svgW=size+140,svgH=size+140;
+  const cx=svgW/2,cy=svgH/2;
+  const r1=size/2+12,r2=size/2+32,r3=size/2+52;
+  return(
+    <div className="avatar-stage" style={{height:svgH}}>
+      <svg className="avatar-svg" width={svgW} height={svgH} style={{position:'absolute',top:0,left:'50%',transform:'translateX(-50%)',pointerEvents:'none'}}>
+        <defs>
+          <linearGradient id="rg1" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor={col} stopOpacity="0.9"/>
+            <stop offset="25%" stopColor="#fb923c" stopOpacity="1"/>
+            <stop offset="50%" stopColor={col} stopOpacity="0.5"/>
+            <stop offset="75%" stopColor="#fef3c7" stopOpacity="1"/>
+            <stop offset="100%" stopColor={col} stopOpacity="0.9"/>
+          </linearGradient>
+          <linearGradient id="rg2" x1="100%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#f97316" stopOpacity="0.5"/>
+            <stop offset="50%" stopColor="#fbbf24" stopOpacity="0.6"/>
+            <stop offset="100%" stopColor={col} stopOpacity="0.2"/>
+          </linearGradient>
+          <filter id="glow"><feGaussianBlur stdDeviation="3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          <filter id="glow2"><feGaussianBlur stdDeviation="6" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        </defs>
+        <g style={{transformOrigin:`${cx}px ${cy}px`,animation:'orbitSpinCCW 22s linear infinite'}}>
+          <circle cx={cx} cy={cy} r={r3} fill="none" stroke="#f97316" strokeWidth="1" strokeOpacity="0.2" strokeDasharray="4 18"/>
+          {[0,90,180,270].map(deg=>{
+            const rad=deg*Math.PI/180;
+            return <circle key={deg} cx={cx+r3*Math.cos(rad)} cy={cy+r3*Math.sin(rad)} r="3" fill="#f97316" fillOpacity="0.5"/>;
+          })}
+        </g>
+        <g style={{transformOrigin:`${cx}px ${cy}px`,animation:'orbitSpin 14s linear infinite'}}>
+          <circle cx={cx} cy={cy} r={r2} fill="none" stroke="url(#rg2)" strokeWidth="1.5" strokeDasharray="6 12" filter="url(#glow)"/>
+          {[0,120,240].map(deg=>{
+            const rad=deg*Math.PI/180;
+            return <circle key={deg} cx={cx+r2*Math.cos(rad)} cy={cy+r2*Math.sin(rad)} r="4" fill="#fbbf24" filter="url(#glow2)" fillOpacity="0.9"/>;
+          })}
+        </g>
+        <g style={{transformOrigin:`${cx}px ${cy}px`,animation:'orbitSpinCCW 8s linear infinite'}}>
+          <circle cx={cx} cy={cy} r={r1} fill="none" stroke="url(#rg1)" strokeWidth="2.5" filter="url(#glow)"/>
+          {[45,225].map(deg=>{
+            const rad=deg*Math.PI/180;
+            return <g key={deg}><circle cx={cx+r1*Math.cos(rad)} cy={cy+r1*Math.sin(rad)} r="5.5" fill="#fef3c7" filter="url(#glow2)"/><circle cx={cx+r1*Math.cos(rad)} cy={cy+r1*Math.sin(rad)} r="3" fill="#fff"/></g>;
+          })}
+        </g>
+      </svg>
+      <div className="avatar-center" style={{width:size,height:size,position:'relative',zIndex:10,
+        boxShadow:`0 0 0 3px ${col}bb,0 0 0 6px ${col}22,0 0 50px ${col}55,0 20px 60px rgba(0,0,0,0.7)`}}>
+        {photo
+          ?<img src={photo} alt={name} onError={e=>{e.target.style.display='none';e.target.nextSibling.style.display='flex';}}/>
+          :null}
+        <div className="avatar-initials" style={{display:photo?'none':'flex',background:DEPT[loc]?.bg||"rgba(249,115,22,0.1)",color:col}}>{init}</div>
+      </div>
+    </div>
+  );
 }
 
-// ── SØNDAG-BLOKKERING ─────────────────────────────
-function isSunday(){ return new Date().getDay() === 0; }
-
-function showSundayMessage(){
-  document.getElementById('root').innerHTML =
-    '<div class="loading">'
-    +'<div style="font-size:52px;animation:crownFloat 2.8s ease-in-out infinite">🏆</div>'
-    +'<div style="font-family:\'Playfair Display\',serif;font-weight:900;font-size:32px;text-align:center;" class="gold-text">Ukens resultater</div>'
-    +'<div style="font-family:\'Cinzel\',serif;font-size:9px;letter-spacing:0.4em;color:rgba(201,168,76,0.4);">klare fra mandag morgen</div>'
-    +'</div>';
+/* ── SmallAvatar ── */
+function SmallAvatar({name,loc,size=38}){
+  const photo=PHOTOS[name];
+  const init=name.split(" ").map(p=>p[0]).join("").slice(0,2).toUpperCase();const col=dc(loc);
+  return(
+    <div style={{width:size,height:size,borderRadius:'50%',overflow:'hidden',border:'1.5px solid '+col+'66',flexShrink:0,
+      background:DEPT[loc]?.bg||'rgba(249,115,22,0.1)',display:'flex',alignItems:'center',justifyContent:'center',
+      boxShadow:'0 0 14px '+col+'33'}}>
+      {photo?<img src={photo} style={{width:'100%',height:'100%',objectFit:'cover'}} onError={e=>{e.target.style.display='none';e.target.nextSibling.style.display='flex';}}/>:null}
+      <span style={{display:photo?'none':'flex',alignItems:'center',justifyContent:'center',width:'100%',height:'100%',fontFamily:"'Playfair Display',serif",fontSize:size*0.34,fontWeight:700,color:col}}>{init}</span>
+    </div>
+  );
 }
 
-if(isSunday()){
-  showSundayMessage();
-} else {
-  loadAndRender();
+/* ── WinnerCard ── */
+function WinnerCard({winner,ranked}){
+  const w=winner,col=dc(w.loc);
+  return(
+    <div className="w-wrap r2">
+      <div className="w-glow"/>
+      <div className="w-card">
+        <div className="winner-eyebrow">🏆 Ukens PST</div>
+        <AvatarHero name={w.name} loc={w.loc} size={130}/>
+        <div className="winner-name gold-text">{w.name}</div>
+        <div style={{display:'flex',justifyContent:'center',marginBottom:32}}>
+          <div className="dept-pill" style={{background:DEPT[w.loc]?.bg||'rgba(249,115,22,0.08)',border:'1px solid '+col+'55'}}>
+            <div style={{width:8,height:8,borderRadius:'50%',background:col,boxShadow:'0 0 12px '+col}}/>
+            <span style={{color:col,fontFamily:"'Cinzel',serif",fontSize:10,letterSpacing:'0.22em'}}>{dl(w.loc).toUpperCase()}</span>
+          </div>
+        </div>
+        <div className="stats-grid stats-4">
+          {[{v:w.pts,l:"Poeng",d:"0.5s"},{v:w.tens,l:"10-ere",d:"0.62s"},{v:w.nines,l:"9-ere",d:"0.74s"},{v:w.fup,l:"Fulgt opp",d:"0.86s"}].map(({v,l,d})=>(
+            <div className="stat-card" key={l} style={{animationDelay:d,border:'1px solid '+col+'22'}}>
+              <div className="stat-num"><AnimNum value={v} color={col}/></div>
+              <div className="stat-lbl">{l}</div>
+            </div>
+          ))}
+        </div>
+        {ranked.length>1&&(
+          <>
+            <div className="rank-title">Øvrige topp {Math.min(ranked.length,6)}</div>
+            {ranked.slice(1,6).map((r,i)=>(
+              <div className="rank-row" key={r.name}>
+                <div className="rank-num">{i+2}</div>
+                <SmallAvatar name={r.name} loc={r.loc} size={38}/>
+                <div style={{flex:1}}>
+                  <div className="rank-name">{r.name}</div>
+                  <div className="rank-dept-lbl" style={{color:dc(r.loc)}}>{dl(r.loc)}</div>
+                </div>
+                <div className="rank-pts" style={{color:dc(r.loc)}}>{r.pts}</div>
+                <span style={{fontSize:9,color:'rgba(255,255,255,0.2)',marginLeft:3,alignSelf:'flex-end',paddingBottom:4}}>p</span>
+              </div>
+            ))}
+          </>
+        )}
+      </div>
+    </div>
+  );
 }
+
+/* ── PlettfriCard (OSAT-variant av MVP-plassen) ── */
+function PlettfriCard({plettfrie}){
+  if(!plettfrie.length)return null;
+  return(
+    <div className="sec r3">
+      <div className="sec-top" style={{background:'linear-gradient(90deg,transparent,rgba(251,146,60,0.7),transparent)'}}/>
+      <div className="sec-title">💎 {plettfrie.length>1?"Delt plettfri uke":"Plettfri uke"}</div>
+      {plettfrie.map((p,idx)=>(
+        <div key={p.name}>
+          {idx>0&&<div style={{height:1,background:'rgba(251,146,60,0.08)',margin:'18px 0'}}/>}
+          <div style={{display:'flex',alignItems:'center',gap:16}}>
+            <SmallAvatar name={p.name} loc={p.loc} size={54}/>
+            <div>
+              <div className="sec-name">{p.name}</div>
+              <div className="sec-sub" style={{color:'#fb923c'}}>{p.tens} scoringer · kun 10-ere ✨</div>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/* ── GulltelefonCard (OSAT sitt spesialkort) ── */
+function GulltelefonCard({gulltelefoner}){
+  if(!gulltelefoner.length)return null;
+  return(
+    <div className="sec r4">
+      <div className="sec-top" style={{background:'linear-gradient(90deg,transparent,rgba(251,191,36,0.7),transparent)'}}/>
+      <div className="sec-title" style={{color:'rgba(251,191,36,0.72)'}}>📞 {gulltelefoner.length>1?"Delt Gulltelefon":"Gulltelefon"}</div>
+      {gulltelefoner.map((g,idx)=>(
+        <div key={g.name}>
+          {idx>0&&<div style={{height:1,background:'rgba(251,191,36,0.08)',margin:'16px 0'}}/>}
+          <div style={{display:'flex',alignItems:'center',gap:14}}>
+            <SmallAvatar name={g.name} loc={g.loc} size={50}/>
+            <div>
+              <div className="sec-name">{g.name} 📞</div>
+              <div className="sec-sub" style={{color:'#fbbf24'}}>{g.fup} fulgt opp</div>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/* ── HatTrickCard ── */
+function HatTrickCard({hatters,weekScores}){
+  if(!hatters.length)return null;
+  return(
+    <div className="sec r5">
+      <div className="sec-top" style={{background:'linear-gradient(90deg,transparent,rgba(39,201,138,0.6),transparent)'}}/>
+      <div className="sec-title" style={{color:'rgba(39,201,138,0.45)'}}>⭐ Hat-trick denne uken</div>
+      {hatters.map((h,idx)=>{
+        const days={};
+        weekScores.filter(s=>s.pst===h.name).forEach(s=>{const d=s.ts.slice(0,10);days[d]=(days[d]||0)+1;});
+        const htDays=Object.entries(days).filter(([,c])=>c>=3).map(([d,c])=>({d,c}));
+        return(
+          <div key={h.name}>
+            {idx>0&&<div style={{height:1,background:'rgba(39,201,138,0.08)',margin:'16px 0'}}/>}
+            <div style={{display:'flex',alignItems:'center',gap:14,marginBottom:14}}>
+              <SmallAvatar name={h.name} loc={h.loc} size={50}/>
+              <div>
+                <div className="sec-name">{h.name} ⭐</div>
+                <div className="sec-sub" style={{color:'#27c98a'}}>{htDays.length} hat-trick-dag{htDays.length>1?"er":""}</div>
+              </div>
+            </div>
+            {htDays.map(({d,c})=>(
+              <div key={d} className="ht-row">
+                <div className="ht-dot"/><span className="ht-ct">{c} scoringer</span>
+                <span style={{color:'rgba(255,255,255,0.25)'}}>—</span>
+                <span className="ht-dt">{new Date(d).toLocaleDateString("no-NO",{weekday:"long",day:"numeric",month:"long"})}</span>
+              </div>
+            ))}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+/* ── DeptCard ── */
+function DeptCard({result}){
+  if(!result)return null;
+  return(
+    <div className="sec r6">
+      <div className="sec-top" style={{background:'linear-gradient(90deg,transparent,rgba(255,255,255,0.18),transparent)'}}/>
+      <div className="sec-title">🏟 Beste forhandler denne uken</div>
+      {result.locs.map((loc,i)=>{const col=dc(loc);return(
+        <div key={loc} className="dept-row" style={{marginBottom:i<result.locs.length-1?16:0}}>
+          <div className="dept-circle" style={{background:DEPT[loc]?.bg||'rgba(249,115,22,0.1)',border:'2px solid '+col+'66',color:col,boxShadow:'0 0 28px '+col+'33'}}>
+            {(DEPT[loc]?.label||loc).slice(0,2).toUpperCase()}
+          </div>
+          <div>
+            <div className="dept-nm" style={{color:col,textShadow:'0 0 30px '+col+'55'}}>{dl(loc)}</div>
+            <div style={{fontSize:11,fontWeight:500,letterSpacing:'0.1em',color:'rgba(255,255,255,0.28)',marginTop:4}}>{result.scores[loc]} scoringer denne uken</div>
+          </div>
+        </div>
+      );})}
+    </div>
+  );
+}
+
+/* ── AllScores ── */
+function AllScores({scores}){
+  return(
+    <div className="sec r6">
+      <div className="sec-top" style={{background:'linear-gradient(90deg,transparent,rgba(249,115,22,0.25),transparent)'}}/>
+      <div className="sec-title">📋 Alle {scores.length} scoringer denne uken</div>
+      {scores.slice().sort((a,b)=>b.ts.localeCompare(a.ts)).map((s,i)=>{const loc=LOC_OF[s.pst]||"";return(
+        <div key={i} className="sale-row">
+          <div className="sale-pip" style={{background:dc(loc),boxShadow:'0 0 8px '+dc(loc)+'99'}}/>
+          <div className="sale-nm">{s.pst}</div>
+          <div className="sale-mod">{s.score}-er</div>
+          {s.fulgt_opp&&<div className="sale-fin">◆ FULGT OPP</div>}
+          <div className="sale-dt">{s.ts.slice(5,10).replace("-",".")}</div>
+        </div>
+      );})}
+    </div>
+  );
+}
+
+/* ── Ticker ── */
+function Ticker({scores,week}){
+  const items=scores.map(s=>`${s.pst} · ${s.score}${s.fulgt_opp?" ◆":""}`).join("   ✦   ");
+  const full=`✦ UKE ${week} · VCSO OSAT LEAGUE 2026 ✦   ${items}   `;
+  return(
+    <div className="ticker-wrap">
+      <div className="ticker-inner">
+        <span className="ticker-chunk">{full}</span>
+        <span className="ticker-chunk">{full}</span>
+      </div>
+    </div>
+  );
+}
+
+/* ── App ── */
+function App(){
+  const[rows,setRows]=useState(null);
+  const[error,setError]=useState(null);
+  const lw=getDisplayWeek();
+
+  useEffect(()=>{
+    const{start,end}=weekDates(lw.year,lw.week);
+    const fmt=d=>d.toISOString().replace('Z','');
+    fetch(SB_URL+"/rest/v1/osat_scores?select=*&ts=gte."+fmt(start)+"&ts=lte."+fmt(end)+"&deleted=eq.false&order=ts.asc&limit=2000",
+      {headers:{apikey:SB_KEY,Authorization:"Bearer "+SB_KEY}})
+    .then(r=>r.ok?r.json():Promise.reject(r.statusText))
+    .then(setRows).catch(e=>setError(String(e)));
+  },[]);
+
+  if(error)return<div style={{minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center',color:'#ef4444',fontFamily:'Rajdhani',padding:24,textAlign:'center'}}><div><div style={{fontSize:36,marginBottom:12}}>⚠️</div>Feil: {error}</div></div>;
+  if(!rows)return<div className="loading"><div className="spin-ring"/><div className="loading-lbl">Laster inn resultater...</div></div>;
+
+  const valid=rows.filter(s=>s.score===9||s.score===10);
+  const stats={};
+  PST.forEach(p=>{stats[p.name]={name:p.name,loc:p.loc,g:0,tens:0,nines:0,fup:0,pts:0,dayMap:{}};});
+  valid.forEach(s=>{
+    const p=stats[s.pst];if(!p)return;
+    p.g++;p.pts+=3;
+    if(s.score===10)p.tens++;else p.nines++;
+    if(s.fulgt_opp)p.fup++;
+    const d=s.ts.slice(0,10);p.dayMap[d]=(p.dayMap[d]||0)+1;
+  });
+  Object.values(stats).forEach(p=>{p.hatDays=Object.values(p.dayMap).filter(c=>c>=3).length;});
+
+  const ranked=Object.values(stats).filter(p=>p.pts>0).sort((a,b)=>b.pts-a.pts||b.tens-a.tens||b.fup-a.fup);
+  const winner=ranked.length?ranked[0]:null;
+  const plettfrie=Object.values(stats).filter(p=>p.nines===0&&p.tens>=3).sort((a,b)=>b.tens-a.tens);
+  const maxFup=Math.max(0,...Object.values(stats).map(p=>p.fup));
+  const gulltelefoner=maxFup>0?Object.values(stats).filter(p=>p.fup===maxFup):[];
+  const hatters=Object.values(stats).filter(p=>p.hatDays>0).sort((a,b)=>b.hatDays-a.hatDays);
+
+  const deptPts={},deptScores={};
+  Object.values(stats).forEach(p=>{if(p.loc){deptPts[p.loc]=(deptPts[p.loc]||0)+p.pts;deptScores[p.loc]=(deptScores[p.loc]||0)+p.g;}});
+  const maxDeptPts=Math.max(0,...Object.values(deptPts));
+  const bestDept=maxDeptPts>0?{locs:Object.keys(deptPts).filter(k=>deptPts[k]===maxDeptPts),scores:deptScores}:null;
+
+  const{start,end}=weekDates(lw.year,lw.week);
+
+  return(
+    <div>
+      <div className="header rf">
+        <div className="eyebrow">VCSO OSAT League · 2026</div>
+        <div className="header-num gold-text">Uke {lw.week}</div>
+        <div className="header-word">Ukesrecap</div>
+        <div className="week-badge">
+          <div className="badge-dot"/>
+          {fmtDate(start)} – {fmtDate(end)}
+        </div>
+      </div>
+
+      {valid.length===0
+        ?<div style={{textAlign:'center',padding:'80px 24px',fontFamily:"'Playfair Display',serif",fontStyle:'italic',fontSize:18,color:'rgba(255,255,255,0.2)'}}>Ingen scoringer registrert denne uken.</div>
+        :<div className="content">
+          <Ticker scores={valid} week={lw.week}/>
+          <div style={{height:28}}/>
+          {winner&&<WinnerCard winner={winner} ranked={ranked}/>}
+          {plettfrie.length>0&&<PlettfriCard plettfrie={plettfrie}/>}
+          {gulltelefoner.length>0&&<GulltelefonCard gulltelefoner={gulltelefoner}/>}
+          {hatters.length>0&&<HatTrickCard hatters={hatters} weekScores={valid}/>}
+          {bestDept&&<DeptCard result={bestDept}/>}
+          <AllScores scores={valid}/>
+          <div className="footer">
+            <div className="footer-line"/>
+            <div className="footer-txt">VCSO OSAT League 2026 · Kundetilfredshet</div>
+          </div>
+        </div>
+      }
+    </div>
+  );
+}
+ReactDOM.render(<App/>,document.getElementById("root"));
 </script>
 </body>
 </html>
