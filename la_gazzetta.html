@@ -505,7 +505,7 @@ function visTekst(row) {
 
   var avsnittsHtml = avsnitt.map(function(a, i) {
     if (a.startsWith('«') || a.startsWith('"')) {
-      return '<div class="article-pull">'+a+'<div class="article-pull-disclaimer">(Sitat generert etter beste evne basert på resultater av AI)</div></div>';
+      return '<div class="article-pull">'+a+'<div class="article-pull-disclaimer">(Sitatet er AI-generert basert på dagens resultater)</div></div>';
     }
     return '<p>'+a+'</p>';
   }).join('');
@@ -513,7 +513,7 @@ function visTekst(row) {
   // Sett inn stats etter andre avsnitt
   if (avsnitt.length > 2) {
     var deler = avsnitt.map(function(a, i) {
-      if (a.startsWith('«') || a.startsWith('"')) return '<div class="article-pull">'+a+'<div class="article-pull-disclaimer">(Sitat generert etter beste evne basert på resultater av AI)</div></div>';
+      if (a.startsWith('«') || a.startsWith('"')) return '<div class="article-pull">'+a+'<div class="article-pull-disclaimer">(Sitatet er AI-generert basert på dagens resultater)</div></div>';
       return '<p>'+a+'</p>';
     });
     // fakta-stripa rendres nå øverst (se under), ikke midt i artikkelen
@@ -628,6 +628,37 @@ function genererGazzetta() {
 }
 
 // ── AI-GENERERING ────────────────────────────────────────────────────
+// ── KORREKTUR-STEG: andre AI-runde som retter språket ─────────────
+// Faller alltid tilbake til originalteksten hvis korrekturen feiler.
+function korrekturles(art) {
+  var korrPrompt = 'Du er korrekturleser for en avis. Under får du en artikkel som JSON. '
+    + 'Rett ALLE feil i rettskriving, grammatikk og tegnsetting til feilfri norsk bokmål. '
+    + 'IKKE endre fakta, tall, navn, avdelinger eller meningsinnhold. IKKE endre stil, dramatikk eller lengde – behold tonen nøyaktig. '
+    + 'IKKE legg til eller fjern avsnitt. Behold doble linjeskift mellom avsnitt og anførselstegn rundt sitater nøyaktig som de er. '
+    + 'Svar KUN med korrigert JSON i nøyaktig samme form, uten noe annet:\n'
+    + JSON.stringify({ overskrift: art.overskrift, ingress: art.ingress, tekst: art.tekst });
+  return fetch('https://resrjvztsqdxzqgiffeg.supabase.co/functions/v1/swift-api', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJlc3Jqdnp0c3FkeHpxZ2lmZmVnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgxNzg0MTMsImV4cCI6MjA5Mzc1NDQxM30.ouYcq-2hIUkqkn395Q5us5jYqa9JDVbOjJzORDBM72Y' },
+    body: JSON.stringify({ prompt: korrPrompt })
+  })
+  .then(function(r) { if (!r.ok) throw new Error('korrektur ' + r.status); return r.json(); })
+  .then(function(data) {
+    var content = data.content || (data.data && data.data.content);
+    var raw = content && content[0] ? content[0].text : null;
+    if (!raw) throw new Error('tomt korrektursvar');
+    var m = raw.match(/\{[\s\S]*\}/);
+    var clean = m ? m[0] : raw.replace(/```json|```/g, '').trim();
+    var rettet = JSON.parse(clean);
+    if (!rettet || !rettet.overskrift || !rettet.tekst) throw new Error('ugyldig korrektur');
+    return { overskrift: rettet.overskrift, ingress: rettet.ingress, tekst: rettet.tekst };
+  })
+  .catch(function(e) {
+    console.warn('Korrektur hoppet over, bruker originaltekst:', e.message);
+    return { overskrift: art.overskrift, ingress: art.ingress, tekst: art.tekst };
+  });
+}
+
 function genererTekst(salg, dato, alleSalg, forrige) {
   var totalt = salg.length;
   var selgerTelling = {}, avdTelling = {ryen:0,fornebu:0,lillestrom:0,okern:0}, finTelling = 0, hatTrickNavn = [];
@@ -850,8 +881,10 @@ function genererTekst(salg, dato, alleSalg, forrige) {
     else clean = raw.replace(/```json|```/g,'').trim();
     var parsed = JSON.parse(clean);
     if (!parsed.overskrift) throw new Error('Mangler overskrift. Svar: ' + clean);
-    parsed.stats = stats;
-    return parsed;
+    return korrekturles(parsed).then(function(rettet) {
+      rettet.stats = stats;
+      return rettet;
+    });
   });
 }
 
