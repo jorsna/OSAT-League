@@ -454,7 +454,7 @@ function buildStats(rows){
   const valid=rows.filter(s=>s.score===9||s.score===10);
   const stats={};
   PST.forEach(p=>{stats[p.name]={name:p.name,loc:p.loc,g:0,tens:0,nines:0,fup:0,pts:0,dayTens:{}};});
-  valid.forEach(s=>{const p=stats[s.pst];if(!p)return;p.g++;p.pts+=3;if(s.score===10)p.tens++;else p.nines++;if(s.fulgt_opp)p.fup++;if(s.score===10){const d=s.ts.slice(0,10);p.dayTens[d]=(p.dayTens[d]||0)+1;}});
+  valid.forEach(s=>{const p=stats[s.pst];if(!p)return;p.g++;p.pts+=3;if(s.score===10)p.tens++;else p.nines++;if(s.fulgt_opp)p.fup++;{const d=s.ts.slice(0,10);p.dayTens[d]=(p.dayTens[d]||0)+1;}});
   Object.values(stats).forEach(p=>{p.hatDays=Object.values(p.dayTens).filter(c=>c>=3).length;});
   return stats;
 }
@@ -579,11 +579,11 @@ function HatTrickMoment({hatters}){
   if(!hatters.length)return null;const h=hatters[0];const accent="#27c98a",soft="#7fe3bf",dark="#176f4f";
   const htDays=Object.entries(h.dayTens||{}).filter(([,c])=>c>=3).map(([d,c])=>({d,c})).sort((a,b)=>a.d.localeCompare(b.d));
   const sub=(<div style={{margin:'16px 2px 0',position:'relative',zIndex:2}}>
-    {htDays.map(({d,c})=>(<div key={d} className="ht-row"><div className="ht-dot"/><span className="ht-ct">{c} tiere</span>
+    {htDays.map(({d,c})=>(<div key={d} className="ht-row"><div className="ht-dot"/><span className="ht-ct">{c} scoringer</span>
       <span style={{color:'rgba(255,255,255,0.25)'}}>—</span><span className="ht-dt">{new Date(d).toLocaleDateString("no-NO",{weekday:"long",day:"numeric",month:"long"})}</span></div>))}
     {hatters.length>1&&(<div className="mom-shared" style={{marginTop:12}}>{hatters.slice(1).map(x=>(<span key={x.name} style={{display:'inline-flex',alignItems:'center',gap:8,color:'rgba(255,255,255,0.7)',fontWeight:600,fontSize:14}}><SmallAvatar name={x.name} loc={x.loc} size={30}/>{x.name} ({x.hatDays})</span>))}</div>)}</div>);
   return <Moment rkey="r4" accent={accent} soft={soft} dark={dark} icon="⭐" eyebrow="FLEST HAT-TRICKS"
-    name={h.name} honor={`${h.hatDays} hat-trick-dag${h.hatDays>1?"er":""} — 3 tiere på én dag`}
+    name={h.name} honor={`${h.hatDays} hat-trick-dag${h.hatDays>1?"er":""} — 3 scoringer på én dag`}
     badge={<Portrait name={h.name} loc={h.loc} accent={accent} soft={soft}/>} hero={h.hatDays} heroLabel="HAT-TRICKS" sub={sub}/>;
 }
 
