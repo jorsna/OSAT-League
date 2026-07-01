@@ -521,7 +521,7 @@ function ChampionCard({champ}){
       <span style={{width:7,height:7,borderRadius:'50%',background:col,boxShadow:`0 0 8px ${col}`,display:'inline-block'}}/>{dl(champ.loc)}</span></div>
     <div className="champ-stats">{stats.map((s,i)=>(<div key={i} className="champ-stat" style={{animationDelay:s.delay}}>
       <div className="champ-stat-num"><AnimNum value={s.val} color={s.c}/></div><div className="champ-stat-lbl">{s.lbl}</div></div>))}</div>
-    <div className="champ-down">▾ &nbsp; PALLEN · VINNERAVDELING · GULLTELEFON · PLETTFRI · HAT-TRICKS &nbsp; ▾</div>
+    <div className="champ-down">▾ &nbsp; PALLEN · VINNERAVDELING · GULLTELEFON · HAT-TRICKS &nbsp; ▾</div>
   </div></div>);
 }
 
@@ -644,7 +644,6 @@ function App(){
         <PallCard ranked={ranked}/>
         <VinneravdelingMoment depts={depts}/>
         <GulltelefonMoment gulls={gulls}/>
-        <PlettfriMoment plett={plett}/>
         <HatTrickMoment hatters={hatters}/>
         <SesongStats stats={stats} rows={rows}/>
         <div style={{margin:'18px 16px 24px',display:'flex',flexDirection:'column',gap:10}}>
