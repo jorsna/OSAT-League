@@ -325,10 +325,15 @@ html,body{background:var(--bg);font-family:'Barlow',sans-serif;color:var(--txt);
   border-bottom:1px solid var(--b1);align-items:center;gap:12px}
 
 /* ─── TABS ──────────────────────────────────────────────── */
-.tabs{display:flex;flex-wrap:wrap;background:#1c1917;border-bottom:1px solid #3c3330}
-.tab{flex:1 1 20%;padding:9px 0;font-size:10px;font-weight:700;border:none;background:transparent;
+.tabs{display:flex;flex-direction:column;background:#1c1917;border-bottom:1px solid #3c3330}
+.tabs-row{display:flex;width:100%}
+.tabs-row + .tabs-row{border-top:1px solid #3c3330}
+.tab{flex:1;padding:9px 0;font-size:11px;font-weight:700;border:none;background:transparent;
   color:#57534e;cursor:pointer;font-family:'Barlow',sans-serif;
-  border-bottom:3px solid transparent;transition:all .2s;text-transform:uppercase;letter-spacing:.3px}
+  border-bottom:3px solid transparent;transition:all .2s;text-transform:uppercase;letter-spacing:.5px;
+  display:flex;flex-direction:column;align-items:center;gap:3px}
+.tab-icon{font-size:16px;line-height:1}
+.tab-label{font-size:10px}
 .tab.on{color:#f97316;border-bottom-color:#f97316}
 .tab.wide{flex:1 1 30%;font-size:10px}
 
@@ -684,6 +689,32 @@ body{background:transparent !important}
 .grain{position:absolute;inset:-100%;opacity:.05;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E");animation:grainShift 1.4s steps(3) infinite}
 @keyframes grainShift{0%{transform:translate(0,0)}33%{transform:translate(-6%,4%)}66%{transform:translate(5%,-5%)}100%{transform:translate(0,0)}}
 .atmo-vig{position:absolute;inset:0;background:radial-gradient(140% 100% at 50% 55%,transparent 55%,rgba(0,0,0,.55) 100%)}
+/* ── AVDELINGSPALL (podium) ── */
+.pod-wrap{background:linear-gradient(160deg,var(--card),var(--card2));border:1px solid var(--b1);border-radius:16px;padding:18px 14px 12px;margin:0 0 12px}
+.pod-row{display:flex;align-items:flex-end;justify-content:center;gap:10px}
+.pod-col{display:flex;flex-direction:column;align-items:center;width:31%}
+.pod-crown{font-size:14px;line-height:1;margin-bottom:1px}
+.pod-pps{font-family:'Anton',sans-serif;font-size:22px;line-height:1}
+.pod-lbl{font-size:8px;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:5px}
+.pod-bar{width:100%;border-radius:8px 8px 0 0;display:flex;align-items:flex-start;justify-content:center;padding-top:7px;transform-origin:bottom;animation:podGrow .8s cubic-bezier(.16,1,.3,1) both}
+.pod-bar-lead{box-shadow:0 0 16px rgba(249,115,22,.3);border-top:2px solid var(--gold)}
+.pod-medal{font-size:15px;line-height:1}
+.pod-name{font-family:'Anton',sans-serif;font-size:12px;margin-top:6px;text-align:center;line-height:1.1}
+.pod-rest-list{margin-top:12px;padding-top:10px;border-top:1px solid var(--b1)}
+.pod-rest{display:flex;align-items:center;gap:10px;padding:5px 0}
+.pod-rest-rank{font-family:'Anton',sans-serif;width:22px;height:22px;border-radius:50%;background:var(--faint);border:1px solid var(--b2);color:var(--muted);font-size:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.pod-rest-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.pod-rest-name{font-weight:700;color:var(--txt);font-size:14px}
+.pod-rest-pps{font-family:'Anton',sans-serif;margin-left:auto;font-size:16px;color:var(--txt)}
+.pod-rest-lbl{font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+@keyframes podGrow{from{transform:scaleY(0);opacity:0}to{transform:scaleY(1);opacity:1}}
+/* urgency-stripe base (oransje) */
+#urgency-stripe{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;margin:12px 18px 4px;border-radius:10px;padding:11px 16px;text-align:center;font-weight:700;letter-spacing:.4px;font-size:14px;background:rgba(249,115,22,.06);border:1px solid rgba(249,115,22,.18);color:#f97316}
+body.tier-sluttspurt #urgency-stripe{background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.4);color:#f59e0b;animation:stripePulse 2s ease-in-out infinite}
+body.tier-kritisk #urgency-stripe{background:rgba(239,68,68,.14);border:1px solid rgba(239,68,68,.5);color:#ff8585;animation:stripePulse 2s ease-in-out infinite}
+@keyframes stripePulse{0%,100%{opacity:1}50%{opacity:.72}}
+.cd-row{display:flex;gap:3px;align-items:center}
+.cd-msg{font-weight:700;letter-spacing:.4px}
 /* scoreboard-fliser på eksisterende countdown */
 #urgency-stripe .cd-box,.cd-box{background:linear-gradient(180deg,#2a1a08 48%,#1a1006 52%) !important;border:1px solid rgba(249,115,22,.4) !important;border-radius:7px !important;min-width:52px;padding:8px 6px 6px !important;box-shadow:0 10px 24px -12px rgba(0,0,0,.9),inset 0 1px 0 rgba(255,255,255,.06) !important;position:relative}
 .cd-box::before{content:"";position:absolute;left:4px;right:4px;top:50%;height:1px;background:rgba(0,0,0,.55)}
@@ -851,29 +882,34 @@ body{background:transparent !important}
 
 
 <!-- NEDTELLING TIL SLUTTEN AV JUNI -->
-<div id="countdown-bar" style="background:rgba(249,115,22,.07);border-bottom:1px solid rgba(249,115,22,.18);padding:8px 16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px">
-  <div style="font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(249,115,22,.7)">⏳ Ligaen avsluttes</div>
-  <div id="countdown-display" style="display:flex;gap:10px;align-items:center"></div>
+<div id="urgency-stripe">
+  <div class="cd-row">
+    <div class="cd-box"><div class="cd-n" id="cdd">--</div><div class="cd-l">dag</div></div>
+    <div class="cd-sep">:</div>
+    <div class="cd-box"><div class="cd-n" id="cdh">--</div><div class="cd-l">t</div></div>
+    <div class="cd-sep">:</div>
+    <div class="cd-box"><div class="cd-n" id="cdm">--</div><div class="cd-l">m</div></div>
+    <div class="cd-sep">:</div>
+    <div class="cd-box"><div class="cd-n" id="cds">--</div><div class="cd-l">s</div></div>
+  </div>
+  <div class="cd-msg" id="cdMsg">Countdown til 30. september</div>
 </div>
 <script>
 (function(){
+  function pad(n){ return String(n).padStart(2,'0'); }
   function updateCountdown(){
-    var now=new Date();
-    var end=new Date(now.getFullYear(),8,30,23,59,59); // 30. september
-    if(now>end){ document.getElementById('countdown-bar').style.display='none'; return; }
-    var diff=end-now;
+    var end=new Date('2026-09-30T23:59:59');
+    var diff=end-new Date();
+    var strip=document.getElementById('urgency-stripe');
+    if(diff<=0){ if(strip) strip.style.display='none'; return; }
     var d=Math.floor(diff/864e5);
-    var h=Math.floor((diff%864e5)/36e5);
-    var m=Math.floor((diff%36e5)/6e4);
-    var s=Math.floor((diff%6e4)/1e3);
-    function unit(v,l){
-      return '<div style="text-align:center">'
-        +'<div style="font-family:Anton,sans-serif;font-size:18px;line-height:1;color:#f97316">'+String(v).padStart(2,'0')+'</div>'
-        +'<div style="font-size:8px;color:rgba(249,115,22,.5);letter-spacing:1px;text-transform:uppercase">'+l+'</div>'
-        +'</div>';
-    }
-    var el=document.getElementById('countdown-display');
-    if(el) el.innerHTML=unit(d,'dager')+unit(h,'timer')+unit(m,'min')+unit(s,'sek');
+    document.getElementById('cdd').textContent=pad(d);
+    document.getElementById('cdh').textContent=pad(Math.floor((diff%864e5)/36e5));
+    document.getElementById('cdm').textContent=pad(Math.floor((diff%36e5)/6e4));
+    document.getElementById('cds').textContent=pad(Math.floor((diff%6e4)/1e3));
+    document.body.classList.remove('tier-sluttspurt','tier-kritisk');
+    if(d<=3){ document.body.classList.add('tier-kritisk'); }
+    else if(d<=10){ document.body.classList.add('tier-sluttspurt'); }
   }
   updateCountdown();
   setInterval(updateCountdown,1000);
@@ -881,15 +917,19 @@ body{background:transparent !important}
 </script>
 
 <!-- TABS -->
-<div class="tabs" style="flex-wrap:wrap">
-  <button class="tab on" onclick="setTab('ind',this)" style="flex:1 1 25%">&#128100; PST-er</button>
-  <button class="tab" onclick="setTab('team',this)" style="flex:1 1 25%">&#127960; Avdelinger</button>
-  <button class="tab" onclick="setTab('stats',this)" style="flex:1 1 25%">&#128200; Statistikk</button>
-  <button class="tab" onclick="setTab('scoring',this)" style="flex:1 1 25%">&#127919; Scoringer</button>
-  <div style="width:100%;height:1px;background:var(--b1)"></div>
-  <button class="tab" onclick="setTab('hof',this)" style="flex:1 1 33%;border-top:none">&#127942; Hall of Fame</button>
-  <button class="tab" onclick="setTab('tips',this)" style="flex:1 1 33%;border-top:none">&#128161; Tips</button>
-  <button id="gazz-tab" class="tab" onclick="openGazzetta()" style="flex:1 1 33%;border-top:none;position:relative"><span class="tab-icon" style="display:inline-block">&#128240;</span> <span class="tab-label">La Gazzetta</span><span id="gazz-dot" style="display:none;position:absolute;top:5px;right:7px;width:9px;height:9px;border-radius:50%;background:var(--gold);border:2px solid var(--card)"></span></button>
+<div class="tabs">
+  <div class="tabs-row">
+    <button class="tab on" onclick="setTab('ind',this)"><span class="tab-icon">&#128100;</span><span class="tab-label">PST-er</span></button>
+    <button class="tab" onclick="setTab('team',this)"><span class="tab-icon">&#127960;</span><span class="tab-label">Avdelinger</span></button>
+    <button class="tab" onclick="setTab('stats',this)"><span class="tab-icon">&#128200;</span><span class="tab-label">Statistikk</span></button>
+    <button class="tab" onclick="setTab('scoring',this)"><span class="tab-icon">&#127919;</span><span class="tab-label">Scoringer</span></button>
+  </div>
+  <div class="tabs-row">
+    <button class="tab" onclick="setTab('hof',this)"><span class="tab-icon">&#127942;</span><span class="tab-label">Hall of Fame</span></button>
+    <button class="tab" onclick="location.href='ukesvinner.html'"><span class="tab-icon">&#128081;</span><span class="tab-label">Ukens vinner</span></button>
+    <button class="tab" onclick="setTab('tips',this)"><span class="tab-icon">&#128161;</span><span class="tab-label">Tips</span></button>
+    <button id="gazz-tab" class="tab" style="position:relative" onclick="openGazzetta()"><span class="tab-icon">&#128240;</span><span class="tab-label">La Gazzetta</span><span id="gazz-dot" style="display:none;position:absolute;top:5px;right:7px;width:9px;height:9px;border-radius:50%;background:var(--gold);border:2px solid var(--card)"></span></button>
+  </div>
 </div>
 
 <!-- PERIODE BAR - kun Alle, ingen måneder -->
@@ -919,6 +959,7 @@ body{background:transparent !important}
 
 <!-- AVDELINGER VIEW -->
 <div class="view" id="view-team">
+  <div id="team-podium"></div>
   <div id="team-race"></div>
   <div id="tbl-team-cards"></div>
   <div class="tbl-head" style="margin-top:1px">
@@ -1232,6 +1273,7 @@ const SELGER_PHOTOS = {
   "bawar_faraj":                "photos/bawar_faraj.jpg",
   "brage_grammeltvedt_grefstad":"photos/brage_grammeltvedt_grefstad.jpg",
   "elias_lieberg":              "photos/elias_lieberg.jpg",
+  "elise_olsen_torseth":        "photos/elise_olsen_torseth.webp",
   "fabian_leyell_finstad":      "photos/fabian_leyell_finstad.jpg",
   "kristoffer_h_gravdal":       "photos/kristoffer_h_gravdal.jpg",
   "mathuran_sandrakumar":       "photos/mathuran_sandrakumar.jpg",
@@ -1315,6 +1357,7 @@ var SELGERE_RAW = [
   { navn: 'Aleksander Pettersen',         short: 'Aleksander Pettersen',     loc: 'lillestrom' },
   { navn: 'Christopher Sj\u00f8str\u00f8m', short: 'Christopher Sj\u00f8str\u00f8m', loc: 'lillestrom' },
   { navn: 'Dennis Uggerud',               short: 'Dennis Uggerud',           loc: 'lillestrom' },
+  { navn: 'Elise Olsen Torseth',          short: 'Elise O. Torseth',         loc: 'lillestrom' },
   { navn: 'George Xheki Hanelli',         short: 'George X. Hanelli',        loc: 'lillestrom' },
   { navn: 'Hedvig \u00d8yen Larsen',      short: 'Hedvig \u00d8. Larsen',    loc: 'lillestrom' },
   { navn: 'John Arild Bergengen',         short: 'John A. Bergengen',        loc: 'lillestrom' },
@@ -1836,6 +1879,42 @@ function renderRace() {
     + '</div>';
 }
 
+function renderPodium(rows) {
+  var el = document.getElementById('team-podium');
+  if (!el) return;
+  var top = rows.slice(0,3);
+  var rest = rows.slice(3);
+  var heights = [104, 74, 58];
+  var medals = ['\uD83E\uDD47','\uD83E\uDD48','\uD83E\uDD49'];
+  var slots = [top[1], top[0], top[2]];
+  var slotRank = [1, 0, 2];
+  var cols = '';
+  slots.forEach(function(r, idx) {
+    if (!r) { cols += '<div class="pod-col" style="visibility:hidden"></div>'; return; }
+    var rank = slotRank[idx];
+    var isLeader = rank === 0;
+    cols += '<div class="pod-col">'
+      + (isLeader ? '<div class="pod-crown">\uD83D\uDC51</div>' : '')
+      + '<div class="pod-pps" style="color:'+(isLeader?'var(--gold)':r.color)+'">'+r.pps.toFixed(1)+'</div>'
+      + '<div class="pod-lbl">pr. PST</div>'
+      + '<div class="pod-bar'+(isLeader?' pod-bar-lead':'')+'" style="height:'+heights[rank]+'px;background:linear-gradient(180deg,'+r.color+','+r.color+'33)"><span class="pod-medal">'+medals[rank]+'</span></div>'
+      + '<div class="pod-name" style="color:'+(isLeader?'var(--gold)':r.color)+'">'+r.navn+'</div>'
+    + '</div>';
+  });
+  var restHtml = rest.map(function(r, i) {
+    return '<div class="pod-rest">'
+      + '<span class="pod-rest-rank">'+(i+4)+'</span>'
+      + '<span class="pod-rest-dot" style="background:'+r.color+'"></span>'
+      + '<span class="pod-rest-name">'+r.navn+'</span>'
+      + '<span class="pod-rest-pps">'+r.pps.toFixed(1)+'</span>'
+      + '<span class="pod-rest-lbl">pr. PST</span>'
+    + '</div>';
+  }).join('');
+  el.innerHTML = '<div class="pod-wrap"><div class="pod-row">' + cols + '</div>'
+    + (restHtml ? '<div class="pod-rest-list">' + restHtml + '</div>' : '')
+    + '</div>';
+}
+
 function renderTeam() {
   var el = document.getElementById('tbl-team');
   var cardsEl = document.getElementById('tbl-team-cards');
@@ -1855,6 +1934,8 @@ function renderTeam() {
     var pts = g*PTS;
     return Object.assign({},t,{g:g, pts:pts, tens:tens, fup:fup, members:members, pps:pts/members});
   }).sort(function(a,b){ return b.pps-a.pps||b.pts-a.pts||b.tens-a.tens||b.fup-a.fup; });
+
+  renderPodium(rows);
 
   var ranks=[];
   rows.forEach(function(r,i){
