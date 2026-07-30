@@ -1241,7 +1241,7 @@ body.tier-kritisk #urgency-stripe{background:rgba(239,68,68,.14);border:1px soli
 
       <div style="padding:10px 0;border-bottom:1px solid var(--b1)">
         <div style="font-family:'Anton',sans-serif;font-size:12px;color:var(--gold);letter-spacing:1px;margin-bottom:6px">REGISTRERING (admin)</div>
-        <div>1. Logg inn med Admin-knappen — passord: <strong style="color:var(--txt)">volvo10</strong></div>
+        <div>1. Logg inn med <strong style="color:var(--txt)">Admin-knappen</strong> nederst i toppfeltet</div>
         <div>2. Velg PST fra nedtrekksmenyen (gruppert per avdeling)</div>
         <div>3. Velg om kunden ga <strong style="color:var(--txt)">9 eller 10</strong></div>
         <div>4. Huk av <strong style="color:var(--txt)">"Fulgt opp"</strong> om kunden er kontaktet etter service</div>
@@ -2701,10 +2701,16 @@ function renderLegender() {
 
   var MIN_SCORES_TIER = 5; // minste antall gyldige scores for \u00e5 kvalifisere til gulltelefonen
 
-  fetch(SUPABASE_URL + '/rest/v1/season_archive?select=*&order=pts.desc&limit=500', { mode:'cors', headers: sbH() })
-    .then(function(r){ if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
-    .then(function(archive){
-      if (!Array.isArray(archive) || !archive.length) {
+  Promise.all([
+    fetch(SUPABASE_URL + '/rest/v1/season_archive?select=*&order=pts.desc&limit=500', { mode:'cors', headers: sbH() })
+      .then(function(r){ return r.ok ? r.json() : []; }),
+    fetch(SUPABASE_URL + '/rest/v1/weekly_winners?order=week_year.asc,week_nr.asc&limit=200', { mode:'cors', headers: sbH() })
+      .then(function(r){ return r.ok ? r.json() : []; })
+  ])
+    .then(function(res){
+      var archive = Array.isArray(res[0]) ? res[0] : [];
+      var allWeeks = Array.isArray(res[1]) ? res[1] : [];
+      if (!archive.length) {
         el.innerHTML = '<div style="font-size:11px;color:var(--muted);font-style:italic;padding:16px 14px">Ingen fullf\u00f8rte sesonger enn\u00e5 \u2014 f\u00f8rste sesong arkiveres ved sesongslutt.</div>';
         return;
       }
@@ -2716,6 +2722,17 @@ function renderLegender() {
         bySeason[k].push(a);
       });
       var labels = Object.keys(bySeason).sort().reverse();
+
+      // Knytt uker til sesong-label via tidsrom
+      var SEASON_RANGES = {
+        'Sesong 1 \u00b7 Q2 2026': { from:'2026-04-01', to:'2026-07-01' },
+        'Sesong 2 \u00b7 Q3 2026': { from:'2026-07-01', to:'2026-10-01' }
+      };
+      function weeksForLabel(label){
+        var r = SEASON_RANGES[label];
+        if (!r) return [];
+        return allWeeks.filter(function(w){ var d=w.week_start||''; return d>=r.from && d<r.to; });
+      }
 
       function avHtml(navn, size) {
         var sObj = SELGERE.find(function(s){ return s.navn===navn; }) || {};
@@ -2820,6 +2837,51 @@ function renderLegender() {
               +'</div>'
             +'</div>';
           });
+          html += '</div>';
+        }
+
+        // ── Flest ukesseire ──
+        var wks = weeksForLabel(label);
+        var winCount = {};
+        var hatCount = {};
+        wks.forEach(function(w){
+          if (w.pst) winCount[w.pst] = (winCount[w.pst]||0) + 1;
+          (w.hat_tricks || []).forEach(function(navn){
+            if (navn) hatCount[navn] = (hatCount[navn]||0) + 1;
+          });
+        });
+
+        function locOf(navn){
+          var s = (typeof SELGERE!=='undefined') ? SELGERE.find(function(x){return x.navn===navn;}) : null;
+          return s ? (LL[s.loc]||s.loc||'') : '';
+        }
+        function miniRow(navn, val, unit, i){
+          var medal = i===0?'\ud83e\udd47':i===1?'\ud83e\udd48':i===2?'\ud83e\udd49':(i+1)+'.';
+          var col = i===0?'#f97316':'var(--muted)';
+          return '<div style="display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--b1)">'
+            +'<div style="font-size:'+(i<3?'17':'13')+'px;width:26px;text-align:center;flex-shrink:0">'+medal+'</div>'
+            +avHtml(navn, i===0?40:34)
+            +'<div style="flex:1"><div style="font-family:Anton,sans-serif;font-size:'+(i===0?'14':'12')+'px;color:var(--txt)">'+navn+'</div>'
+            +'<div style="font-size:9px;color:var(--muted);margin-top:2px">'+locOf(navn)+'</div></div>'
+            +'<div style="text-align:right;flex-shrink:0"><div style="font-family:Anton,sans-serif;font-size:'+(i===0?'19':'15')+'px;color:'+col+'">'+val+'</div>'
+            +'<div style="font-size:8px;color:var(--muted);text-transform:uppercase">'+unit+'</div></div>'
+          +'</div>';
+        }
+
+        var winList = Object.keys(winCount).map(function(n){return {navn:n,v:winCount[n]};})
+          .sort(function(a,b){return b.v-a.v;}).slice(0,5);
+        if (winList.length) {
+          html += '<div style="padding:12px 14px 6px;border-top:1px solid var(--b1)">'+secTitle('\ud83d\udc51','FLEST UKESSEIRE');
+          winList.forEach(function(x,i){ html += miniRow(x.navn, x.v, x.v===1?'seier':'seire', i); });
+          html += '</div>';
+        }
+
+        // ── Flest hat-tricks ──
+        var hatList = Object.keys(hatCount).map(function(n){return {navn:n,v:hatCount[n]};})
+          .sort(function(a,b){return b.v-a.v;}).slice(0,5);
+        if (hatList.length) {
+          html += '<div style="padding:12px 14px 16px;border-top:1px solid var(--b1)">'+secTitle('\u2b50','FLEST HAT-TRICKS');
+          hatList.forEach(function(x,i){ html += miniRow(x.navn, x.v, x.v===1?'hat-trick':'hat-tricks', i); });
           html += '</div>';
         }
 
