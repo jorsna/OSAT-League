@@ -8,9 +8,9 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#292524;--card:#2c2825;--card2:#312e2b;
-  --b1:#3c3330;--b2:#4a4340;
-  --txt:#e7e5e4;--muted:#78716c;--faint:#232120;
+  --bg:#1a0f07;--card:#241609;--card2:#2c1b0d;
+  --b1:#432b16;--b2:#5c3a1d;
+  --txt:#fdf0e3;--muted:#b08968;--faint:#1f1308;
   --gold:#f97316;--gold2:#fb923c;--silver:#94a3b8;--bronze:#cd7f32;
   --g:#4ade80;--r:#fca5a5;--y:#fde047;
   --accent:#f97316;
@@ -354,11 +354,12 @@ html,body{background:var(--bg);font-family:'Barlow',sans-serif;color:var(--txt);
 .tbl-head{display:grid;
   grid-template-columns:26px 40px 1fr 36px 60px 70px 40px;
   padding:7px 12px;font-size:8.5px;font-weight:700;color:var(--muted);
-  text-transform:uppercase;letter-spacing:.6px;background:var(--card2);border-bottom:1px solid var(--b1)}
+  text-transform:uppercase;letter-spacing:.6px;background:var(--card2);border-bottom:1px solid var(--b1);column-gap:10px}
 .tbl-head>*{text-align:center}
 .tbl-head>*:nth-child(3){text-align:left}
 .trow{display:grid;
   grid-template-columns:26px 40px 1fr 36px 60px 70px 40px;
+  column-gap:10px;
   padding:8px 12px;align-items:center;border-bottom:1px solid var(--b1);
   background:var(--card);
   transition:background .15s;animation:fadeIn .35s ease both}
@@ -534,13 +535,14 @@ select:focus,input[type=text]:focus{border-color:#f97316}
 
 /* ─── RESPONSIV ─────────────────────────────────────────── */
 @media(max-width:420px){
-  .tbl-head,.trow{grid-template-columns:20px 36px 1fr 30px 48px 56px 32px}
+  .tbl-head,.trow{grid-template-columns:20px 36px 1fr 30px 48px 56px 32px;column-gap:8px}
   .av{width:32px;height:32px}
   .name-main{font-size:11px}
   .score-sel-btn .score-label{font-size:26px}
 }
 #view-team .tbl-head,#view-team .trow{
   grid-template-columns:26px 28px 1fr 50px 60px 60px;
+  column-gap:10px;
 }
 
 /* ── GAZZETTA TICKER ── */
@@ -709,7 +711,7 @@ body{background:transparent !important}
 .pod-rest-lbl{font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
 @keyframes podGrow{from{transform:scaleY(0);opacity:0}to{transform:scaleY(1);opacity:1}}
 /* urgency-stripe base (oransje) */
-#urgency-stripe{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;margin:12px 18px 4px;border-radius:10px;padding:11px 16px;text-align:center;font-weight:700;letter-spacing:.4px;font-size:14px;background:rgba(249,115,22,.06);border:1px solid rgba(249,115,22,.18);color:#f97316}
+#urgency-stripe{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;margin:12px 18px 4px;border-radius:10px;padding:11px 16px;text-align:center;font-weight:700;letter-spacing:.4px;font-size:14px;background:rgba(249,115,22,.09);border:1px solid rgba(249,115,22,.28);color:#f97316}
 body.tier-sluttspurt #urgency-stripe{background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.4);color:#f59e0b;animation:stripePulse 2s ease-in-out infinite}
 body.tier-kritisk #urgency-stripe{background:rgba(239,68,68,.14);border:1px solid rgba(239,68,68,.5);color:#ff8585;animation:stripePulse 2s ease-in-out infinite}
 @keyframes stripePulse{0%,100%{opacity:1}50%{opacity:.72}}
@@ -897,19 +899,66 @@ body.tier-kritisk #urgency-stripe{background:rgba(239,68,68,.14);border:1px soli
 <script>
 (function(){
   function pad(n){ return String(n).padStart(2,'0'); }
+  function wkNum(d){
+    var date=new Date(d); date.setHours(0,0,0,0);
+    date.setDate(date.getDate()+3-(date.getDay()+6)%7);
+    var w1=new Date(date.getFullYear(),0,4);
+    return 1+Math.round(((date-w1)/864e5-3+(w1.getDay()+6)%7)/7);
+  }
+  function nextSundayEnd(){
+    var d=new Date(); var add=6-((d.getDay()+6)%7);
+    return new Date(d.getFullYear(),d.getMonth(),d.getDate()+add,23,59,59);
+  }
+  // Ukens leder m\u00e5lt i antall scoringer (9 og 10 teller likt som scoring)
+  function weekLeaderMsg(){
+    if(typeof sales==='undefined'||!sales) return '\uD83D\uDC51 Ukens vinner k\u00e5res s\u00f8ndag \u2014 f\u00f8rste score tar ledelsen!';
+    var wk=wkNum(new Date()), byName={};
+    sales.forEach(function(s){
+      if(s.deleted) return;
+      if(wkNum(new Date(s.ts))!==wk) return;
+      byName[s.pst]=(byName[s.pst]||0)+1;
+    });
+    var names=Object.keys(byName);
+    if(!names.length) return '\uD83D\uDC51 Ukens vinner k\u00e5res s\u00f8ndag \u2014 f\u00f8rste score tar ledelsen!';
+    var max=0; names.forEach(function(n){ if(byName[n]>max) max=byName[n]; });
+    var leaders=names.filter(function(n){ return byName[n]===max; });
+    var who=leaders.length===1 ? leaders[0].split(' ')[0]
+          : leaders.length===2 ? leaders[0].split(' ')[0]+' og '+leaders[1].split(' ')[0]
+          : leaders.length+' PST-er';
+    return '\uD83D\uDC51 '+who+' leder uka med '+max+' '+(max===1?'score':'scoringer')+' \u2014 k\u00e5ring s\u00f8ndag 23:59';
+  }
   function updateCountdown(){
-    var end=new Date('2026-09-30T23:59:59');
-    var diff=end-new Date();
+    var now=new Date();
+    var toEnd=new Date('2026-09-30T23:59:59')-now;
     var strip=document.getElementById('urgency-stripe');
-    if(diff<=0){ if(strip) strip.style.display='none'; return; }
+    if(toEnd<=0){ if(strip) strip.style.display='none'; return; }
+    var daysEnd=Math.floor(toEnd/864e5);
+    var cdMsg=document.getElementById('cdMsg');
+    var diff;
+    if(daysEnd>14){
+      // Tell mot ukeslutt + vis ukens leder
+      diff=nextSundayEnd()-now; if(diff<0) diff=0;
+      document.body.classList.remove('tier-sluttspurt','tier-kritisk');
+      if(cdMsg) cdMsg.textContent=weekLeaderMsg();
+    } else {
+      // Siste 14 dager: tell mot sesongslutt m/ urgency
+      diff=toEnd;
+      document.body.classList.remove('tier-sluttspurt','tier-kritisk');
+      if(daysEnd<=3){
+        document.body.classList.add('tier-kritisk');
+        if(cdMsg) cdMsg.textContent='\uD83D\uDD25 Sesongen lukkes 30. september \u2014 siste innspurt!';
+      } else if(daysEnd<=10){
+        document.body.classList.add('tier-sluttspurt');
+        if(cdMsg) cdMsg.textContent='\u26A1 Sluttspurten har startet \u2014 hver score teller n\u00e5';
+      } else {
+        if(cdMsg) cdMsg.textContent='Countdown til 30. september';
+      }
+    }
     var d=Math.floor(diff/864e5);
     document.getElementById('cdd').textContent=pad(d);
     document.getElementById('cdh').textContent=pad(Math.floor((diff%864e5)/36e5));
     document.getElementById('cdm').textContent=pad(Math.floor((diff%36e5)/6e4));
     document.getElementById('cds').textContent=pad(Math.floor((diff%6e4)/1e3));
-    document.body.classList.remove('tier-sluttspurt','tier-kritisk');
-    if(d<=3){ document.body.classList.add('tier-kritisk'); }
-    else if(d<=10){ document.body.classList.add('tier-sluttspurt'); }
   }
   updateCountdown();
   setInterval(updateCountdown,1000);
@@ -920,7 +969,7 @@ body.tier-kritisk #urgency-stripe{background:rgba(239,68,68,.14);border:1px soli
 <div class="tabs">
   <div class="tabs-row">
     <button class="tab on" onclick="setTab('ind',this)"><span class="tab-icon">&#128100;</span><span class="tab-label">PST-er</span></button>
-    <button class="tab" onclick="setTab('team',this)"><span class="tab-icon">&#127960;</span><span class="tab-label">Avdelinger</span></button>
+    <button class="tab" onclick="setTab('team',this)"><span class="tab-icon">&#127967;&#65039;</span><span class="tab-label">Avdelinger</span></button>
     <button class="tab" onclick="setTab('stats',this)"><span class="tab-icon">&#128200;</span><span class="tab-label">Statistikk</span></button>
     <button class="tab" onclick="setTab('scoring',this)"><span class="tab-icon">&#127919;</span><span class="tab-label">Scoringer</span></button>
   </div>
