@@ -1005,6 +1005,13 @@ body.tier-kritisk #urgency-stripe{background:rgba(239,68,68,.14);border:1px soli
       <select id="sel-pst"><option value="">Velg PST...</option></select>
     </div>
 
+    <!-- Scoredato (etterregistrering) -->
+    <div style="margin-bottom:8px">
+      <label style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;display:block;margin-bottom:4px">Dato for score</label>
+      <input type="date" id="sel-dato" style="width:100%;padding:9px 10px;border-radius:8px;border:1px solid var(--b1);background:var(--card);color:var(--txt);font-family:'Barlow',sans-serif;font-size:13px">
+      <div style="font-size:9px;color:var(--muted);margin-top:3px">Standard er i dag. Etterregistrering: maks 3 dager tilbake.</div>
+    </div>
+
     <!-- Velg 9 eller 10 -->
     <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">Kundescore</div>
     <div class="score-selector">
@@ -2494,28 +2501,63 @@ function animatePlayerCard(){
 function closePlayerCard(e){ document.getElementById('pc-bd').classList.remove('open'); document.getElementById('pc-sheet').classList.remove('open'); }
 document.addEventListener('keydown', function(e){ if(e.key==='Escape') closePlayerCard(); });
 
+function setDatoToday(){
+  var el = document.getElementById('sel-dato');
+  if(!el) return;
+  var now = new Date();
+  var iso = now.getFullYear()+'-'+pad(now.getMonth()+1)+'-'+pad(now.getDate());
+  el.value = iso;
+  el.max = iso; // kan ikke velge frem i tid
+  var min = new Date(now.getTime() - 3*864e5); // 3 dager tilbake
+  el.min = min.getFullYear()+'-'+pad(min.getMonth()+1)+'-'+pad(min.getDate());
+}
+
 function reg() {
   var pst = document.getElementById('sel-pst').value;
   if(!pst){ toast('Velg PST!'); return; }
   if(!selScore){ toast('Velg 9 eller 10!'); return; }
 
   var mndMap = ['jan','feb','mar','apr','mai','jun','jul','aug','sep','okt','nov','des'];
-  var mnd = mndMap[new Date().getMonth()];
 
   var sObj = SELGERE.find(function(x){return x.navn===pst})||{};
   var now = new Date();
-  var ts = now.getFullYear()+'-'+pad(now.getMonth()+1)+'-'+pad(now.getDate())+'T'+pad(now.getHours())+':'+pad(now.getMinutes())+':00';
+
+  // Scoredato: valgt dato eller i dag. Etterregistrering maks 3 dager tilbake, aldri fram i tid.
+  var datoInput = document.getElementById('sel-dato');
+  var valgtDato = datoInput && datoInput.value ? datoInput.value : null;
+  var ts;
+  if (valgtDato) {
+    var vd = new Date(valgtDato + 'T00:00:00');
+    var iDag = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    var diffDager = Math.round((iDag - vd) / 864e5);
+    if (diffDager < 0) { toast('Du kan ikke registrere en score frem i tid!'); return; }
+    if (diffDager > 3) { toast('Etterregistrering er maks 3 dager tilbake. Eldre scoringer teller ikke.'); return; }
+    if (diffDager === 0) {
+      // i dag: bruk n\u00e5v\u00e6rende klokkeslett
+      ts = now.getFullYear()+'-'+pad(now.getMonth()+1)+'-'+pad(now.getDate())+'T'+pad(now.getHours())+':'+pad(now.getMinutes())+':00';
+    } else {
+      // tidligere dato: sett klokkeslett til slutten av dagen for korrekt uke-tilh\u00f8righet
+      ts = vd.getFullYear()+'-'+pad(vd.getMonth()+1)+'-'+pad(vd.getDate())+'T12:00:00';
+    }
+  } else {
+    ts = now.getFullYear()+'-'+pad(now.getMonth()+1)+'-'+pad(now.getDate())+'T'+pad(now.getHours())+':'+pad(now.getMinutes())+':00';
+  }
+
+  // Riktig m\u00e5ned ut fra faktisk scoredato (ikke alltid dagens)
+  var tsDatoObj = new Date(ts);
   var fulgt_opp = document.getElementById('chk-fup').checked;
 
   var btn=document.getElementById('reg-btn');
   btn.disabled=true; btn.textContent='Lagrer...';
 
+  var mnd = mndMap[tsDatoObj.getMonth()];
   insertSale({ pst:pst, score:selScore, loc:sObj.loc||'', mnd:mnd, ts:ts, fulgt_opp:fulgt_opp, deleted:false }, function(err){
     btn.disabled=false; btn.textContent='Registrer score \u2014 +3 poeng!';
     if(err){ toast('Feil: '+err.message); return; }
 
     document.getElementById('sel-pst').value='';
     document.getElementById('chk-fup').checked=false;
+    setDatoToday();
     selScore=null;
     document.getElementById('btn-score-9').classList.remove('selected');
     document.getElementById('btn-score-10').classList.remove('selected');
@@ -2652,7 +2694,7 @@ function enterAsAdmin() {
   userRole='admin';
   sessionStorage.setItem('osat-role','admin');
   closeIntro();
-  var ro=document.getElementById('reg-outer'); if(ro) ro.style.display='block';
+  var ro=document.getElementById('reg-outer'); if(ro){ ro.style.display='block'; setDatoToday(); }
   updateRoleBadge();
   buildDropdown();
   setDefaultMonth();
