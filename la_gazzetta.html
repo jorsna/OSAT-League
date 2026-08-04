@@ -360,9 +360,9 @@ body {
 <!-- MASTHEAD -->
 <div class="masthead">
   <div class="masthead-top">
-    <span id="top-left">VCSO OSAT League 2026</span>
+    <span id="top-left">VCSO OSAT League 2026 &middot; Sesong 2</span>
     <span>La Gazzetta dello VCSO OSAT</span>
-    <span id="top-right">Mai &ndash; Juni 2026</span>
+    <span id="top-right">August &ndash; September 2026</span>
   </div>
   <div class="masthead-title">La Gazzetta dello VCSO OSAT</div>
   <div class="masthead-rule"></div>
@@ -591,6 +591,10 @@ function genererGazzetta() {
             .then(function(ww){
               var win = (Array.isArray(ww) && ww[0]) ? ww[0] : null;
               if (!win) return dagsGen();
+              // Vakt: bruk kun ukesvinner fra forrige uke (maks 8 dager gammel) – aldri en rest fra forrige sesong
+              var _weG = String(win.week_end).slice(0,10);
+              var _dgSiden = Math.round((new Date(igaar+'T00:00:00Z') - new Date(_weG+'T00:00:00Z'))/86400000);
+              if (_dgSiden < 0 || _dgSiden > 8) return dagsGen();
               var ws = String(win.week_start).slice(0,10), we = String(win.week_end).slice(0,10);
               var ukesSalg = allSalg.filter(function(s){ if(!s.ts) return false; var d=new Date(s.ts).toLocaleDateString('sv-SE',{timeZone:'Europe/Oslo'}); return d >= ws && d <= we; });
               statusEl.textContent = 'Mandag: skriver ukesoppsummering for uke ' + win.week_nr + '...';
@@ -677,9 +681,9 @@ function genererUkesTekst(ukesSalg, win, forrige) {
   function osloDato(ts){ return new Date(ts).toLocaleDateString('sv-SE',{timeZone:'Europe/Oslo'}); }
   function fornavn(n){ return (n||'').split(' ')[0]; }
   var SELGER_AVD = {
-    'Abishan Balasegar':'Fornebu','Ameer Hawary':'Fornebu','Bawar Faraj':'Fornebu','Brage Grammeltvedt Grefstad':'Fornebu','Elias Lieberg':'Fornebu','Fabian Leyell Finstad':'Fornebu','Kristoffer H. Gravdal':'Fornebu','Mathuran Sandrakumar':'Fornebu','Matilde R. Ojala-Andskog':'Fornebu','Mohammed Salou':'Fornebu','Mohammad Sirwan Salar':'Fornebu','Moosa Butt':'Fornebu',
-    'Aleksander Pettersen':'Lillestr\u00f8m','Christopher Sj\u00f8str\u00f8m':'Lillestr\u00f8m','Dennis Uggerud':'Lillestr\u00f8m','George Xheki Hanelli':'Lillestr\u00f8m','Hedvig \u00d8yen Larsen':'Lillestr\u00f8m','John Arild Bergengen':'Lillestr\u00f8m','J\u00f8rn S\u00f8rensen':'Lillestr\u00f8m','Martin Pedersen':'Lillestr\u00f8m','Pavel Jizba':'Lillestr\u00f8m','Tom Kjetil Sandmoe':'Lillestr\u00f8m',
-    'Ali Husseini':'\u00d8kern','Basil Omar':'\u00d8kern','Emirhan Cimen':'\u00d8kern','Shezad Masih Azam':'\u00d8kern',
+    'Abishan Balasegar':'Fornebu','Ameer Hawary':'Fornebu','Bawar Faraj':'Fornebu','Brage Grammeltvedt Grefstad':'Fornebu','Elias Lieberg':'Fornebu','Fabian Leyell Finstad':'Fornebu','Mathuran Sandrakumar':'Fornebu','Andrzej Jozef Jachnicki':'Fornebu','Matilde R. Ojala-Andskog':'Fornebu','Mohammed Salou':'Fornebu','Mohammad Sirwan Salar':'Fornebu','Moosa Butt':'Fornebu',
+    'Aleksander Pettersen':'Lillestr\u00f8m','Christopher Sj\u00f8str\u00f8m':'Lillestr\u00f8m','Dennis Uggerud':'Lillestr\u00f8m','George Xheki Hanelli':'Lillestr\u00f8m','Hedvig \u00d8yen Larsen':'Lillestr\u00f8m','John Arild Bergengen':'Lillestr\u00f8m','J\u00f8rn S\u00f8rensen':'Lillestr\u00f8m','Martin Pedersen':'Lillestr\u00f8m','Pavel Jizba':'Lillestr\u00f8m','Tom Kjetil Sandmoe':'Lillestr\u00f8m','Elise Olsen Torseth':'Lillestr\u00f8m',
+    'Ali Husseini':'\u00d8kern','Basil Omar':'\u00d8kern','Emirhan Cimen':'\u00d8kern','Shezad Masih Azam':'\u00d8kern','Nasser Alnafaa':'\u00d8kern',
     'Abdulghani Ajjan':'Ryen','Algirdas Ambrozaitis':'Ryen','Biniam Tesfamichael Tekle':'Ryen','Elias Palacios':'Ryen','Harvinder Singh Kular':'Ryen','Joel Andom Jiji':'Ryen','Kristoffer Langerud':'Ryen','Marco Bj\u00f8rnstad':'Ryen','Mohammad Yousaf Ahmed':'Ryen','Sindre Andr\u00e9 T\u00f8mte':'Ryen','Sipan Zewki':'Ryen','Vidar Flesvik':'Ryen','Wajahit Elahit':'Ryen','Leon Pettersen':'Ryen'
   };
   var AVD_KEY = {'Ryen':'ryen','Fornebu':'fornebu','Lillestr\u00f8m':'lillestrom','\u00d8kern':'okern'};
@@ -789,12 +793,12 @@ function genererTekst(salg, dato, alleSalg, forrige) {
   var SELGER_AVD = {
     'Abishan Balasegar':'Fornebu','Ameer Hawary':'Fornebu','Bawar Faraj':'Fornebu',
     'Brage Grammeltvedt Grefstad':'Fornebu','Elias Lieberg':'Fornebu','Fabian Leyell Finstad':'Fornebu',
-    'Kristoffer H. Gravdal':'Fornebu','Mathuran Sandrakumar':'Fornebu','Matilde R. Ojala-Andskog':'Fornebu',
+    'Mathuran Sandrakumar':'Fornebu','Matilde R. Ojala-Andskog':'Fornebu','Andrzej Jozef Jachnicki':'Fornebu',
     'Mohammed Salou':'Fornebu','Mohammad Sirwan Salar':'Fornebu','Moosa Butt':'Fornebu',
     'Aleksander Pettersen':'Lillestrøm','Christopher Sjøstrøm':'Lillestrøm','Dennis Uggerud':'Lillestrøm',
     'George Xheki Hanelli':'Lillestrøm','Hedvig Øyen Larsen':'Lillestrøm','John Arild Bergengen':'Lillestrøm',
-    'Jørn Sørensen':'Lillestrøm','Martin Pedersen':'Lillestrøm','Pavel Jizba':'Lillestrøm','Tom Kjetil Sandmoe':'Lillestrøm',
-    'Ali Husseini':'Økern','Basil Omar':'Økern','Emirhan Cimen':'Økern','Shezad Masih Azam':'Økern',
+    'Jørn Sørensen':'Lillestrøm','Martin Pedersen':'Lillestrøm','Pavel Jizba':'Lillestrøm','Tom Kjetil Sandmoe':'Lillestrøm','Elise Olsen Torseth':'Lillestrøm',
+    'Ali Husseini':'Økern','Basil Omar':'Økern','Emirhan Cimen':'Økern','Shezad Masih Azam':'Økern','Nasser Alnafaa':'Økern',
     'Abdulghani Ajjan':'Ryen','Algirdas Ambrozaitis':'Ryen','Biniam Tesfamichael Tekle':'Ryen',
     'Elias Palacios':'Ryen','Harvinder Singh Kular':'Ryen','Joel Andom Jiji':'Ryen',
     'Kristoffer Langerud':'Ryen','Marco Bjørnstad':'Ryen','Mohammad Yousaf Ahmed':'Ryen',
@@ -841,7 +845,7 @@ function genererTekst(salg, dato, alleSalg, forrige) {
     var UKEDAG_NO = ['søndag','mandag','tirsdag','onsdag','torsdag','fredag','lørdag'];
     var ukedagNavn = UKEDAG_NO[ukedagIdx];
     var erStengt = (ukedagIdx===0);
-    var dagerIgjenS = Math.max(0, Math.round((new Date('2026-06-30T00:00:00Z') - new Date(dato+'T00:00:00Z'))/86400000));
+    var dagerIgjenS = Math.max(0, Math.round((new Date('2026-09-30T00:00:00Z') - new Date(dato+'T00:00:00Z'))/86400000));
     var lederAvdN = topAvd ? avdNavn[topAvd] : null;
 
     var stilleData = 'DAGEN SOM DEKKES: ' + norskDato(dato) + ' (' + ukedagNavn + ')\n'
@@ -850,7 +854,7 @@ function genererTekst(salg, dato, alleSalg, forrige) {
           ? '- Dette er en SØNDAG – verkstedet er normalt STENGT. Ram det inn som en velfortjent hviledag for PST-ene, ALDRI som en skuffende tørke.\n'
           : '- Verkstedet var i drift, men ingen nye toppscorer kom inn – roen før neste støt.\n')
       + (torkeDager>0 ? '- Det er ' + torkeDager + ' dag' + (torkeDager>1?'er':'') + ' siden forrige registrerte toppscore' + (sisteScoreDato ? ' (' + norskDato(sisteScoreDato) + ')' : '') + '.\n' : '')
-      + '- ' + dagerIgjenS + ' dager igjen til sesongslutt 30. juni 2026.\n'
+      + '- ' + dagerIgjenS + ' dager igjen til sesongslutt 30. september 2026.\n'
       + 'SESONGSTILLING (bruk KUN disse tallene, aldri egne):\n'
       + '- Totalt fornøyde kunder i sesongen: ' + totalSesongen + '\n'
       + (totalLeder ? '- Sammenlagtleder (PST): ' + totalLeder + ' (' + (totalSelger[totalLeder]||0) + ' fornøyde kunder)\n' : '')
@@ -938,7 +942,7 @@ function genererTekst(salg, dato, alleSalg, forrige) {
     ? '\n\nGÅRSDAGENS UTGAVE (kun for kontinuitet – du kan bygge videre på løpende historier og rivalisering, men IKKE gjenta gårsdagens innhold):\nOverskrift: ' + forrige.overskrift + '\n' + forrige.tekst + '\n'
     : '';
 
-  var seasonSlutt = '2026-06-30';
+  var seasonSlutt = '2026-09-30';
   var tidslinje = '';
   if (alleSalg && alleSalg.length) {
     var minTs = null;
@@ -948,7 +952,7 @@ function genererTekst(salg, dato, alleSalg, forrige) {
       var d0 = new Date(fDato + 'T00:00:00Z'), dN = new Date(dato + 'T00:00:00Z'), dE = new Date(seasonSlutt + 'T00:00:00Z');
       var dagISesong = Math.round((dN - d0) / 86400000) + 1;
       var dagerIgjen = Math.max(0, Math.round((dE - dN) / 86400000));
-      tidslinje = '\n\nTIDSLINJE (bruk KUN disse tallene hvis du nevner tid – aldri regn ut eller finn på egne):\n- Utgaven dekker ' + norskDato(dato) + '\n- Dette er dag ' + dagISesong + ' av konkurransen (regnet fra første registrerte kunde)\n- ' + dagerIgjen + ' dager igjen til sesongslutt 30. juni 2026';
+      tidslinje = '\n\nTIDSLINJE (bruk KUN disse tallene hvis du nevner tid – aldri regn ut eller finn på egne):\n- Utgaven dekker ' + norskDato(dato) + '\n- Dette er dag ' + dagISesong + ' av konkurransen (regnet fra første registrerte kunde)\n- ' + dagerIgjen + ' dager igjen til sesongslutt 30. september 2026';
     }
   }
 
