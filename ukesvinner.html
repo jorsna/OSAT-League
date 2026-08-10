@@ -294,6 +294,17 @@ function weekDates(year,week){
     end:  new Date(Date.UTC(e.getUTCFullYear(),e.getUTCMonth(),e.getUTCDate(),23,59,59,999))
   };
 }
+// Uken stenger mandag kl. 12:00 — før det er forrige uke fortsatt åpen
+function laasTidspunkt(){
+  const now=new Date();
+  const day=now.getDay();
+  const mon=new Date(now);
+  mon.setDate(now.getDate()+((day===0)?-6:1-day));
+  mon.setHours(12,0,0,0);
+  return mon;
+}
+function erVenteperiode(){ return new Date() < laasTidspunkt(); }
+
 function getDisplayWeek(){
   const now=new Date();
   const thisWeek=isoWeek(now);
@@ -562,6 +573,56 @@ function AllScores({scores}){
   );
 }
 
+/* ── Ventekort (mandag før 12:00) ── */
+function VenteKort({ranked,week}){
+  const[igjen,setIgjen]=useState(laasTidspunkt()-new Date());
+  useEffect(()=>{
+    const t=setInterval(()=>{
+      const d=laasTidspunkt()-new Date();
+      setIgjen(d);
+      if(d<=0){clearInterval(t);window.location.reload();}
+    },1000);
+    return()=>clearInterval(t);
+  },[]);
+  const tot=Math.max(0,Math.floor(igjen/1000));
+  const p=n=>String(n).padStart(2,'0');
+  const leder=ranked.length?ranked[0]:null;
+  const delt=leder?ranked.filter(r=>r.pts===leder.pts&&r.tens===leder.tens&&r.fup===leder.fup):[];
+  return(
+    <div style={{textAlign:'center',padding:'56px 24px 40px'}}>
+      <div style={{fontSize:44,marginBottom:18}}>⏳</div>
+      <div style={{fontFamily:"'Cinzel',serif",fontSize:10,letterSpacing:'0.4em',color:'rgba(251,191,36,0.55)',marginBottom:14}}>
+        UKE {week} ER IKKE AVSLUTTET
+      </div>
+      <div style={{fontFamily:"'Playfair Display',serif",fontSize:19,lineHeight:1.5,color:'rgba(255,255,255,0.72)',maxWidth:430,margin:'0 auto 26px'}}>
+        Helgens scoringer kan registreres frem til <strong style={{color:'var(--gold)'}}>mandag kl. 12:00</strong>. Vinneren kåres når uken stenger.
+      </div>
+      <div style={{fontFamily:"'Rajdhani',sans-serif",fontWeight:700,fontSize:40,letterSpacing:'0.06em',color:'var(--gold)',marginBottom:6}}>
+        {p(Math.floor(tot/3600))}:{p(Math.floor((tot%3600)/60))}:{p(tot%60)}
+      </div>
+      <div style={{fontFamily:"'Cinzel',serif",fontSize:8,letterSpacing:'0.35em',color:'rgba(255,255,255,0.28)',marginBottom:38}}>
+        TIL KÅRING
+      </div>
+      {leder&&
+        <div style={{display:'inline-block',padding:'20px 30px',borderRadius:12,border:'1px solid rgba(251,191,36,0.22)',background:'rgba(251,191,36,0.04)'}}>
+          <div style={{fontFamily:"'Cinzel',serif",fontSize:8,letterSpacing:'0.35em',color:'rgba(255,255,255,0.35)',marginBottom:9}}>
+            {delt.length>1?'FORELØPIG DELT LEDELSE':'FORELØPIG LEDER'}
+          </div>
+          <div style={{fontFamily:"'Playfair Display',serif",fontSize:23,color:'#fff',marginBottom:5}}>
+            {delt.length>1?delt.map(d=>d.name).join(' · '):leder.name}
+          </div>
+          <div style={{fontFamily:"'Rajdhani',sans-serif",fontSize:13,letterSpacing:'0.1em',color:'rgba(251,191,36,0.75)'}}>
+            {leder.pts} poeng · {leder.g} scoringer · {leder.tens} tiere
+          </div>
+        </div>
+      }
+      <div style={{marginTop:34,fontFamily:"'Rajdhani',sans-serif",fontSize:11,letterSpacing:'0.14em',color:'rgba(255,255,255,0.22)'}}>
+        IKKE ENDELIG — TALLENE KAN ENDRE SEG
+      </div>
+    </div>
+  );
+}
+
 /* ── Ticker ── */
 function Ticker({scores,week}){
   const items=scores.map(s=>`${s.pst} · ${s.score}${s.fulgt_opp?" ◆":""}`).join("   ✦   ");
@@ -580,7 +641,9 @@ function Ticker({scores,week}){
 function App(){
   const[rows,setRows]=useState(null);
   const[error,setError]=useState(null);
+  const[offisiell,setOffisiell]=useState(undefined); // undefined=laster, null=ikke kåret
   const lw=getDisplayWeek();
+  const venter=erVenteperiode();
 
   useEffect(()=>{
     const{start,end}=weekDates(lw.year,lw.week);
@@ -589,10 +652,17 @@ function App(){
       {headers:{apikey:SB_KEY,Authorization:"Bearer "+SB_KEY}})
     .then(r=>r.ok?r.json():Promise.reject(r.statusText))
     .then(setRows).catch(e=>setError(String(e)));
+
+    // Offisiell kåring fra weekly_winners — samme kilde som Hall of Fame
+    fetch(SB_URL+"/rest/v1/weekly_winners?week_nr=eq."+lw.week+"&week_year=eq."+lw.year+"&limit=1",
+      {headers:{apikey:SB_KEY,Authorization:"Bearer "+SB_KEY}})
+    .then(r=>r.ok?r.json():Promise.reject(r.statusText))
+    .then(d=>setOffisiell(Array.isArray(d)&&d.length?d[0]:null))
+    .catch(()=>setOffisiell(null));
   },[]);
 
   if(error)return<div style={{minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center',color:'#ef4444',fontFamily:'Rajdhani',padding:24,textAlign:'center'}}><div><div style={{fontSize:36,marginBottom:12}}>⚠️</div>Feil: {error}</div></div>;
-  if(!rows)return<div className="loading"><div className="spin-ring"/><div className="loading-lbl">Laster inn resultater...</div></div>;
+  if(!rows||offisiell===undefined)return<div className="loading"><div className="spin-ring"/><div className="loading-lbl">Laster inn resultater...</div></div>;
 
   const valid=rows.filter(s=>s.score===9||s.score===10);
   const stats={};
@@ -607,7 +677,10 @@ function App(){
   Object.values(stats).forEach(p=>{p.hatDays=Object.values(p.dayMap).filter(c=>c>=3).length;});
 
   const ranked=Object.values(stats).filter(p=>p.pts>0).sort((a,b)=>b.pts-a.pts||b.tens-a.tens||b.fup-a.fup);
-  const winner=ranked.length?ranked[0]:null;
+  // Er uken kåret, styrer weekly_winners hvem som er vinner — aldri uenig med Hall of Fame
+  const winner=offisiell
+    ? (ranked.find(r=>r.name===offisiell.pst) || ranked[0] || null)
+    : (ranked.length?ranked[0]:null);
   const plettfrie=Object.values(stats).filter(p=>p.nines===0&&p.tens>=3).sort((a,b)=>b.tens-a.tens);
   const maxFup=Math.max(0,...Object.values(stats).map(p=>p.fup));
   const gulltelefoner=maxFup>0?Object.values(stats).filter(p=>p.fup===maxFup):[];
@@ -632,7 +705,9 @@ function App(){
         </div>
       </div>
 
-      {valid.length===0
+      {venter
+        ?<VenteKort ranked={ranked} week={lw.week}/>
+        :valid.length===0
         ?<div style={{textAlign:'center',padding:'80px 24px',fontFamily:"'Playfair Display',serif",fontStyle:'italic',fontSize:18,color:'rgba(255,255,255,0.2)'}}>Ingen scoringer registrert denne uken.</div>
         :<div className="content">
           <Ticker scores={valid} week={lw.week}/>

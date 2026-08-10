@@ -911,7 +911,7 @@ body.tier-kritisk #urgency-stripe{background:rgba(239,68,68,.14);border:1px soli
   }
   // Ukens leder m\u00e5lt i antall scoringer (9 og 10 teller likt som scoring)
   function weekLeaderMsg(){
-    if(typeof sales==='undefined'||!sales) return '\uD83D\uDC51 Ukens vinner k\u00e5res s\u00f8ndag \u2014 f\u00f8rste score tar ledelsen!';
+    if(typeof sales==='undefined'||!sales) return '\uD83D\uDC51 Ukens vinner k\u00e5res mandag kl. 12 \u2014 f\u00f8rste score tar ledelsen!';
     var wk=wkNum(new Date()), byName={};
     sales.forEach(function(s){
       if(s.deleted) return;
@@ -919,13 +919,13 @@ body.tier-kritisk #urgency-stripe{background:rgba(239,68,68,.14);border:1px soli
       byName[s.pst]=(byName[s.pst]||0)+1;
     });
     var names=Object.keys(byName);
-    if(!names.length) return '\uD83D\uDC51 Ukens vinner k\u00e5res s\u00f8ndag \u2014 f\u00f8rste score tar ledelsen!';
+    if(!names.length) return '\uD83D\uDC51 Ukens vinner k\u00e5res mandag kl. 12 \u2014 f\u00f8rste score tar ledelsen!';
     var max=0; names.forEach(function(n){ if(byName[n]>max) max=byName[n]; });
     var leaders=names.filter(function(n){ return byName[n]===max; });
     var who=leaders.length===1 ? leaders[0].split(' ')[0]
           : leaders.length===2 ? leaders[0].split(' ')[0]+' og '+leaders[1].split(' ')[0]
           : leaders.length+' PST-er';
-    return '\uD83D\uDC51 '+who+' leder uka med '+max+' '+(max===1?'score':'scoringer')+' \u2014 k\u00e5ring s\u00f8ndag 23:59';
+    return '\uD83D\uDC51 '+who+' leder uka med '+max+' '+(max===1?'score':'scoringer')+' \u2014 k\u00e5ring mandag kl. 12:00';
   }
   function updateCountdown(){
     var now=new Date();
@@ -1058,7 +1058,7 @@ body.tier-kritisk #urgency-stripe{background:rgba(239,68,68,.14);border:1px soli
     <div style="margin-bottom:8px">
       <label style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;display:block;margin-bottom:4px">Dato for score</label>
       <input type="date" id="sel-dato" style="width:100%;padding:9px 10px;border-radius:8px;border:1px solid var(--b1);background:var(--card);color:var(--txt);font-family:'Barlow',sans-serif;font-size:13px">
-      <div style="font-size:9px;color:var(--muted);margin-top:3px">Standard er i dag. Etterregistrering: maks 3 dager tilbake.</div>
+      <div style="font-size:9px;color:var(--muted);margin-top:3px">Standard er i dag. Etterregistrering: maks 1 dag tilbake. Mandag f&#248;r kl. 12 kan hele helgen (fre&#8211;s&#248;n) registreres.</div>
     </div>
 
     <!-- Velg 9 eller 10 -->
@@ -1287,7 +1287,7 @@ body.tier-kritisk #urgency-stripe{background:rgba(239,68,68,.14);border:1px soli
 
       <div style="padding:10px 0;border-bottom:1px solid var(--b1)">
         <div style="font-family:'Anton',sans-serif;font-size:12px;color:var(--gold);letter-spacing:1px;margin-bottom:6px">UKESVINNER</div>
-        <div>Kåres <strong style="color:var(--txt)">søndag kl. 23:59</strong>. Tiebreaker: 1) flest poeng, 2) flest 10-ere, 3) flest fulgt opp. Legges manuelt inn av admin i Hall of Fame.</div>
+        <div>Uken stenger <strong style="color:var(--txt)">mandag kl. 12:00</strong> – da kåres vinneren og uken låses. Frem til da kan helgens scoringer fortsatt registreres. Tiebreaker: 1) flest poeng, 2) flest 10-ere, 3) flest fulgt opp, 4) tidligst nådd. Legges automatisk i Hall of Fame.</div>
       </div>
 
       <div style="padding:10px 0;border-bottom:1px solid var(--b1)">
@@ -1539,6 +1539,7 @@ function getPrevWeekBounds() {
 }
 
 function autoSaveWeeklyWinner() {
+  if (iHelgevindu()) return; // uken stenger først mandag kl. 12:00
   var wb = getPrevWeekBounds();
 
   // Sjekk om denne uken allerede er lagret
@@ -1561,24 +1562,26 @@ function autoSaveWeeklyWinner() {
       var stats = {};
       weekSales.forEach(function(s){
         if(s.score!==9 && s.score!==10) return;
-        if(!stats[s.pst]) stats[s.pst] = { pst:s.pst, loc:s.loc, g:0, tens:0, fup:0, pts:0, days:{} };
+        if(!stats[s.pst]) stats[s.pst] = { pst:s.pst, loc:s.loc, g:0, tens:0, fup:0, pts:0, days:{}, sisteTs:'' };
         var p = stats[s.pst];
         p.g++; p.pts+=3;
         if(s.score===10) p.tens++;
         if(s.fulgt_opp) p.fup++;
         var d = tsDate(s.ts);
         p.days[d] = (p.days[d]||0)+1;
+        if(s.ts > p.sisteTs) p.sisteTs = s.ts;
       });
 
       var rows = Object.values(stats);
       if(!rows.length) return;
 
       // Finn vinner (høyest pts, tiebreaker: tens, fup)
-      rows.sort(function(a,b){ return b.pts-a.pts || b.tens-a.tens || b.fup-a.fup; });
-      var bestPts  = rows[0].pts;
-      var bestTens = rows[0].tens;
-      var bestFup  = rows[0].fup;
-      var winners = rows.filter(function(r){ return r.pts===bestPts && r.tens===bestTens && r.fup===bestFup; });
+      // Samme tiebreaker som databasetriggeren: poeng, 10-ere, fulgt opp, deretter tidligst nådd
+      rows.sort(function(a,b){
+        return b.pts-a.pts || b.tens-a.tens || b.fup-a.fup
+            || (a.sisteTs < b.sisteTs ? -1 : a.sisteTs > b.sisteTs ? 1 : 0);
+      });
+      var winners = [rows[0]]; // alltid én vinner — samsvarer med Hall of Fame
 
       // Hat tricks — PST-er med 3+ scoringer på én dag
       var hatTricks = [];
@@ -1606,7 +1609,7 @@ function autoSaveWeeklyWinner() {
       });
 
       // Lagre til weekly_winners
-      fetch(SUPABASE_URL+'/rest/v1/weekly_winners', {
+      fetch(SUPABASE_URL+'/rest/v1/weekly_winners?on_conflict=week_nr,week_year,pst', {
         method:'POST',
         mode:'cors',
         headers: Object.assign({}, sbH(), {'Prefer':'resolution=ignore-duplicates'}),
@@ -2550,6 +2553,27 @@ function animatePlayerCard(){
 function closePlayerCard(e){ document.getElementById('pc-bd').classList.remove('open'); document.getElementById('pc-sheet').classList.remove('open'); }
 document.addEventListener('keydown', function(e){ if(e.key==='Escape') closePlayerCard(); });
 
+// ─── UKELÅS: uken stenger mandag kl. 12:00 ───────────────
+function mandagKl12(d){
+  var x = new Date(d);
+  var day = x.getDay();
+  x.setDate(x.getDate() + ((day===0) ? -6 : 1-day));
+  x.setHours(12,0,0,0);
+  return x;
+}
+// Låsetidspunkt for uken som inneholder dato d = mandag kl. 12 uken etter
+function laasTidFor(d){
+  var m = mandagKl12(d);
+  m.setDate(m.getDate()+7);
+  return m;
+}
+function ukeErLaast(d){ return new Date() >= laasTidFor(d); }
+// Helgevindu = mandag før kl. 12:00 (da kan fre/lør/søn fortsatt registreres)
+function iHelgevindu(){
+  var n = new Date();
+  return n.getDay()===1 && n.getHours()<12;
+}
+
 function setDatoToday(){
   var el = document.getElementById('sel-dato');
   if(!el) return;
@@ -2557,7 +2581,13 @@ function setDatoToday(){
   var iso = now.getFullYear()+'-'+pad(now.getMonth()+1)+'-'+pad(now.getDate());
   el.value = iso;
   el.max = iso; // kan ikke velge frem i tid
-  var min = new Date(now.getTime() - 3*864e5); // 3 dager tilbake
+  // Mandag før 12: helgevindu tilbake til fredag. Ellers maks 1 dag tilbake.
+  var back = iHelgevindu() ? 3 : 1;
+  var min = new Date(now.getTime() - back*864e5);
+  while(back > 0 && ukeErLaast(min)){
+    back--;
+    min = new Date(now.getTime() - back*864e5);
+  }
   el.min = min.getFullYear()+'-'+pad(min.getMonth()+1)+'-'+pad(min.getDate());
 }
 
@@ -2571,7 +2601,7 @@ function reg() {
   var sObj = SELGERE.find(function(x){return x.navn===pst})||{};
   var now = new Date();
 
-  // Scoredato: valgt dato eller i dag. Etterregistrering maks 3 dager tilbake, aldri fram i tid.
+  // Scoredato: valgt dato eller i dag. Maks 1 dag tilbake — mandag før 12:00 tilbake til fredag. Aldri fram i tid.
   var datoInput = document.getElementById('sel-dato');
   var valgtDato = datoInput && datoInput.value ? datoInput.value : null;
   var ts;
@@ -2580,7 +2610,14 @@ function reg() {
     var iDag = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     var diffDager = Math.round((iDag - vd) / 864e5);
     if (diffDager < 0) { toast('Du kan ikke registrere en score frem i tid!'); return; }
-    if (diffDager > 3) { toast('Etterregistrering er maks 3 dager tilbake. Eldre scoringer teller ikke.'); return; }
+    if (ukeErLaast(vd)) { toast('Uken er l\u00e5st \u2014 den stengte mandag kl. 12:00. Kontakt admin.'); return; }
+    var maksBak = iHelgevindu() ? 3 : 1;
+    if (diffDager > maksBak) {
+      toast(iHelgevindu()
+        ? 'Helgevinduet g\u00e5r tilbake til fredag. Eldre scoringer teller ikke.'
+        : 'Etterregistrering er maks 1 dag tilbake. Eldre scoringer teller ikke.');
+      return;
+    }
     if (diffDager === 0) {
       // i dag: bruk n\u00e5v\u00e6rende klokkeslett
       ts = now.getFullYear()+'-'+pad(now.getMonth()+1)+'-'+pad(now.getDate())+'T'+pad(now.getHours())+':'+pad(now.getMinutes())+':00';
