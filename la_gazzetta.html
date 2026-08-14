@@ -222,19 +222,59 @@ body {
   border-left: 4px solid #e0710e;
   padding: 16px 20px;
   margin: 20px 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
+  gap: 16px 20px;
+  align-items: start;
 }
-.stat-item { text-align: center; flex: 1; min-width: 80px; }
+.stat-item { text-align: center; min-width: 0; }
+.stat-item--wide {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  text-align: left;
+  border-top: 1px solid #e2ddd3;
+  padding-top: 13px;
+  margin-top: 2px;
+}
+.stat-wide-key { flex: 0 0 auto; text-align: center; min-width: 54px; }
+.stat-wide-key .stat-n { font-size: 26px; }
+.stat-wide-rule { flex: 0 0 1px; align-self: stretch; background: #e2ddd3; }
 .stat-n {
   font-family: 'Playfair Display', serif;
   font-size: 28px;
   font-weight: 900;
   color: #1a1a1a;
-  line-height: 1;
+  line-height: 1.05;
+  overflow-wrap: anywhere;
 }
 .stat-l { font-size: 10px; color: #888; letter-spacing: 1px; text-transform: uppercase; margin-top: 3px; }
+.stat-names {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(84px, 1fr));
+  gap: 9px 10px;
+}
+.stat-name {
+  font-family: 'Playfair Display', serif;
+  font-weight: 900;
+  color: #1a1a1a;
+  line-height: 1.15;
+  text-align: center;
+  overflow-wrap: anywhere;
+  padding-bottom: 4px;
+  border-bottom: 2px solid #e0710e;
+}
+@media (max-width: 560px) {
+  .stats-box { grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); padding: 14px 14px; }
+  .stat-n { font-size: 24px; }
+  .stat-item--wide { flex-direction: column; gap: 10px; align-items: stretch; }
+  .stat-wide-key { text-align: center; }
+  .stat-wide-rule { display: none; }
+  .stat-names { grid-template-columns: repeat(auto-fit, minmax(72px, 1fr)); }
+}
 
 /* ── ADMIN PANEL ── */
 .admin-bar {
@@ -495,8 +535,8 @@ function visTekst(row) {
     statsHtml = '<div class="stats-box">'
       + (stats.totalt ? '<div class="stat-item"><div class="stat-n">'+stats.totalt+'</div><div class="stat-l">'+(stats.uke?'Svar totalt i VCSO forrige uke':'Svar totalt i VCSO i går')+'</div></div>' : '')
       + (stats.sesong ? '<div class="stat-item"><div class="stat-n">'+stats.sesong+'</div><div class="stat-l">I sesongen</div></div>' : '')
-      + (stats.mvp ? '<div class="stat-item"><div class="stat-n" style="font-size:18px">'+stats.mvp+'</div><div class="stat-l">'+(stats.uke?'Ukesvinner':'MVP')+'</div></div>' : '')
-      + (stats.topAvd ? '<div class="stat-item"><div class="stat-n" style="font-size:18px">'+stats.topAvd+'</div><div class="stat-l">Ledende avd.</div></div>' : '')
+      + (stats.mvp ? mvpStatItem(stats.mvp, stats.uke ? 'Ukesvinner' : 'MVP') : '')
+      + (stats.topAvd ? '<div class="stat-item"><div class="stat-n" style="font-size:18px">'+escHtml(stats.topAvd)+'</div><div class="stat-l">Ledende avd.</div></div>' : '')
       + (stats.hatTrick ? '<div class="stat-item"><div class="stat-n">⭐</div><div class="stat-l">Hat-trick</div></div>' : '')
       + '</div>';
   }
@@ -528,6 +568,28 @@ function visTekst(row) {
     + '<div class="article-divider"><span class="article-divider-diamond">◆</span></div>'
     + '<div class="article-body">'+photoHtml+avsnittsHtml+'</div>'
     + '</div>';
+}
+
+// Bygger MVP/ukesvinner-feltet. Ved 3+ delte MVP-er faar feltet egen full
+// bredde-rad med ombrekkende navneliste, slik at «Ledende avd.» ikke blir dekket.
+function mvpStatItem(mvpStr, label) {
+  var navn = String(mvpStr || '').split('/').map(function(s){ return s.trim(); })
+    .filter(function(s){ return s.length; });
+  if (!navn.length) return '';
+  if (navn.length <= 2) {
+    return '<div class="stat-item"><div class="stat-n" style="font-size:18px">'
+      + escHtml(navn.join(' / ')) + '</div>'
+      + '<div class="stat-l">' + escHtml(label) + '</div></div>';
+  }
+  var fs = navn.length >= 7 ? 15 : (navn.length >= 5 ? 16 : 17);
+  var inner = navn.map(function(n){
+    return '<div class="stat-name">' + escHtml(n) + '</div>';
+  }).join('');
+  return '<div class="stat-item stat-item--wide">'
+    + '<div class="stat-wide-key"><div class="stat-n">' + navn.length + '</div>'
+    + '<div class="stat-l">Delt ' + escHtml(label) + '</div></div>'
+    + '<div class="stat-wide-rule"></div>'
+    + '<div class="stat-names" style="font-size:' + fs + 'px">' + inner + '</div></div>';
 }
 
 function escHtml(s) {
@@ -682,7 +744,7 @@ function genererUkesTekst(ukesSalg, win, forrige) {
   function fornavn(n){ return (n||'').split(' ')[0]; }
   var SELGER_AVD = {
     'Abishan Balasegar':'Fornebu','Ameer Hawary':'Fornebu','Bawar Faraj':'Fornebu','Brage Grammeltvedt Grefstad':'Fornebu','Elias Lieberg':'Fornebu','Fabian Leyell Finstad':'Fornebu','Mathuran Sandrakumar':'Fornebu','Andrzej Jozef Jachnicki':'Fornebu','Matilde R. Ojala-Andskog':'Fornebu','Mohammed Salou':'Fornebu','Mohammad Sirwan Salar':'Fornebu','Moosa Butt':'Fornebu',
-    'Aleksander Pettersen':'Lillestr\u00f8m','Christopher Sj\u00f8str\u00f8m':'Lillestr\u00f8m','Dennis Uggerud':'Lillestr\u00f8m','George Xheki Hanelli':'Lillestr\u00f8m','Hedvig \u00d8yen Larsen':'Lillestr\u00f8m','John Arild Bergengen':'Lillestr\u00f8m','J\u00f8rn S\u00f8rensen':'Lillestr\u00f8m','Martin Pedersen':'Lillestr\u00f8m','Pavel Jizba':'Lillestr\u00f8m','Tom Kjetil Sandmoe':'Lillestr\u00f8m','Elise Olsen Torseth':'Lillestr\u00f8m',
+    'Aleksander Pettersen':'Lillestr\u00f8m','Christopher Sj\u00f8str\u00f8m':'Lillestr\u00f8m','Dennis Uggerud':'Lillestr\u00f8m','George Xheki Hanelli':'Lillestr\u00f8m','Hedvig \u00d8yen Larsen':'Lillestr\u00f8m','John Arild Bergengen':'Lillestr\u00f8m','J\u00f8rn S\u00f8rensen':'Lillestr\u00f8m','Martin Pedersen':'Lillestr\u00f8m','Pavel Jizba':'Lillestr\u00f8m','Tom Kjetil Sandmoe':'Lillestr\u00f8m','Elise Olsen Torseth':'Lillestr\u00f8m','Akshanan Subaskaran':'Lillestr\u00f8m','Eirik Flatner':'Lillestr\u00f8m','Elias Hassel Sivertsen':'Lillestr\u00f8m','J\u00f8ran Granholt Ejersbo':'Lillestr\u00f8m','Kenneth \u00d8kshaug':'Lillestr\u00f8m','Kurt Ronny Karlsen':'Lillestr\u00f8m','Liam Holmen':'Lillestr\u00f8m','Nikolai Kvilaas':'Lillestr\u00f8m','Trym Sverre Svendsen':'Lillestr\u00f8m','Yamen Agheid Madkhana':'Lillestr\u00f8m',
     'Ali Husseini':'\u00d8kern','Basil Omar':'\u00d8kern','Emirhan Cimen':'\u00d8kern','Shezad Masih Azam':'\u00d8kern','Nasser Alnafaa':'\u00d8kern','Aleydzhan Beynabi':'\u00d8kern','Azizcan G\u00f8zlek':'\u00d8kern','Bj\u00f8rn Inge Millerjord':'\u00d8kern','Ernest Maciejec':'\u00d8kern','Haider Ali':'\u00d8kern','Kristian Severin':'\u00d8kern','Magnus Unger':'\u00d8kern','Marcus Fjeldstad':'\u00d8kern','Marek Szpiech':'\u00d8kern','Marek Zebrowski':'\u00d8kern','Philip Hernes':'\u00d8kern','Roger Johansen':'\u00d8kern','Sondre Nakland':'\u00d8kern','Vladimir Gnjatovic':'\u00d8kern',
     'Abdulghani Ajjan':'Ryen','Algirdas Ambrozaitis':'Ryen','Biniam Tesfamichael Tekle':'Ryen','Elias Palacios':'Ryen','Harvinder Singh Kular':'Ryen','Joel Andom Jiji':'Ryen','Kristoffer Langerud':'Ryen','Marco Bj\u00f8rnstad':'Ryen','Mohammad Yousaf Ahmed':'Ryen','Sindre Andr\u00e9 T\u00f8mte':'Ryen','Sipan Zewki':'Ryen','Vidar Flesvik':'Ryen','Wajahit Elahit':'Ryen','Leon Pettersen':'Ryen'
   };
@@ -797,7 +859,7 @@ function genererTekst(salg, dato, alleSalg, forrige) {
     'Mohammed Salou':'Fornebu','Mohammad Sirwan Salar':'Fornebu','Moosa Butt':'Fornebu',
     'Aleksander Pettersen':'Lillestrøm','Christopher Sjøstrøm':'Lillestrøm','Dennis Uggerud':'Lillestrøm',
     'George Xheki Hanelli':'Lillestrøm','Hedvig Øyen Larsen':'Lillestrøm','John Arild Bergengen':'Lillestrøm',
-    'Jørn Sørensen':'Lillestrøm','Martin Pedersen':'Lillestrøm','Pavel Jizba':'Lillestrøm','Tom Kjetil Sandmoe':'Lillestrøm','Elise Olsen Torseth':'Lillestrøm',
+    'Jørn Sørensen':'Lillestrøm','Martin Pedersen':'Lillestrøm','Pavel Jizba':'Lillestrøm','Tom Kjetil Sandmoe':'Lillestrøm','Elise Olsen Torseth':'Lillestrøm','Akshanan Subaskaran':'Lillestrøm','Eirik Flatner':'Lillestrøm','Elias Hassel Sivertsen':'Lillestrøm','Jøran Granholt Ejersbo':'Lillestrøm','Kenneth Økshaug':'Lillestrøm','Kurt Ronny Karlsen':'Lillestrøm','Liam Holmen':'Lillestrøm','Nikolai Kvilaas':'Lillestrøm','Trym Sverre Svendsen':'Lillestrøm','Yamen Agheid Madkhana':'Lillestrøm',
     'Ali Husseini':'Økern','Basil Omar':'Økern','Emirhan Cimen':'Økern','Shezad Masih Azam':'Økern','Nasser Alnafaa':'Økern','Aleydzhan Beynabi':'Økern','Azizcan Gøzlek':'Økern','Bjørn Inge Millerjord':'Økern','Ernest Maciejec':'Økern','Haider Ali':'Økern','Kristian Severin':'Økern','Magnus Unger':'Økern','Marcus Fjeldstad':'Økern','Marek Szpiech':'Økern','Marek Zebrowski':'Økern','Philip Hernes':'Økern','Roger Johansen':'Økern','Sondre Nakland':'Økern','Vladimir Gnjatovic':'Økern',
     'Abdulghani Ajjan':'Ryen','Algirdas Ambrozaitis':'Ryen','Biniam Tesfamichael Tekle':'Ryen',
     'Elias Palacios':'Ryen','Harvinder Singh Kular':'Ryen','Joel Andom Jiji':'Ryen',
