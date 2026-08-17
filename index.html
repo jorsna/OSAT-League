@@ -2542,6 +2542,14 @@ if (document.fonts && document.fonts.ready) {
 }
 window.addEventListener('resize', matchEtikettBredde);
 
+// ISO-ukenummer. Finnes i Championship og Selekt, men ikke i OSAT.
+function getWeekNum(d){
+  var x=new Date(d); x.setHours(0,0,0,0);
+  x.setDate(x.getDate()+3-((x.getDay()+6)%7));
+  var w=new Date(x.getFullYear(),0,4);
+  return 1+Math.round(((x.getTime()-w.getTime())/86400000-3+((w.getDay()+6)%7))/7);
+}
+
 // ─── SEIERSSANNSYNLIGHET (Monte Carlo) ───────────────────────────────
 var SS_START='2026-08-03', SS_SLUTT='2026-09-30';
 var SS_SIMS=12000, SS_HALV=21;
@@ -2748,7 +2756,7 @@ function renderSannsynlighet(){
 }
 
 function renderStats() {
-  renderSannsynlighet();
+  try { renderSannsynlighet(); } catch(e) { console.error("seierssannsynlighet:", e); }
   var m = curMonth;
 
   var scorers = SELGERE.map(function(s){
