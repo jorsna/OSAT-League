@@ -1103,6 +1103,7 @@ body.tier-kritisk #urgency-stripe{background:rgba(239,68,68,.14);border:1px soli
         </div>
       </div>
       <div class="hdr-right" style="position:absolute;top:0;right:0">
+        <button id="news-btn" onclick="openNews()" aria-label="Nyheter fra Matchday" title="Nyheter fra Matchday" style="position:relative;width:34px;height:34px;border-radius:50%;border:1px solid #f97316;background:rgba(249,115,22,.08);font-size:15px;cursor:pointer;line-height:1;display:inline-flex;align-items:center;justify-content:center">📣<span id="news-dot" style="display:none;position:absolute;top:-2px;right:-2px;width:10px;height:10px;border-radius:50%;background:#f97316;border:2px solid var(--card,#1a0f0a)"></span></button>
         <button class="hdr-btn" onclick="showHelp()">? Slik fungerer det</button>
         <div id="export-btn" style="display:none"></div>
       </div>
@@ -3776,5 +3777,83 @@ function buildTicker(items) {
   }
 })();
 </script>
+<!-- Nyheter fra Matchday (leses fra delt Supabase-tabell; rediger via skriv_nyhet.html) -->
+<script>
+(function(){
+  var NEWS_URL='https://resrjvztsqdxzqgiffeg.supabase.co/rest/v1/news';
+  var NEWS_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJlc3Jqdnp0c3FkeHpxZ2lmZmVnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgxNzg0MTMsImV4cCI6MjA5Mzc1NDQxM30.ouYcq-2hIUkqkn395Q5us5jYqa9JDVbOjJzORDBM72Y';
+  var SEEN_KEY='osat_news_seen_id';
+  var NEWS=[];
+  var MONTHS=['januar','februar','mars','april','mai','juni','juli','august','september','oktober','november','desember'];
+  function fmtDate(iso){try{var d=new Date(iso);return d.getDate()+'. '+MONTHS[d.getMonth()];}catch(e){return '';}}
+  function newestId(){return NEWS.length?Math.max.apply(null,NEWS.map(function(n){return n.id;})):0;}
+  function updateDot(){var dot=document.getElementById('news-dot');var btn=document.getElementById('news-btn');if(!dot)return;var seen=0;try{seen=parseInt(localStorage.getItem(SEEN_KEY)||'0',10)||0;}catch(e){}var hasNew=newestId()>seen;dot.style.display=hasNew?'block':'none';if(btn)btn.classList.toggle('news-new',hasNew);}
+  function markSeen(){try{localStorage.setItem(SEEN_KEY,String(newestId()));}catch(e){}updateDot();}
+  function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+  function dismiss(){var o=document.getElementById('news-overlay');if(o&&o.parentNode)o.parentNode.removeChild(o);}
+  window.openNews=function(){
+    if(document.getElementById('news-overlay')||!document.body)return;
+    var inner=NEWS.length?NEWS.map(function(n,i){
+      var bt=i===0?'none':'1px solid var(--b1)';
+      return '<div style="padding:15px 0;border-top:'+bt+'">'
+        +'<div style="display:flex;align-items:center;gap:10px">'
+        +'<span style="display:inline-block;font-size:9px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;padding:2px 9px;border-radius:100px;border:1px solid #f97316;color:#f97316">'+esc(n.tag)+'</span>'
+        +'<span style="font-size:10px;color:var(--muted);letter-spacing:.05em">'+esc(fmtDate(n.created_at))+'</span></div>'
+        +'<div style="font-weight:700;font-size:15px;color:var(--txt);margin:8px 0 4px">'+esc(n.title)+'</div>'
+        +'<div style="font-size:13px;line-height:1.45;color:var(--muted);white-space:pre-wrap">'+esc(n.body)+'</div></div>';
+    }).join(''):'<div style="font-size:13px;color:var(--muted);padding:8px 0">Ingen nyheter ennå.</div>';
+    var o=document.createElement('div');o.id='news-overlay';
+    o.style.cssText='position:fixed;inset:0;z-index:99998;background:rgba(0,0,0,0.82);display:flex;align-items:flex-start;justify-content:center;padding:40px 20px;overflow:auto;font-family:Barlow,system-ui,sans-serif';
+    o.innerHTML='<div style="background:var(--card);border:1.5px solid #f97316;border-radius:16px;max-width:440px;width:100%;padding:22px">'
+      +'<div style="display:flex;align-items:center;justify-content:space-between">'
+      +'<div style="font-family:Anton,sans-serif;color:#f97316;font-size:18px;letter-spacing:.06em">📣 NYHETER FRA MATCHDAY</div>'
+      +'<div id="news-close" style="cursor:pointer;color:var(--muted);font-size:24px;line-height:1;padding:0 4px">×</div></div>'
+      +'<div style="width:46px;height:2px;background:#f97316;opacity:.5;margin:8px 0 4px"></div>'
+      +inner+'</div>';
+    document.body.appendChild(o);
+    o.addEventListener('click',function(e){if(e.target===o)dismiss();});
+    o.querySelector('#news-close').addEventListener('click',dismiss);
+    markSeen();
+  };
+  var POPUP_KEY='osat_news_popup_seen_id';
+  function maybePopup(){
+    if(!document.body) return;
+    if(document.getElementById('news-overlay')||document.getElementById('news-popup')) return;
+    var seen=0; try{seen=parseInt(localStorage.getItem(POPUP_KEY)||'0',10)||0;}catch(e){}
+    var pops=NEWS.filter(function(n){return n.popup && n.id>seen;});
+    if(!pops.length) return;
+    pops.sort(function(a,b){return b.id-a.id;});
+    showPopup(pops[0]);
+  }
+  function showPopup(n){
+    try{localStorage.setItem(POPUP_KEY,String(n.id));}catch(e){}
+    var o=document.createElement('div');o.id='news-popup';
+    o.style.cssText='position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.85);display:flex;align-items:center;justify-content:center;padding:20px;font-family:Barlow,system-ui,sans-serif';
+    o.innerHTML='<div style="background:var(--card);border:1.5px solid #f97316;border-radius:16px;padding:26px 26px 22px;max-width:360px;width:100%;text-align:center;max-height:88vh;overflow:auto">'
+      +'<div style="font-size:34px;line-height:1">\uD83D\uDCE3</div>'
+      +'<div style="font-family:Barlow,sans-serif;font-size:10px;font-weight:700;letter-spacing:.28em;text-transform:uppercase;color:#f97316;opacity:.85;margin-top:10px">'+esc(n.tag||'Nyhet')+'</div>'
+      +'<div style="font-family:Anton,sans-serif;font-size:23px;letter-spacing:.01em;color:var(--txt);margin-top:6px;line-height:1.15">'+esc(n.title)+'</div>'
+      +'<div style="width:42px;height:1px;background:#f97316;opacity:.4;margin:14px auto"></div>'
+      +'<div style="font-size:13.5px;line-height:1.5;color:var(--muted);white-space:pre-wrap;text-align:left">'+esc(n.body)+'</div>'
+      +'<button id="np-ok" style="margin-top:20px;background:#f97316;color:#000;font-family:Barlow,sans-serif;font-weight:700;font-size:14px;border:none;cursor:pointer;padding:11px 28px;border-radius:100px">Skj\u00f8nner!</button>'
+      +'</div>';
+    document.body.appendChild(o);
+    function close(){if(o&&o.parentNode)o.parentNode.removeChild(o);markSeen();}
+    o.addEventListener('click',function(e){if(e.target===o)close();});
+    o.querySelector('#np-ok').addEventListener('click',close);
+  }
+  function load(){
+    fetch(NEWS_URL+'?select=id,created_at,tag,title,body,popup&comp=in.(osat,begge)&order=created_at.desc&limit=30',{headers:{apikey:NEWS_KEY,Authorization:'Bearer '+NEWS_KEY}})
+      .then(function(r){return r.json();})
+      .then(function(d){if(Array.isArray(d))NEWS=d;updateDot();maybePopup();})
+      .catch(function(){});
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',load);else load();
+  setInterval(load,60000);
+  document.addEventListener('visibilitychange',function(){if(!document.hidden)load();});
+  window.addEventListener('focus',load);
+})();
+</script>
+
 </body>
 </html>
