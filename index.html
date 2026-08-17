@@ -1248,7 +1248,7 @@ body.tier-kritisk #urgency-stripe{background:rgba(239,68,68,.14);border:1px soli
 <div class="view" id="view-stats">
   <div class="stats-grid">
     <div class="stat-card full"><div class="stat-title">🎯 Sjanse for å vinne uka</div><div id="ss-uke"></div></div>
-    <div class="stat-card full"><div class="stat-title">🏆 Sjanse for topp 5 i sesongen</div><div id="ss-sesong"></div></div>
+    <div class="stat-card full"><div class="stat-title">🏆 Sjanse for topp 15 i sesongen</div><div id="ss-sesong"></div></div>
     <div class="stat-card"><div class="stat-title">Toppscorere</div><div id="top-scorers"></div></div>
     <div class="stat-card"><div class="stat-title">Mest 10-ere</div><div id="top-tens"></div></div>
     <div class="stat-card full"><div class="stat-title">Avdeling mot m&#229;l</div><div id="team-bars"></div></div>
@@ -2644,7 +2644,7 @@ function ssBeregn(alleSalg){
       if(lagreFord){                       // sannsynlighet for topp 5
         var sortert=[]; navn.forEach(function(n){sortert.push(pn[n]);});
         sortert.sort(function(x,y){return y-x;});
-        var terskel=sortert[4];
+        var terskel=sortert[14];   // topp 15 av 63 PST-er
         navn.forEach(function(n){ if(pn[n]>=terskel) t5[n]+=1; });
       }
       if(medAvd){var db=-1,dl=[];
@@ -2734,7 +2734,7 @@ function renderSannsynlighet(){
   hs+='<div class="ss-note">Avdeling: '
     +TEAMS.slice().sort(function(a,b){return r.dept[b.id]-r.dept[a.id];})
       .map(function(t){return t.navn+' '+pct(r.dept[t.id]/SS_SIMS*100)+'%';}).join(' \u00b7 ')
-    +'<br>'+r.gjenDager+' dager igjen. Prosenten viser sjansen for \u00e5 ende blant de fem beste. '
+    +'<br>'+r.gjenDager+' dager igjen. Prosenten viser sjansen for \u00e5 ende blant de 15 beste. '
     +'Sesongen simuleres '+SS_SIMS.toLocaleString('nb-NO')+' ganger ut fra hver PSTs tempo, '
     +'der de siste ukene teller tyngst. '
     +'Stripen viser hvilke sluttresultater som er mulige \u2014 bred stripe betyr at mye kan skje enn\u00e5.</div>';
