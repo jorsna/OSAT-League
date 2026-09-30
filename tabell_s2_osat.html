@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VCSO OSAT League – Sluttstilling · Q3 2026</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Cinzel:wght@400;600;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --gold:#c9a84c; --gold2:#f0c96e; --gold3:#8a6414; --gold-bright:#ffe98a;
+  --ryen:#4a8fff; --fornebu:#27c98a; --lillestrom:#e8a020;
+  --bg:#03080f;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);font-family:'Rajdhani',sans-serif;color:#fff;overflow-x:hidden;}
+#particles{position:fixed;inset:0;z-index:0;pointer-events:none;}
+.bg-deep{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(ellipse 120% 60% at 10% 10%,rgba(74,143,255,0.07) 0%,transparent 55%),
+    radial-gradient(ellipse 80% 80% at 90% 85%,rgba(201,168,76,0.08) 0%,transparent 55%),#03080f;}
+.bg-grid{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:linear-gradient(rgba(74,143,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(74,143,255,0.025) 1px,transparent 1px);
+  background-size:70px 70px;mask-image:radial-gradient(ellipse 90% 90% at 50% 40%,black,transparent);}
+.grain{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:0.04;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)'/%3E%3C/svg%3E");}
+
+@keyframes shimmer{0%{background-position:200% center;}100%{background-position:-200% center;}}
+@keyframes crownFloat{0%,100%{transform:translateY(0) scale(1) rotate(-3deg);filter:drop-shadow(0 0 24px rgba(201,168,76,0.7));}50%{transform:translateY(-16px) scale(1.06) rotate(3deg);filter:drop-shadow(0 0 50px rgba(201,168,76,1));}}
+@keyframes revealUp{from{opacity:0;transform:translateY(60px) scale(0.95);}to{opacity:1;transform:translateY(0) scale(1);}}
+@keyframes revealFade{from{opacity:0;}to{opacity:1;}}
+@keyframes scanDown{0%{top:-4px;opacity:1;}80%{opacity:1;}100%{top:100vh;opacity:0;}}
+@keyframes tickerMove{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+@keyframes spin{to{transform:rotate(360deg);}}
+@keyframes statPop{0%{transform:scale(0.6);opacity:0;}75%{transform:scale(1.06);}100%{transform:scale(1);opacity:1;}}
+@keyframes glowPulse{0%,100%{opacity:0.5;}50%{opacity:1;}}
+@keyframes orbitSpin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+@keyframes orbitSpinCCW{from{transform:rotate(0deg);}to{transform:rotate(-360deg);}}
+@keyframes trophyGlow{0%,100%{filter:drop-shadow(0 0 20px rgba(201,168,76,0.6));}50%{filter:drop-shadow(0 0 50px rgba(201,168,76,1));}}
+@keyframes playerDrop{from{opacity:0;transform:translateY(-30px) scale(0.85);}to{opacity:1;transform:translateY(0) scale(1);}}
+@keyframes pitchGlow{0%,100%{opacity:0.5;}50%{opacity:0.8;}}
+
+.r1{animation:revealUp 1s cubic-bezier(.16,1,.3,1) 0.08s both;}
+.r2{animation:revealUp 1s cubic-bezier(.16,1,.3,1) 0.22s both;}
+.r3{animation:revealUp 1s cubic-bezier(.16,1,.3,1) 0.38s both;}
+.r4{animation:revealUp 1s cubic-bezier(.16,1,.3,1) 0.52s both;}
+.r5{animation:revealUp 1s cubic-bezier(.16,1,.3,1) 0.66s both;}
+.r6{animation:revealUp 1s cubic-bezier(.16,1,.3,1) 0.80s both;}
+.rf{animation:revealFade 1.4s ease 0.2s both;}
+
+.gold-text{background:linear-gradient(90deg,var(--gold3),var(--gold),var(--gold2),var(--gold-bright),var(--gold),var(--gold3));
+  background-size:300% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 4s linear infinite;}
+
+.scan{position:fixed;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,rgba(74,143,255,0.9),rgba(201,168,76,0.9),transparent);z-index:999;pointer-events:none;animation:scanDown 2s cubic-bezier(.4,0,.2,1) 0.05s forwards;}
+.spin-ring{width:44px;height:44px;border-radius:50%;border:2px solid rgba(74,143,255,0.1);border-top-color:var(--gold);animation:spin 0.85s linear infinite;}
+
+/* HEADER */
+.header{position:relative;text-align:center;padding:72px 24px 52px;overflow:hidden;}
+.header::after{content:'';position:absolute;bottom:0;left:5%;right:5%;height:1px;background:linear-gradient(90deg,transparent,rgba(74,143,255,0.3),rgba(201,168,76,0.7),rgba(74,143,255,0.3),transparent);}
+.eyebrow{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.55em;text-transform:uppercase;color:rgba(201,168,76,0.4);margin-bottom:18px;}
+.header-trophy{font-size:70px;display:inline-block;margin-bottom:16px;animation:trophyGlow 3s ease-in-out infinite;}
+.header-title{font-family:'Playfair Display',serif;font-weight:900;font-size:clamp(38px,10vw,68px);line-height:0.95;letter-spacing:-0.02em;margin-bottom:8px;}
+.header-sub{font-family:'Playfair Display',serif;font-style:italic;font-weight:400;font-size:clamp(16px,4vw,26px);color:rgba(255,255,255,0.2);letter-spacing:0.06em;margin-bottom:28px;}
+.month-badge{display:inline-flex;align-items:center;gap:10px;background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.25);border-radius:100px;padding:10px 26px;font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.22em;color:rgba(201,168,76,0.7);}
+.badge-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);box-shadow:0 0 10px var(--gold);animation:glowPulse 2s ease-in-out infinite;}
+
+/* TICKER */
+.ticker-wrap{overflow:hidden;white-space:nowrap;border-top:1px solid rgba(74,143,255,0.08);border-bottom:1px solid rgba(74,143,255,0.08);padding:12px 0;background:rgba(74,143,255,0.018);}
+.ticker-inner{display:inline-block;animation:tickerMove 50s linear infinite;}
+.ticker-chunk{display:inline-block;font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.28em;color:rgba(201,168,76,0.35);padding:0 40px;}
+
+/* FORHANDLER CARD */
+.fotm-wrap{margin:28px 16px 20px;}
+.fotm-card{background:linear-gradient(160deg,#080f1a,#04090e,#061210);border-radius:28px;padding:44px 28px 40px;position:relative;overflow:hidden;
+  box-shadow:0 0 0 1px rgba(74,143,255,0.15),0 0 80px rgba(201,168,76,0.07),0 40px 80px rgba(0,0,0,0.6);}
+.fotm-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,rgba(74,143,255,0.4),rgba(201,168,76,1),rgba(240,201,110,1),rgba(201,168,76,1),rgba(74,143,255,0.4),transparent);}
+.fotm-trophy{font-size:52px;text-align:center;margin-bottom:8px;display:block;animation:crownFloat 3s ease-in-out infinite;}
+.fotm-eyebrow{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.42em;text-transform:uppercase;color:rgba(201,168,76,0.5);text-align:center;margin-bottom:14px;display:flex;align-items:center;gap:12px;}
+.fotm-eyebrow::before,.fotm-eyebrow::after{content:'';flex:1;height:1px;}
+.fotm-eyebrow::before{background:linear-gradient(90deg,transparent,rgba(201,168,76,0.3));}
+.fotm-eyebrow::after{background:linear-gradient(90deg,rgba(201,168,76,0.3),transparent);}
+.fotm-name{font-family:'Playfair Display',serif;font-weight:900;font-size:clamp(32px,9vw,56px);line-height:1.1;letter-spacing:-0.01em;text-align:center;margin-bottom:16px;}
+.fotm-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:28px;}
+.fotm-stat{background:rgba(0,0,0,0.35);border-radius:18px;padding:20px 8px 16px;text-align:center;position:relative;overflow:hidden;animation:statPop 0.7s cubic-bezier(.16,1,.3,1) both;}
+.fotm-stat::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,0.4),transparent);}
+.fotm-stat-num{font-family:'Playfair Display',serif;font-weight:900;font-size:44px;line-height:1;margin-bottom:5px;}
+.fotm-stat-lbl{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.28em;text-transform:uppercase;color:rgba(255,255,255,0.16);}
+
+/* RANK MINI */
+.rank-title{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.35em;color:rgba(201,168,76,0.32);text-align:center;display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+.rank-title::before,.rank-title::after{content:'';flex:1;height:1px;background:rgba(201,168,76,0.1);}
+.rank-row{display:flex;align-items:center;gap:14px;padding:12px 14px;border-radius:14px;margin-bottom:5px;background:rgba(255,255,255,0.018);border:1px solid rgba(255,255,255,0.03);transition:all 0.22s;}
+.rank-row:hover{background:rgba(74,143,255,0.04);border-color:rgba(74,143,255,0.12);transform:translateX(4px);}
+.rank-num{font-family:'Playfair Display',serif;font-weight:700;font-size:20px;color:rgba(255,255,255,0.1);width:24px;text-align:center;flex-shrink:0;}
+.rank-name{flex:1;font-size:14px;font-weight:600;color:rgba(255,255,255,0.7);}
+.rank-dept{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.1em;color:rgba(255,255,255,0.25);margin-top:1px;}
+.rank-pts{font-family:'Playfair Display',serif;font-weight:700;font-size:22px;}
+
+/* BESTE SELGER */
+.sec{margin:0 16px 14px;background:linear-gradient(160deg,#070d18,#030709);border-radius:24px;border:1px solid rgba(74,143,255,0.1);padding:28px 26px;position:relative;overflow:hidden;}
+.sec-top{position:absolute;top:0;left:0;right:0;height:2px;}
+.sec-title{font-family:'Cinzel',serif;font-size:12px;letter-spacing:0.22em;color:rgba(201,168,76,0.72);margin-bottom:22px;display:flex;align-items:center;gap:12px;font-weight:600;}
+.sec-title::after{content:'';flex:1;height:1px;background:rgba(74,143,255,0.1);}
+.sec-name{font-family:'Playfair Display',serif;font-weight:700;font-size:28px;line-height:1;}
+.sec-sub{font-size:11px;font-weight:600;letter-spacing:0.12em;margin-top:6px;}
+
+/* STATS GRID */
+.stats-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:0 16px 14px;}
+.stat-tile{background:linear-gradient(160deg,#070d18,#030709);border:1px solid rgba(74,143,255,0.1);border-radius:18px;padding:18px 8px 14px;text-align:center;position:relative;overflow:hidden;animation:statPop 0.7s cubic-bezier(.16,1,.3,1) both;}
+.stat-tile::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,0.3),transparent);}
+.stat-tile-num{font-family:'Playfair Display',serif;font-weight:900;font-size:32px;line-height:1;margin-bottom:5px;}
+.stat-tile-lbl{font-family:'Cinzel',serif;font-size:6px;letter-spacing:0.25em;text-transform:uppercase;color:rgba(255,255,255,0.18);}
+
+/* ── PITCH / FOTBALLBANE ── */
+.pitch-wrap{margin:0 16px 20px;}
+.pitch-header{background:linear-gradient(135deg,#0a1628,#050d1a);border-radius:24px 24px 0 0;padding:22px 24px 18px;
+  border:1px solid rgba(74,143,255,0.12);border-bottom:2px solid rgba(201,168,76,0.25);display:flex;align-items:center;gap:16px;}
+.pitch-badge{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold2),var(--gold3));
+  display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;box-shadow:0 0 24px rgba(201,168,76,0.35);}
+.pitch-title{font-family:'Cinzel',serif;font-size:13px;letter-spacing:0.3em;color:var(--gold);font-weight:700;}
+.pitch-sub{font-size:11px;color:rgba(255,255,255,0.3);letter-spacing:0.1em;margin-top:3px;}
+
+.pitch{
+  position:relative;
+  background:linear-gradient(180deg,#0d2b14 0%,#0f3318 30%,#0d2b14 60%,#0a2010 100%);
+  border:1px solid rgba(74,143,255,0.1);border-top:none;
+  border-radius:0 0 24px 24px;
+  padding:28px 16px 32px;
+  overflow:hidden;
+}
+/* Gress-tekstur */
+.pitch::before{
+  content:'';position:absolute;inset:0;
+  background:repeating-linear-gradient(180deg,rgba(255,255,255,0.018) 0px,rgba(255,255,255,0.018) 28px,transparent 28px,transparent 56px);
+  pointer-events:none;
+}
+/* Pitch-linjer SVG */
+.pitch-lines{position:absolute;inset:0;pointer-events:none;}
+
+/* Pitch-formasjon grid: 3 rader (spiss / midtlinje / forsvar) */
+.pitch-formation{
+  position:relative;z-index:2;
+  display:flex;flex-direction:column;align-items:center;
+  gap:20px;
+}
+.pitch-row{display:flex;justify-content:center;gap:14px;}
+
+/* Spillerkort på banen */
+.player-tile{
+  display:flex;flex-direction:column;align-items:center;
+  width:88px;
+  animation:playerDrop 0.6s cubic-bezier(.16,1,.3,1) both;
+  cursor:default;
+}
+.player-tile:hover .player-photo-ring{transform:scale(1.07);box-shadow:var(--ring-shadow),0 0 30px var(--ring-color);}
+.player-photo-ring{
+  width:64px;height:64px;border-radius:50%;
+  border:2.5px solid var(--ring-color,#c9a84c);
+  overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(0,0,0,0.5);
+  transition:transform 0.25s,box-shadow 0.25s;
+  box-shadow:0 0 16px var(--ring-color,rgba(201,168,76,0.4)),0 4px 20px rgba(0,0,0,0.6);
+  position:relative;
+}
+.player-photo-ring img{width:100%;height:100%;object-fit:cover;}
+.player-photo-ring .initials{font-family:'Playfair Display',serif;font-weight:700;font-size:22px;color:var(--ring-color,#c9a84c);}
+.player-rank-badge{
+  position:absolute;top:-4px;right:-4px;
+  width:22px;height:22px;border-radius:50%;
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  border:2px solid #03080f;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Cinzel',serif;font-size:9px;font-weight:700;color:#000;
+  box-shadow:0 0 8px rgba(201,168,76,0.7);
+  z-index:3;
+}
+.player-nameplate{
+  margin-top:8px;
+  background:rgba(0,0,0,0.65);
+  border:1px solid rgba(255,255,255,0.07);
+  border-radius:8px;
+  padding:6px 8px 5px;
+  text-align:center;
+  width:100%;
+  backdrop-filter:blur(6px);
+}
+.player-nameplate-name{
+  font-family:'Rajdhani',sans-serif;font-weight:700;font-size:12px;
+  color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  line-height:1;
+}
+.player-nameplate-dept{
+  font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.12em;
+  margin-top:2px;
+}
+.player-nameplate-stats{
+  display:flex;justify-content:center;gap:6px;margin-top:5px;
+}
+.player-stat-chip{
+  font-family:'Playfair Display',serif;font-weight:700;font-size:13px;
+  padding:1px 6px;border-radius:4px;
+  background:rgba(255,255,255,0.06);
+  line-height:1.4;
+}
+.player-stat-label{
+  font-family:'Cinzel',serif;font-size:6px;letter-spacing:0.15em;
+  color:rgba(255,255,255,0.3);margin-top:1px;text-align:center;
+}
+
+/* FOOTER */
+.footer{text-align:center;padding:44px 24px 28px;}
+.footer-line{height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,0.2),transparent);margin-bottom:22px;}
+.footer-txt{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.4em;color:rgba(201,168,76,0.18);}
+
+.loading{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;}
+.loading-lbl{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.4em;color:rgba(201,168,76,0.28);}
+.page{position:relative;z-index:2;min-height:100vh;}
+.content{max-width:520px;margin:0 auto;}
+.spacer{height:24px;}
+
+/* ── Sesongfinale-tillegg ── */
+.ht-row{display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:12px;margin-bottom:8px;background:rgba(39,201,138,0.05);border:1px solid rgba(39,201,138,0.14);}
+.ht-dot{width:8px;height:8px;border-radius:50%;background:#27c98a;box-shadow:0 0 10px #27c98a;flex-shrink:0;}
+.ht-ct{color:#27c98a;font-weight:700;font-size:14px;}
+.ht-dt{color:rgba(255,255,255,0.38);font-size:12px;}
+.gz-cta{display:flex;align-items:center;justify-content:center;gap:12px;padding:16px;border-radius:16px;border:1px solid rgba(201,168,76,0.4);background:rgba(201,168,76,0.06);font-family:'Cinzel',serif;font-size:12px;letter-spacing:0.12em;color:#f0c96e;text-decoration:none;text-transform:uppercase;transition:all 0.2s;}
+.gz-cta:hover{background:rgba(201,168,76,0.12);border-color:rgba(201,168,76,0.7);}
+
+/* ── Elevert sesongmester ── */
+.champ-wrap{margin:24px 16px 18px;}
+.champ-card{position:relative;overflow:hidden;border-radius:28px;padding:42px 24px 26px;text-align:center;
+  background:radial-gradient(ellipse 90% 55% at 50% 0%,rgba(201,168,76,0.13),transparent 60%),linear-gradient(160deg,#080f1a,#04090e,#061210);
+  box-shadow:0 0 0 1px rgba(201,168,76,0.18),0 0 90px rgba(201,168,76,0.08),0 40px 80px rgba(0,0,0,0.6);}
+.champ-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,rgba(74,143,255,0.4),rgba(201,168,76,1),rgba(240,201,110,1),rgba(201,168,76,1),rgba(74,143,255,0.4),transparent);}
+.champ-beam{position:absolute;top:-12%;left:50%;transform:translateX(-50%);width:72%;height:64%;pointer-events:none;background:radial-gradient(ellipse 50% 100% at 50% 0%,rgba(240,201,110,0.16),transparent 70%);}
+.champ-burst{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:3;}
+.champ-sweep{position:absolute;top:0;bottom:0;width:40%;left:-50%;transform:skewX(-18deg);pointer-events:none;z-index:4;background:linear-gradient(100deg,transparent,rgba(255,255,255,0.10),transparent);animation:champSweep 1.8s ease-out 0.4s 1 both;}
+@keyframes champSweep{from{left:-50%;}to{left:130%;}}
+.champ-yr{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.4em;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:6px;position:relative;z-index:2;}
+.champ-eyebrow{font-family:'Cinzel',serif;font-size:13px;font-weight:900;letter-spacing:0.5em;margin-bottom:18px;position:relative;z-index:2;}
+.champ-crown{font-size:42px;line-height:1;position:relative;z-index:2;animation:crownFloat 3s ease-in-out infinite;}
+.champ-portrait-wrap{position:relative;width:170px;height:170px;margin:6px auto 2px;z-index:2;}
+.champ-portrait-ring{position:absolute;inset:0;border-radius:50%;padding:4px;background:conic-gradient(#8a6414,#f0c96e,#c9a84c,#ffe98a,#8a6414);box-shadow:0 0 42px rgba(201,168,76,0.45);animation:trophyGlow 3.5s ease-in-out infinite;}
+.champ-portrait-inner{width:100%;height:100%;border-radius:50%;overflow:hidden;background:#03080f;border:2px solid #04090f;display:flex;align-items:center;justify-content:center;}
+.champ-portrait-inner img{width:100%;height:100%;object-fit:cover;}
+.champ-portrait-inner span{font-family:'Playfair Display',serif;font-weight:900;font-size:56px;color:#f0c96e;}
+.champ-laurel{position:absolute;top:50%;font-size:36px;opacity:0.85;}
+.champ-laurel-l{left:-16px;transform:translateY(-50%);}
+.champ-laurel-r{right:-16px;transform:translateY(-50%) scaleX(-1);}
+.champ-name{font-family:'Playfair Display',serif;font-weight:900;font-size:clamp(38px,11vw,58px);line-height:1.02;margin-top:10px;position:relative;z-index:2;}
+.champ-honor{font-family:'Playfair Display',serif;font-style:italic;font-size:17px;color:rgba(255,255,255,0.5);margin-top:8px;position:relative;z-index:2;}
+.champ-pill{display:inline-flex;align-items:center;gap:8px;margin-top:16px;padding:7px 20px;border-radius:100px;font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.18em;font-weight:600;position:relative;z-index:2;}
+.champ-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:28px;position:relative;z-index:2;}
+.champ-stat{background:rgba(0,0,0,0.4);border-radius:18px;padding:20px 8px 15px;text-align:center;border-top:1px solid rgba(201,168,76,0.35);animation:statPop 0.7s cubic-bezier(.16,1,.3,1) both;}
+.champ-stat-num{font-family:'Playfair Display',serif;font-weight:900;font-size:42px;line-height:1;margin-bottom:5px;}
+.champ-stat-lbl{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.28em;text-transform:uppercase;color:rgba(255,255,255,0.3);}
+.champ-down{margin-top:22px;font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.3em;color:rgba(255,255,255,0.25);position:relative;z-index:2;}
+
+/* ── Moment-band (fargetonede kåringer) ── */
+@keyframes momFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-9px);}}
+.mom{margin:18px 16px;position:relative;}
+.mom-card{position:relative;overflow:hidden;border-radius:28px;padding:40px 24px 26px;text-align:center;}
+.mom-bar{position:absolute;top:0;left:0;right:0;height:3px;}
+.mom-beam{position:absolute;top:-12%;left:50%;transform:translateX(-50%);width:72%;height:64%;pointer-events:none;}
+.mom-burst{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:3;}
+.mom-sweep{position:absolute;top:0;bottom:0;width:40%;left:-50%;transform:skewX(-18deg);pointer-events:none;z-index:4;background:linear-gradient(100deg,transparent,rgba(255,255,255,0.10),transparent);animation:champSweep 1.8s ease-out 0.5s 1 both;}
+.mom-yr{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.4em;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:6px;position:relative;z-index:2;}
+.mom-eyebrow{font-family:'Cinzel',serif;font-size:13px;font-weight:900;letter-spacing:0.5em;margin-bottom:18px;position:relative;z-index:2;}
+.mom-shimmer{-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;background-size:300% auto;animation:shimmer 4.5s linear infinite;}
+.mom-icon{font-size:40px;line-height:1;position:relative;z-index:2;animation:momFloat 3s ease-in-out infinite;}
+.mom-name{font-family:'Playfair Display',serif;font-weight:900;font-size:clamp(38px,11vw,58px);line-height:1.02;margin-top:12px;position:relative;z-index:2;}
+.mom-honor{font-family:'Playfair Display',serif;font-style:italic;font-size:17px;color:rgba(255,255,255,0.5);margin-top:8px;position:relative;z-index:2;}
+.mom-hero{display:inline-block;border-radius:18px;padding:16px 34px;margin-top:20px;border:1px solid;position:relative;z-index:2;}
+.mom-hero-num{font-family:'Playfair Display',serif;font-weight:900;font-size:52px;line-height:1;}
+.mom-hero-lbl{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.28em;text-transform:uppercase;margin-top:4px;}
+.mom-tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:24px;position:relative;z-index:2;}
+.mom-tile{background:rgba(0,0,0,0.4);border-radius:16px;padding:18px 6px 13px;text-align:center;animation:statPop 0.7s cubic-bezier(.16,1,.3,1) both;}
+.mom-tile-num{font-family:'Playfair Display',serif;font-weight:900;font-size:28px;line-height:1;}
+.mom-tile-lbl{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-top:4px;}
+.mom-portrait{position:relative;width:150px;height:150px;margin:6px auto 2px;z-index:2;}
+.mom-portrait-ring{position:absolute;inset:0;border-radius:50%;padding:4px;}
+.mom-portrait-inner{width:100%;height:100%;border-radius:50%;overflow:hidden;background:#03080f;border:2px solid #04090f;display:flex;align-items:center;justify-content:center;}
+.mom-portrait-inner img{width:100%;height:100%;object-fit:cover;}
+.mom-portrait-inner span{font-family:'Playfair Display',serif;font-weight:900;font-size:50px;}
+.mom-crest{position:relative;width:148px;height:148px;margin:10px auto 6px;z-index:2;}
+.mom-crest-ring{position:absolute;inset:0;border-radius:30px;padding:4px;transform:rotate(45deg);}
+.mom-crest-inner{width:100%;height:100%;border-radius:26px;display:flex;align-items:center;justify-content:center;transform:rotate(-45deg);}
+.mom-crest-inner span{font-family:'Cinzel',serif;font-weight:900;font-size:44px;}
+.mom-sub-row{display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:12px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);margin-bottom:6px;}
+.mom-shared{display:flex;align-items:center;justify-content:center;gap:18px;flex-wrap:wrap;margin-top:16px;position:relative;z-index:2;}
+.gz-cta-sec{border-color:rgba(255,255,255,0.14);background:rgba(255,255,255,0.03);color:rgba(255,255,255,0.7);}
+.gz-cta-sec:hover{border-color:rgba(255,255,255,0.3);background:rgba(255,255,255,0.06);}
+
+/* ── OSAT amber-overstyring ── */
+:root{--gold:#e0710e;--gold2:#f3a23a;--gold3:#8a3d08;--gold-bright:#ffb866;}
+body{background:#0f0a05 !important;}
+.bg-deep{background:radial-gradient(circle at 50% 0%,rgba(224,113,14,0.10),transparent 55%),#0f0a05 !important;}
+.champ-card{background:radial-gradient(ellipse 90% 55% at 50% 0%,rgba(224,113,14,0.14),transparent 60%),linear-gradient(160deg,#1a0f06,#120a04,#0f0a05) !important;box-shadow:0 0 0 1px rgba(224,113,14,0.18),0 0 90px rgba(224,113,14,0.08),0 40px 80px rgba(0,0,0,0.6) !important;}
+.champ-card::before{background:linear-gradient(90deg,transparent,rgba(243,162,58,0.4),#e0710e,#ffb866,#e0710e,rgba(243,162,58,0.4),transparent) !important;}
+.champ-beam{background:radial-gradient(ellipse 50% 100% at 50% 0%,rgba(255,184,102,0.16),transparent 70%) !important;}
+.champ-portrait-ring{background:conic-gradient(#8a3d08,#f3a23a,#e0710e,#ffb866,#8a3d08) !important;box-shadow:0 0 42px rgba(224,113,14,0.45) !important;}
+.champ-portrait-inner{border-color:#0f0a05 !important;}
+.champ-portrait-inner span{color:#f3a23a !important;}
+.gz-cta{border-color:rgba(224,113,14,0.4);background:rgba(224,113,14,0.06);color:#f3a23a;}
+.gz-cta:hover{background:rgba(224,113,14,0.12);border-color:rgba(224,113,14,0.7);}
+</style>
+</head>
+<body>
+<canvas id="particles"></canvas>
+<div class="bg-deep"></div>
+<div class="bg-grid"></div>
+<div class="grain"></div>
+<div class="scan"></div>
+<div id="root" class="page"></div>
+
+<script>
+(function(){
+  const c=document.getElementById('particles'),ctx=c.getContext('2d');
+  let W,H,pts=[];
+  function resize(){W=c.width=innerWidth;H=c.height=innerHeight;}
+  resize();window.addEventListener('resize',resize);
+  const COLS=[[74,143,255],[201,168,76],[240,201,110],[39,201,138],[255,215,0]];
+  for(let i=0;i<110;i++){
+    const col=COLS[Math.floor(Math.random()*COLS.length)];
+    pts.push({x:Math.random()*9999,y:Math.random()*9999,r:Math.random()*1.5+0.2,
+      vx:(Math.random()-0.5)*0.2,vy:-(Math.random()*0.35+0.05),
+      life:Math.random(),maxLife:Math.random()*0.6+0.4,col,
+      drift:Math.random()*Math.PI*2,driftS:Math.random()*0.01+0.003});
+  }
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    pts.forEach(p=>{
+      p.life+=0.0022;p.drift+=p.driftS;
+      if(p.life>p.maxLife){p.life=0;p.x=Math.random()*W;p.y=H+10;}
+      p.x+=p.vx+Math.sin(p.drift)*0.35;p.y+=p.vy;
+      const t=p.life/p.maxLife,a=t<0.15?t/0.15:t>0.8?(1-t)/0.2:1;
+      ctx.save();ctx.globalAlpha=a*0.5;
+      ctx.fillStyle=`rgb(${p.col.join(',')})`;
+      ctx.shadowBlur=10;ctx.shadowColor=`rgba(${p.col.join(',')},0.9)`;
+      ctx.beginPath();ctx.arc(p.x%W,p.y,p.r,0,Math.PI*2);ctx.fill();
+      ctx.restore();
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+</script>
+
+<script type="text/babel">
+const SB_URL="https://aemboxqpaeyfdlzmghxe.supabase.co";
+const SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFlbWJveHFwYWV5ZmRsem1naHhlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3OTIzNTQsImV4cCI6MjA5NDM2ODM1NH0.vKRaz0bRJm621eKgtF7iXh23Zqdh0qNuriMgDMhJ8Yw";
+
+/* ── FROSSEN MODUS ──────────────────────────────────────────────────
+   Settes ÉN gang 1. oktober etter avstemming: lim inn osat_scores-radene
+   (samme format som /rest/v1/osat_scores) i arrayet under. Da henter
+   siden ingenting fra Supabase – permanent monument. */
+const FROZEN_ROWS = [{"id": "8adba025-f4a1-4414-b50c-0b479b9f289a", "pst": "Moosa Butt", "score": 9, "loc": "fornebu", "mnd": "aug", "ts": "2026-08-03T12:00:00", "fulgt_opp": false, "deleted": false}, {"id": "dfa7438f-f7f7-4d63-96e9-6f313b89a478", "pst": "Mathuran Sandrakumar", "score": 10, "loc": "fornebu", "mnd": "aug", "ts": "2026-08-03T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "e481511a-26ba-4f13-b564-c1ca3af14080", "pst": "Mohammad Sirwan Salar", "score": 10, "loc": "fornebu", "mnd": "aug", "ts": "2026-08-03T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "f4d03e20-9907-46cd-8d66-a668ae2c68bf", "pst": "Ameer Hawary", "score": 9, "loc": "fornebu", "mnd": "aug", "ts": "2026-08-03T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "c10b9573-675a-49cf-beb8-d4163219e891", "pst": "Fabian Leyell Finstad", "score": 9, "loc": "fornebu", "mnd": "aug", "ts": "2026-08-03T12:00:00", "fulgt_opp": false, "deleted": false}, {"id": "146dd86c-3339-4345-bde3-2259c3ffaa93", "pst": "Mathuran Sandrakumar", "score": 10, "loc": "fornebu", "mnd": "aug", "ts": "2026-08-03T12:00:00", "fulgt_opp": false, "deleted": false}, {"id": "f1ac9d61-d6ea-47d2-a5b0-242f04879d1e", "pst": "Harvinder Singh Kular", "score": 10, "loc": "ryen", "mnd": "aug", "ts": "2026-08-03T12:17:00", "fulgt_opp": false, "deleted": false}, {"id": "9c0befa1-9008-44fe-bb2f-adef245b7dad", "pst": "Wajahit Elahit", "score": 10, "loc": "ryen", "mnd": "aug", "ts": "2026-08-03T12:18:00", "fulgt_opp": false, "deleted": false}, {"id": "dab66064-0096-4ee2-a386-cd5acda6ed76", "pst": "Wajahit Elahit", "score": 10, "loc": "ryen", "mnd": "aug", "ts": "2026-08-03T12:18:00", "fulgt_opp": false, "deleted": false}, {"id": "3a515242-f4dd-4023-92ec-58bfa058e1a0", "pst": "Sipan Zewki", "score": 10, "loc": "ryen", "mnd": "aug", "ts": "2026-08-03T12:18:00", "fulgt_opp": true, "deleted": false}, {"id": "8bd10fb0-276f-4d02-b3b4-118969b7d06d", "pst": "Mohammad Yousaf Ahmed", "score": 9, "loc": "ryen", "mnd": "aug", "ts": "2026-08-03T12:19:00", "fulgt_opp": true, "deleted": false}, {"id": "66b1ded6-b0e2-48e2-aba2-ee916502919b", "pst": "Elias Palacios", "score": 9, "loc": "ryen", "mnd": "aug", "ts": "2026-08-03T12:19:00", "fulgt_opp": false, "deleted": false}, {"id": "afaf0f12-996f-4a14-b982-45a6f002917d", "pst": "Sipan Zewki", "score": 10, "loc": "ryen", "mnd": "aug", "ts": "2026-08-03T12:19:00", "fulgt_opp": true, "deleted": false}, {"id": "1f05b9e8-af04-44e6-81b5-e10692c3045d", "pst": "Christopher Sjøstrøm", "score": 9, "loc": "lillestrom", "mnd": "aug", "ts": "2026-08-04T08:32:00", "fulgt_opp": true, "deleted": false}, {"id": "c02e7297-ffa7-4ede-bafb-1695839ac6a1", "pst": "Martin Pedersen", "score": 10, "loc": "lillestrom", "mnd": "aug", "ts": "2026-08-04T10:14:00", "fulgt_opp": true, "deleted": false}, {"id": "520a0128-f112-4ea3-83ac-e27ae1d9a890", "pst": "Aleksander Pettersen", "score": 9, "loc": "lillestrom", "mnd": "aug", "ts": "2026-08-04T10:15:00", "fulgt_opp": false, "deleted": false}, {"id": "f26eabcb-1c96-4e2a-958e-32f182576593", "pst": "Harvinder Singh Kular", "score": 9, "loc": "ryen", "mnd": "aug", "ts": "2026-08-04T10:47:00", "fulgt_opp": false, "deleted": false}, {"id": "40dbfe74-61e9-478a-b635-e338dd9159b0", "pst": "Leon Pettersen", "score": 9, "loc": "ryen", "mnd": "aug", "ts": "2026-08-04T10:54:00", "fulgt_opp": false, "deleted": false}, {"id": "990b7b70-36cf-492c-8199-023eb7fc20db", "pst": "Mohammad Sirwan Salar", "score": 10, "loc": "fornebu", "mnd": "aug", "ts": "2026-08-04T12:00:00", "fulgt_opp": false, "deleted": false}, {"id": "c01d54ff-c0ad-420d-bc92-1bf85492ae20", "pst": "Abishan Balasegar", "score": 10, "loc": "fornebu", "mnd": "aug", "ts": "2026-08-04T12:00:00", "fulgt_opp": false, "deleted": false}, {"id": "20a6f065-25e9-4802-97ca-86fd8a811b9a", "pst": "Mathuran Sandrakumar", "score": 10, "loc": "fornebu", "mnd": "aug", "ts": "2026-08-04T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "421e9e58-a2b3-4086-b15e-09f9df58fe0b", "pst": "Mohammad Sirwan Salar", "score": 10, "loc": "fornebu", "mnd": "aug", "ts": "2026-08-04T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "83e32145-1481-457c-bd97-4aa3a421ca76", "pst": "Mathuran Sandrakumar", "score": 10, "loc": "fornebu", "mnd": "aug", "ts": "2026-08-04T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "7c1c8f58-dc3d-4c95-81dd-f65987f84db0", "pst": "Aleksander Pettersen", "score": 10, "loc": "lillestrom", "mnd": "aug", "ts": "2026-08-05T09:33:00", "fulgt_opp": true, "deleted": false}, {"id": "cc4ee17d-6d05-424d-ad4d-aadf9a87c783", "pst": "Martin Pedersen", "score": 9, "loc": "lillestrom", "mnd": "aug", "ts": "2026-08-05T11:00:00", "fulgt_opp": true, "deleted": false}, {"id": "13c64855-0241-4e17-83ae-1dc4eb2b5299", "pst": "Sipan Zewki", "score": 10, "loc": "ryen", "mnd": "aug", "ts": "2026-08-05T11:12:00", "fulgt_opp": false, "deleted": false}, {"id": "ee4d4dc0-0643-41af-9790-7e49e8036fee", "pst": "Harvinder Singh Kular", "score": 10, "loc": "ryen", "mnd": "aug", "ts": "2026-08-05T11:13:00", "fulgt_opp": false, "deleted": false}, {"id": "a48de9cb-7913-42ca-a925-3f964c10cc8c", "pst": "Mathuran Sandrakumar", "score": 9, "loc": "fornebu", "mnd": "aug", "ts": "2026-08-05T11:49:00", "fulgt_opp": true, "deleted": false}, {"id": "1f87d1dd-c68e-4347-9133-68b965b8dada", "pst": "Mathuran Sandrakumar", "score": 10, "loc": "fornebu", "mnd": "aug", "ts": "2026-08-05T11:50:00", "fulgt_opp": true, "deleted": false}, {"id": "ac517833-95ce-4e02-af49-e3b880beedb4", "pst": "Mathuran Sandrakumar", "score": 10, "loc": "fornebu", "mnd": "aug", "ts": "2026-08-05T12:00:00", "fulgt_opp": false, "deleted": false}, {"id": "13caa76b-952a-4ddf-a483-7101ace4afea", "pst": "Mohammad Yousaf Ahmed", "score": 10, "loc": "ryen", "mnd": "aug", "ts": "2026-08-05T12:00:00", "fulgt_opp": false, "deleted": false}, {"id": "f48fb938-b06f-4270-b3dd-b4b2e227731c", "pst": "Mathuran Sandrakumar", "score": 9, "loc": "fornebu", "mnd": "aug", "ts": "2026-08-05T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "4bb05540-0842-4d58-b904-82db4c42392d", "pst": "Christopher Sjøstrøm", "score": 10, "loc": "lillestrom", "mnd": "aug", "ts": "2026-08-05T12:00:00", "fulgt_opp": false, "deleted": false}, {"id": "85825b13-adcf-491e-93b2-212020410de0", "pst": "Mohammad Yousaf Ahmed", "score": 10, "loc": "ryen", "mnd": "aug", "ts": "2026-08-06T08:43:00", "fulgt_opp": true, "deleted": false}, {"id": "ac7a5715-3f58-4281-a930-8b5f280270b9", "pst": "Martin Pedersen", "score": 10, "loc": "lillestrom", "mnd": "aug", "ts": "2026-08-07T09:39:00", "fulgt_opp": true, "deleted": false}, {"id": "914db062-390d-4123-94eb-10e20ee76c58", "pst": "Moosa Butt", "score": 9, "loc": "fornebu", "mnd": "aug", "ts": "2026-08-10T07:14:00", "fulgt_opp": true, "deleted": false}, {"id": "cd17a745-42d2-4826-b013-220915ac5c12", "pst": "Mohammad Sirwan Salar", "score": 10, "loc": "fornebu", "mnd": "aug", "ts": "2026-08-10T07:15:00", "fulgt_opp": false, "deleted": false}, {"id": "51199db6-e7b3-4379-8d25-f89c7c279b3d", "pst": "Mohammad Sirwan Salar", "score": 9, "loc": "fornebu", "mnd": "aug", "ts": "2026-08-10T07:17:00", "fulgt_opp": false, "deleted": false}, {"id": "f610e5d7-4cdb-4a7a-be9f-cf57f8a9e5c9", "pst": "Mathuran Sandrakumar", "score": 9, "loc": "fornebu", "mnd": "aug", "ts": "2026-08-10T07:17:00", "fulgt_opp": true, "deleted": false}, {"id": "ae66a233-90fd-40ec-b79b-a31cf6c75fb1", "pst": "Fabian Leyell Finstad", "score": 10, "loc": "fornebu", "mnd": "aug", "ts": "2026-08-10T07:18:00", "fulgt_opp": true, "deleted": false}, {"id": "dd6923e3-6bb8-47f5-bfa6-04a563655197", "pst": "Matilde R. Ojala-Andskog", "score": 10, "loc": "fornebu", "mnd": "aug", "ts": "2026-08-10T07:44:00", "fulgt_opp": false, "deleted": false}, {"id": "796a5bd0-d366-4b3b-9d2a-6bf517a7b564", "pst": "Elias Lieberg", "score": 10, "loc": "fornebu", "mnd": "aug", "ts": "2026-08-10T07:44:00", "fulgt_opp": false, "deleted": false}, {"id": "9072ab6f-5970-4f67-9f48-d89b6f8d6f4d", "pst": "Abishan Balasegar", "score": 10, "loc": "fornebu", "mnd": "aug", "ts": "2026-08-10T09:52:00", "fulgt_opp": false, "deleted": false}, {"id": "1f40b76c-c724-4115-bda3-5547d54a7974", "pst": "Mohammad Sirwan Salar", "score": 10, "loc": "fornebu", "mnd": "aug", "ts": "2026-08-10T12:00:00", "fulgt_opp": false, "deleted": false}, {"id": "a1f10753-cde7-47d7-a8c1-e10ef8ac8183", "pst": "Harvinder Singh Kular", "score": 10, "loc": "ryen", "mnd": "aug", "ts": "2026-08-10T12:18:00", "fulgt_opp": false, "deleted": false}, {"id": "8257171b-9132-42b4-a17d-f69b95355ee0", "pst": "Abdulghani Ajjan", "score": 10, "loc": "ryen", "mnd": "aug", "ts": "2026-08-10T12:18:00", "fulgt_opp": true, "deleted": false}, {"id": "61c93d81-002b-4dd8-8911-05ba616986db", "pst": "Harvinder Singh Kular", "score": 10, "loc": "ryen", "mnd": "aug", "ts": "2026-08-10T12:19:00", "fulgt_opp": true, "deleted": false}, {"id": "20463d85-131a-424b-a70e-87d79ed55c60", "pst": "Sipan Zewki", "score": 9, "loc": "ryen", "mnd": "aug", "ts": "2026-08-10T12:19:00", "fulgt_opp": true, "deleted": false}, {"id": "aaa4012d-3040-4ca2-b769-083ccceebb56", "pst": "Sipan Zewki", "score": 10, "loc": "ryen", "mnd": "aug", "ts": "2026-08-10T12:20:00", "fulgt_opp": true, "deleted": false}, {"id": "fd731ba0-8b31-4707-b805-467d4e2bfaa8", "pst": "Mohammad Yousaf Ahmed", "score": 10, "loc": "ryen", "mnd": "aug", "ts": "2026-08-10T12:20:00", "fulgt_opp": false, "deleted": false}, {"id": "ac9ba462-cfd2-4b83-9889-c80ed519f43d", "pst": "Christopher Sjøstrøm", "score": 10, "loc": "lillestrom", "mnd": "aug", "ts": "2026-08-10T12:31:00", "fulgt_opp": false, "deleted": false}, {"id": "7679252c-6eb0-465e-acd8-955177373dce", "pst": "Christopher Sjøstrøm", "score": 10, "loc": "lillestrom", "mnd": "aug", "ts": "2026-08-10T12:32:00", "fulgt_opp": true, "deleted": false}, {"id": "f56c8c49-841d-458d-8dc3-282b7f830560", "pst": "Christopher Sjøstrøm", "score": 9, "loc": "lillestrom", "mnd": "aug", "ts": "2026-08-10T12:36:00", "fulgt_opp": true, "deleted": false}, {"id": "162fb8d3-a5a5-4083-9513-77359e7d02b4", "pst": "Mohammad Sirwan Salar", "score": 10, "loc": "fornebu", "mnd": "aug", "ts": "2026-08-10T14:37:00", "fulgt_opp": false, "deleted": false}, {"id": "4c39a660-f53b-4c0c-a6f5-045244bd456c", "pst": "Matilde R. Ojala-Andskog", "score": 10, "loc": "fornebu", "mnd": "aug", "ts": "2026-08-10T14:38:00", "fulgt_opp": true, "deleted": false}, {"id": "783eb3bb-e230-4ad8-89a1-d4ec243673c2", "pst": "Marco Bjørnstad", "score": 10, "loc": "ryen", "mnd": "aug", "ts": "2026-08-11T09:05:00", "fulgt_opp": true, "deleted": false}, {"id": "ea8b1f80-419c-4e42-8ecb-c27573177df9", "pst": "Vidar Flesvik", "score": 10, "loc": "ryen", "mnd": "aug", "ts": "2026-08-11T09:06:00", "fulgt_opp": false, "deleted": false}, {"id": "0c57491d-8a87-4b27-990a-0ab0ab2e377d", "pst": "Vidar Flesvik", "score": 10, "loc": "ryen", "mnd": "aug", "ts": "2026-08-11T09:06:00", "fulgt_opp": false, "deleted": false}, {"id": "da468bef-1afb-4675-830a-2484c8d0549c", "pst": "Basil Omar", "score": 10, "loc": "okern", "mnd": "aug", "ts": "2026-08-11T12:00:00", "fulgt_opp": false, "deleted": false}, {"id": "ed5489b7-c700-4d36-ae73-49ba4d79b040", "pst": "Elias Lieberg", "score": 10, "loc": "fornebu", "mnd": "aug", "ts": "2026-08-11T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "d8d4b7b7-6a5e-4f49-aa9d-3fd352221ebb", "pst": "Elias Lieberg", "score": 10, "loc": "fornebu", "mnd": "aug", "ts": "2026-08-11T13:43:00", "fulgt_opp": true, "deleted": false}, {"id": "37bc8d82-d0c0-4bd6-9ba1-69809aab7d39", "pst": "Mohammed Salou", "score": 10, "loc": "fornebu", "mnd": "aug", "ts": "2026-08-12T09:38:00", "fulgt_opp": true, "deleted": false}, {"id": "9c0327a7-3a46-4998-b1de-f6c352d29749", "pst": "Sipan Zewki", "score": 10, "loc": "ryen", "mnd": "aug", "ts": "2026-08-12T11:53:00", "fulgt_opp": true, "deleted": false}, {"id": "1b4b0c40-80b7-4535-8dbc-771173daa6ba", "pst": "Sipan Zewki", "score": 9, "loc": "ryen", "mnd": "aug", "ts": "2026-08-12T11:53:00", "fulgt_opp": true, "deleted": false}, {"id": "307e3f2c-1ea7-4ccb-bae2-903ae2f33998", "pst": "Harvinder Singh Kular", "score": 9, "loc": "ryen", "mnd": "aug", "ts": "2026-08-12T11:54:00", "fulgt_opp": false, "deleted": false}, {"id": "2101d7f2-e6e1-4cdc-9cff-0a314ae56153", "pst": "Tom Kjetil Sandmoe", "score": 10, "loc": "lillestrom", "mnd": "aug", "ts": "2026-08-12T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "00180123-69e3-4e41-b291-ebe33d97e4b2", "pst": "Mohammad Sirwan Salar", "score": 10, "loc": "fornebu", "mnd": "aug", "ts": "2026-08-12T12:00:00", "fulgt_opp": false, "deleted": false}, {"id": "8e29465a-adda-4b95-a3b5-95704081d6c2", "pst": "Christopher Sjøstrøm", "score": 10, "loc": "lillestrom", "mnd": "aug", "ts": "2026-08-12T12:00:00", "fulgt_opp": false, "deleted": false}, {"id": "045fea84-1217-4f89-8250-a279f10884a5", "pst": "Pavel Jizba", "score": 10, "loc": "lillestrom", "mnd": "aug", "ts": "2026-08-12T12:00:00", "fulgt_opp": false, "deleted": false}, {"id": "aeed9c09-3a62-464c-8ec4-0bc7c96c65e8", "pst": "Christopher Sjøstrøm", "score": 10, "loc": "lillestrom", "mnd": "aug", "ts": "2026-08-12T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "3a38f461-1462-4bb6-81ad-8eede41da025", "pst": "Magnus Unger", "score": 10, "loc": "okern", "mnd": "aug", "ts": "2026-08-12T13:23:00", "fulgt_opp": true, "deleted": false}, {"id": "68011960-d93f-42b4-b4aa-b32284916867", "pst": "Magnus Unger", "score": 10, "loc": "okern", "mnd": "aug", "ts": "2026-08-12T13:24:00", "fulgt_opp": true, "deleted": false}, {"id": "779c1b9d-ae35-456a-814c-2f752d404a6d", "pst": "Moosa Butt", "score": 10, "loc": "fornebu", "mnd": "aug", "ts": "2026-08-13T08:09:00", "fulgt_opp": true, "deleted": false}, {"id": "bb70a850-67fd-421e-a5ae-81425a426490", "pst": "Abishan Balasegar", "score": 10, "loc": "fornebu", "mnd": "aug", "ts": "2026-08-13T11:54:00", "fulgt_opp": true, "deleted": false}, {"id": "8e7f4714-fda7-496d-959b-bece6d7d6446", "pst": "Marco Bjørnstad", "score": 10, "loc": "ryen", "mnd": "aug", "ts": "2026-08-13T13:02:00", "fulgt_opp": true, "deleted": false}, {"id": "2ece6e74-0619-4ad6-b935-1c3c69da585e", "pst": "Vidar Flesvik", "score": 10, "loc": "ryen", "mnd": "aug", "ts": "2026-08-13T13:02:00", "fulgt_opp": true, "deleted": false}, {"id": "53fd2a4b-493e-4cb0-888d-db2858dd83d1", "pst": "Joel Andom Jiji", "score": 10, "loc": "ryen", "mnd": "aug", "ts": "2026-08-13T13:03:00", "fulgt_opp": true, "deleted": false}, {"id": "a4e12dfb-dc7a-4371-a2dc-6c5f14e1bd26", "pst": "Mohammad Sirwan Salar", "score": 10, "loc": "fornebu", "mnd": "aug", "ts": "2026-08-14T10:45:00", "fulgt_opp": false, "deleted": false}, {"id": "e8e3fb66-ca6e-4522-9a27-04ccdbf378e8", "pst": "Mohammad Sirwan Salar", "score": 10, "loc": "fornebu", "mnd": "aug", "ts": "2026-08-14T10:48:00", "fulgt_opp": true, "deleted": false}, {"id": "6bbbcfbd-ccfc-4e72-b4a2-5a4c0788b31e", "pst": "Elias Lieberg", "score": 10, "loc": "fornebu", "mnd": "aug", "ts": "2026-08-14T10:49:00", "fulgt_opp": true, "deleted": false}, {"id": "c917eefd-ddc5-41b5-928f-25185113a5fa", "pst": "John Arild Bergengen", "score": 10, "loc": "lillestrom", "mnd": "aug", "ts": "2026-08-14T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "d6dfe7cf-53e3-42b8-a727-916ef4c4cdf4", "pst": "John Arild Bergengen", "score": 10, "loc": "lillestrom", "mnd": "aug", "ts": "2026-08-15T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "b558ab19-596b-4c4f-9152-0320b1f689a0", "pst": "Mohammad Sirwan Salar", "score": 10, "loc": "fornebu", "mnd": "aug", "ts": "2026-08-15T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "6f042d7a-01f0-42d1-90cd-96f993172163", "pst": "Christopher Sjøstrøm", "score": 10, "loc": "lillestrom", "mnd": "aug", "ts": "2026-08-16T12:00:00", "fulgt_opp": false, "deleted": false}, {"id": "39bcca3c-0355-4945-afcc-42d357a4b9cf", "pst": "Trym Sverre Svendsen", "score": 10, "loc": "lillestrom", "mnd": "aug", "ts": "2026-08-16T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "581ad5d3-2fac-458b-aebc-1d62fdeb63c6", "pst": "Shezad Masih Azam", "score": 9, "loc": "okern", "mnd": "aug", "ts": "2026-08-16T12:00:00", "fulgt_opp": false, "deleted": false}, {"id": "d6c14189-6ec0-4249-bd59-3ac919d99b3a", "pst": "Matilde R. Ojala-Andskog", "score": 10, "loc": "fornebu", "mnd": "aug", "ts": "2026-08-16T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "653e5bd5-7cfa-484f-8989-49a3ad4be2dd", "pst": "Shezad Masih Azam", "score": 10, "loc": "okern", "mnd": "aug", "ts": "2026-08-17T07:55:00", "fulgt_opp": true, "deleted": false}, {"id": "56edf013-ce64-474f-934d-98cb569099dc", "pst": "John Arild Bergengen", "score": 10, "loc": "lillestrom", "mnd": "aug", "ts": "2026-08-17T09:29:00", "fulgt_opp": false, "deleted": false}, {"id": "54f81b31-caf8-4ae7-bfcc-a63762eef996", "pst": "Elias Lieberg", "score": 9, "loc": "fornebu", "mnd": "aug", "ts": "2026-08-17T10:28:00", "fulgt_opp": true, "deleted": false}, {"id": "08b6ffcf-804b-4083-a2ac-e7b0b60b1b3f", "pst": "Abishan Balasegar", "score": 10, "loc": "fornebu", "mnd": "aug", "ts": "2026-08-17T10:28:00", "fulgt_opp": true, "deleted": false}, {"id": "19d5d1c2-62b0-41db-8747-6c72cdc19ef4", "pst": "Aleksander Pettersen", "score": 10, "loc": "lillestrom", "mnd": "aug", "ts": "2026-08-17T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "9da3565d-d3a0-456f-83af-7ce81a4f3f48", "pst": "Moosa Butt", "score": 10, "loc": "fornebu", "mnd": "aug", "ts": "2026-08-17T12:00:00", "fulgt_opp": false, "deleted": false}, {"id": "91aa019c-1777-494c-a393-31d9f7c45106", "pst": "Vidar Flesvik", "score": 10, "loc": "ryen", "mnd": "aug", "ts": "2026-08-17T12:02:00", "fulgt_opp": true, "deleted": false}, {"id": "de82bd90-b301-4f5e-ac11-224ddcf858d8", "pst": "Vidar Flesvik", "score": 9, "loc": "ryen", "mnd": "aug", "ts": "2026-08-17T12:03:00", "fulgt_opp": false, "deleted": false}, {"id": "c805d4e2-fa61-41cb-ad19-f2c68598d232", "pst": "Abdulghani Ajjan", "score": 9, "loc": "ryen", "mnd": "aug", "ts": "2026-08-17T12:03:00", "fulgt_opp": true, "deleted": false}, {"id": "3aad5197-c4d3-4120-8cc6-bff16b7d82fb", "pst": "Vidar Flesvik", "score": 9, "loc": "ryen", "mnd": "aug", "ts": "2026-08-17T12:03:00", "fulgt_opp": false, "deleted": false}, {"id": "b5323716-e0da-44c0-b9e4-259739f78f2d", "pst": "Harvinder Singh Kular", "score": 9, "loc": "ryen", "mnd": "aug", "ts": "2026-08-17T12:04:00", "fulgt_opp": true, "deleted": false}, {"id": "15fd12d9-73fa-4458-8015-341fce47536b", "pst": "Elias Palacios", "score": 10, "loc": "ryen", "mnd": "aug", "ts": "2026-08-17T12:04:00", "fulgt_opp": false, "deleted": false}, {"id": "6bab5bad-cfb6-4c6f-9cc4-caae89fd8cb4", "pst": "Sipan Zewki", "score": 10, "loc": "ryen", "mnd": "aug", "ts": "2026-08-17T12:04:00", "fulgt_opp": true, "deleted": false}, {"id": "c442021e-e571-4ea9-bc33-b50064e09eb8", "pst": "Biniam Tesfamichael Tekle", "score": 10, "loc": "ryen", "mnd": "aug", "ts": "2026-08-17T12:05:00", "fulgt_opp": true, "deleted": false}, {"id": "02d48df2-bf4c-411e-859d-999367f0d578", "pst": "Elias Palacios", "score": 10, "loc": "ryen", "mnd": "aug", "ts": "2026-08-17T12:05:00", "fulgt_opp": true, "deleted": false}, {"id": "31595695-760d-44fc-b3d4-d54b0fa13ba3", "pst": "Marco Bjørnstad", "score": 9, "loc": "ryen", "mnd": "aug", "ts": "2026-08-17T12:05:00", "fulgt_opp": true, "deleted": false}, {"id": "3ab3d08f-2cc0-4bf8-9358-8e45e2126faf", "pst": "Biniam Tesfamichael Tekle", "score": 9, "loc": "ryen", "mnd": "aug", "ts": "2026-08-17T12:05:00", "fulgt_opp": true, "deleted": false}, {"id": "1516e568-8531-41b4-bdc9-42bcf05c169a", "pst": "Mohammad Yousaf Ahmed", "score": 10, "loc": "ryen", "mnd": "aug", "ts": "2026-08-17T12:06:00", "fulgt_opp": true, "deleted": false}, {"id": "358cdf23-d093-4570-9b5d-cd9f26d4562b", "pst": "John Arild Bergengen", "score": 10, "loc": "lillestrom", "mnd": "aug", "ts": "2026-08-17T12:35:00", "fulgt_opp": true, "deleted": false}, {"id": "c8cf9bc2-6fa6-4eb4-b686-f104fa9d19d5", "pst": "John Arild Bergengen", "score": 9, "loc": "lillestrom", "mnd": "aug", "ts": "2026-08-17T12:36:00", "fulgt_opp": true, "deleted": false}, {"id": "9151d1ee-a5bf-4422-bc3a-7dd0a59487fc", "pst": "Mohammad Sirwan Salar", "score": 9, "loc": "fornebu", "mnd": "aug", "ts": "2026-08-18T08:57:00", "fulgt_opp": true, "deleted": false}, {"id": "f1f51471-bf04-4964-b90a-5dc1ff37dced", "pst": "Biniam Tesfamichael Tekle", "score": 10, "loc": "ryen", "mnd": "aug", "ts": "2026-08-18T09:59:00", "fulgt_opp": true, "deleted": false}, {"id": "f60c5c66-2bff-4053-b01d-4f6d3da23af0", "pst": "Harvinder Singh Kular", "score": 10, "loc": "ryen", "mnd": "aug", "ts": "2026-08-18T09:59:00", "fulgt_opp": false, "deleted": false}, {"id": "495df5a4-8d39-4916-a7ee-3e89f2fcc129", "pst": "Mohammad Yousaf Ahmed", "score": 10, "loc": "ryen", "mnd": "aug", "ts": "2026-08-18T10:00:00", "fulgt_opp": true, "deleted": false}, {"id": "b750da1d-3408-40ab-a6d9-b40f99845b7c", "pst": "Harvinder Singh Kular", "score": 10, "loc": "ryen", "mnd": "aug", "ts": "2026-08-18T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "cba5fc8e-cd5a-44cb-af86-52054f94b9d4", "pst": "Fabian Leyell Finstad", "score": 10, "loc": "fornebu", "mnd": "aug", "ts": "2026-08-18T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "d22284a6-e4fc-47a1-9119-8dcd00f78dec", "pst": "John Arild Bergengen", "score": 10, "loc": "lillestrom", "mnd": "aug", "ts": "2026-08-18T12:00:00", "fulgt_opp": false, "deleted": false}, {"id": "55d84602-be8b-4baa-8013-c23ef87051d7", "pst": "Harvinder Singh Kular", "score": 9, "loc": "ryen", "mnd": "aug", "ts": "2026-08-18T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "6d5ad832-ec13-428f-b1ed-351f99ea84ad", "pst": "Aleksander Pettersen", "score": 10, "loc": "lillestrom", "mnd": "aug", "ts": "2026-08-18T15:39:00", "fulgt_opp": true, "deleted": false}, {"id": "64af388d-d2ed-4cb3-be79-7ddb799ddb5c", "pst": "John Arild Bergengen", "score": 10, "loc": "lillestrom", "mnd": "aug", "ts": "2026-08-18T15:39:00", "fulgt_opp": true, "deleted": false}, {"id": "c091ee07-251c-4e3f-8e21-fe9bafdd152e", "pst": "Aleksander Pettersen", "score": 10, "loc": "lillestrom", "mnd": "aug", "ts": "2026-08-18T15:40:00", "fulgt_opp": true, "deleted": false}, {"id": "e0544efa-f2fc-44fd-af22-367910b389ed", "pst": "Mohammad Yousaf Ahmed", "score": 10, "loc": "ryen", "mnd": "aug", "ts": "2026-08-19T09:26:00", "fulgt_opp": true, "deleted": false}, {"id": "64f5653f-6566-4082-9afc-dae6af90542c", "pst": "Sipan Zewki", "score": 9, "loc": "ryen", "mnd": "aug", "ts": "2026-08-19T09:26:00", "fulgt_opp": true, "deleted": false}, {"id": "23d8c4c9-c13a-491d-90f4-8d7c1e48349b", "pst": "Wajahit Elahit", "score": 9, "loc": "ryen", "mnd": "aug", "ts": "2026-08-19T09:26:00", "fulgt_opp": false, "deleted": false}, {"id": "1037cad2-3301-4fa7-9909-8504b560ed79", "pst": "Jøran Granholt Ejersbo", "score": 10, "loc": "lillestrom", "mnd": "aug", "ts": "2026-08-19T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "3d3a474f-60c1-4c46-9a9d-a8e4fa5fee4b", "pst": "Brage Grammeltvedt Grefstad", "score": 10, "loc": "fornebu", "mnd": "aug", "ts": "2026-08-19T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "a056a39f-0109-4791-a24d-f8eb77a3353d", "pst": "Jøran Granholt Ejersbo", "score": 9, "loc": "lillestrom", "mnd": "aug", "ts": "2026-08-20T11:29:00", "fulgt_opp": false, "deleted": false}, {"id": "0d013a4f-21dd-4311-9d94-9aa335193fb0", "pst": "Elias Lieberg", "score": 10, "loc": "fornebu", "mnd": "aug", "ts": "2026-08-20T14:44:00", "fulgt_opp": false, "deleted": false}, {"id": "7e3c42c6-0361-433c-9009-804a18b1e120", "pst": "Biniam Tesfamichael Tekle", "score": 10, "loc": "ryen", "mnd": "aug", "ts": "2026-08-21T09:41:00", "fulgt_opp": false, "deleted": false}, {"id": "9e283f0c-8d6d-4dfe-80a2-54fae0d49129", "pst": "Biniam Tesfamichael Tekle", "score": 9, "loc": "ryen", "mnd": "aug", "ts": "2026-08-22T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "e8b632c9-0625-49a2-969b-352935ff863e", "pst": "Martin Pedersen", "score": 10, "loc": "lillestrom", "mnd": "aug", "ts": "2026-08-22T12:00:00", "fulgt_opp": false, "deleted": false}, {"id": "f670643b-afd9-4683-852b-df5dae2878a3", "pst": "Elias Hassel Sivertsen", "score": 10, "loc": "lillestrom", "mnd": "aug", "ts": "2026-08-22T12:00:00", "fulgt_opp": false, "deleted": false}, {"id": "cf38a054-47eb-4469-b50c-7dbebb6c3ecd", "pst": "Harvinder Singh Kular", "score": 10, "loc": "ryen", "mnd": "aug", "ts": "2026-08-22T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "0a7d1141-c908-4cd8-8b51-0086ec958441", "pst": "Aleksander Pettersen", "score": 10, "loc": "lillestrom", "mnd": "aug", "ts": "2026-08-22T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "ed499d67-1861-4262-bde4-3600338e4039", "pst": "Joel Andom Jiji", "score": 9, "loc": "ryen", "mnd": "aug", "ts": "2026-08-22T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "ab19b33d-6596-43f1-9aa8-d13986d80878", "pst": "Basil Omar", "score": 9, "loc": "okern", "mnd": "aug", "ts": "2026-08-23T12:00:00", "fulgt_opp": false, "deleted": false}, {"id": "e80c85bc-ffa2-44aa-bb97-7f07baa44902", "pst": "Harvinder Singh Kular", "score": 9, "loc": "ryen", "mnd": "aug", "ts": "2026-08-23T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "b59ab1da-6b84-4f4e-8685-81778ce91115", "pst": "Magnus Unger", "score": 10, "loc": "okern", "mnd": "aug", "ts": "2026-08-23T12:00:00", "fulgt_opp": false, "deleted": false}, {"id": "83be6028-58d6-4b5b-bf92-fed8d7f4e356", "pst": "John Arild Bergengen", "score": 9, "loc": "lillestrom", "mnd": "aug", "ts": "2026-08-24T07:22:00", "fulgt_opp": true, "deleted": false}, {"id": "2bb10a28-7884-4c17-8596-5b978c21bf43", "pst": "Moosa Butt", "score": 10, "loc": "fornebu", "mnd": "aug", "ts": "2026-08-24T09:54:00", "fulgt_opp": true, "deleted": false}, {"id": "965ef6f9-edf9-442d-b518-a3daf88967fb", "pst": "Abishan Balasegar", "score": 10, "loc": "fornebu", "mnd": "aug", "ts": "2026-08-24T09:54:00", "fulgt_opp": true, "deleted": false}, {"id": "88dc63d3-1630-4e5e-be6b-6d8190ad3b1f", "pst": "Mohammad Sirwan Salar", "score": 9, "loc": "fornebu", "mnd": "aug", "ts": "2026-08-24T09:55:00", "fulgt_opp": false, "deleted": false}, {"id": "9bc60d7d-5615-4de5-88dd-3e7bb5812ce8", "pst": "Moosa Butt", "score": 9, "loc": "fornebu", "mnd": "aug", "ts": "2026-08-24T09:56:00", "fulgt_opp": false, "deleted": false}, {"id": "df3925ac-1599-41dc-a5ba-7dc8481741c1", "pst": "Fabian Leyell Finstad", "score": 10, "loc": "fornebu", "mnd": "aug", "ts": "2026-08-24T09:56:00", "fulgt_opp": false, "deleted": false}, {"id": "07d9add4-6034-41a1-8470-43e82d0b72da", "pst": "Martin Pedersen", "score": 10, "loc": "lillestrom", "mnd": "aug", "ts": "2026-08-24T12:00:00", "fulgt_opp": false, "deleted": false}, {"id": "5c44a5e5-7023-4fbf-891b-d2d41932013c", "pst": "Aleydzhan Beynabi", "score": 10, "loc": "okern", "mnd": "aug", "ts": "2026-08-24T12:00:00", "fulgt_opp": false, "deleted": false}, {"id": "13f791d7-8d07-479c-8250-ca7cc5a169c2", "pst": "John Arild Bergengen", "score": 10, "loc": "lillestrom", "mnd": "aug", "ts": "2026-08-24T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "db3f551e-51e3-44db-8b30-7612f4f2638f", "pst": "Mohammad Sirwan Salar", "score": 9, "loc": "fornebu", "mnd": "aug", "ts": "2026-08-25T08:51:00", "fulgt_opp": false, "deleted": false}, {"id": "456ffb00-70a3-45ca-9a96-ffb3d685acaf", "pst": "Martin Pedersen", "score": 10, "loc": "lillestrom", "mnd": "aug", "ts": "2026-08-25T10:33:00", "fulgt_opp": true, "deleted": false}, {"id": "08a4ced7-33c4-43e7-b418-71e41f8451e5", "pst": "John Arild Bergengen", "score": 10, "loc": "lillestrom", "mnd": "aug", "ts": "2026-08-25T10:34:00", "fulgt_opp": true, "deleted": false}, {"id": "e7b6fb53-f9f4-4881-a1aa-60d11d7520d8", "pst": "Abishan Balasegar", "score": 10, "loc": "fornebu", "mnd": "aug", "ts": "2026-08-25T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "38547d08-be36-445e-a4f4-e0d045fec31c", "pst": "Pavel Jizba", "score": 9, "loc": "lillestrom", "mnd": "aug", "ts": "2026-08-25T12:00:00", "fulgt_opp": false, "deleted": false}, {"id": "3d104a84-e0d7-4653-b7de-ecfb6bce89f4", "pst": "Marco Bjørnstad", "score": 10, "loc": "ryen", "mnd": "aug", "ts": "2026-08-25T13:23:00", "fulgt_opp": false, "deleted": false}, {"id": "4d9524c3-2a7a-4ff2-a103-4881ba876232", "pst": "Harvinder Singh Kular", "score": 10, "loc": "ryen", "mnd": "aug", "ts": "2026-08-25T13:23:00", "fulgt_opp": false, "deleted": false}, {"id": "d833c196-ae58-4917-a0a9-c798404ee7c4", "pst": "Abdulghani Ajjan", "score": 9, "loc": "ryen", "mnd": "aug", "ts": "2026-08-25T13:24:00", "fulgt_opp": true, "deleted": false}, {"id": "64318a65-d6b2-4dd4-a19b-aa809a088352", "pst": "Wajahit Elahit", "score": 10, "loc": "ryen", "mnd": "aug", "ts": "2026-08-25T13:25:00", "fulgt_opp": false, "deleted": false}, {"id": "3acf9219-53d9-43a3-ba45-aa3ddd050b6e", "pst": "Vidar Flesvik", "score": 9, "loc": "ryen", "mnd": "aug", "ts": "2026-08-25T13:25:00", "fulgt_opp": true, "deleted": false}, {"id": "162c1f40-b519-421b-bc20-ec3400e1aea0", "pst": "Abdulghani Ajjan", "score": 10, "loc": "ryen", "mnd": "aug", "ts": "2026-08-25T13:25:00", "fulgt_opp": false, "deleted": false}, {"id": "61dc5513-5160-4079-8a80-1013950a883e", "pst": "Harvinder Singh Kular", "score": 10, "loc": "ryen", "mnd": "aug", "ts": "2026-08-25T13:26:00", "fulgt_opp": true, "deleted": false}, {"id": "d3ea2cb4-53b8-45ad-89f2-f0c03a3b9def", "pst": "Joel Andom Jiji", "score": 10, "loc": "ryen", "mnd": "aug", "ts": "2026-08-25T13:27:00", "fulgt_opp": false, "deleted": false}, {"id": "30b08a85-8266-4ff8-9715-3c36ba8060d4", "pst": "Vidar Flesvik", "score": 10, "loc": "ryen", "mnd": "aug", "ts": "2026-08-25T13:28:00", "fulgt_opp": true, "deleted": false}, {"id": "5b4c8247-2ff0-455d-949e-cfcf418d0442", "pst": "Mohammad Yousaf Ahmed", "score": 9, "loc": "ryen", "mnd": "aug", "ts": "2026-08-25T13:28:00", "fulgt_opp": false, "deleted": false}, {"id": "3a62594e-007f-42be-9ce7-e3b7c245167f", "pst": "Elias Lieberg", "score": 9, "loc": "fornebu", "mnd": "aug", "ts": "2026-08-25T15:02:00", "fulgt_opp": true, "deleted": false}, {"id": "2990901b-6a11-40ab-9a16-8d7ee1437135", "pst": "Abishan Balasegar", "score": 10, "loc": "fornebu", "mnd": "aug", "ts": "2026-08-25T15:03:00", "fulgt_opp": true, "deleted": false}, {"id": "f0c339d2-50de-492f-9027-50115a35a956", "pst": "John Arild Bergengen", "score": 10, "loc": "lillestrom", "mnd": "aug", "ts": "2026-08-26T06:29:00", "fulgt_opp": true, "deleted": false}, {"id": "5db30e11-4ad5-4ef6-9ddc-2f843bb20809", "pst": "Biniam Tesfamichael Tekle", "score": 10, "loc": "ryen", "mnd": "aug", "ts": "2026-08-26T09:28:00", "fulgt_opp": false, "deleted": false}, {"id": "9a4a0f4b-5933-47c5-89d4-753153131a0e", "pst": "Mohammad Yousaf Ahmed", "score": 10, "loc": "ryen", "mnd": "aug", "ts": "2026-08-26T09:28:00", "fulgt_opp": true, "deleted": false}, {"id": "8b455681-0b83-4d0f-8a95-9b6d07d4f6b3", "pst": "Abdulghani Ajjan", "score": 10, "loc": "ryen", "mnd": "aug", "ts": "2026-08-26T09:29:00", "fulgt_opp": false, "deleted": false}, {"id": "348dc839-9315-4d4a-bbdf-3f195dd3488b", "pst": "Trym Sverre Svendsen", "score": 10, "loc": "lillestrom", "mnd": "aug", "ts": "2026-08-26T12:00:00", "fulgt_opp": false, "deleted": false}, {"id": "2c806e8d-5db5-4d18-a569-f64d9779ace2", "pst": "Brage Grammeltvedt Grefstad", "score": 10, "loc": "fornebu", "mnd": "aug", "ts": "2026-08-26T12:00:00", "fulgt_opp": false, "deleted": false}, {"id": "46fc0820-6c73-4a47-94b3-6748772cc3e1", "pst": "Christopher Sjøstrøm", "score": 10, "loc": "lillestrom", "mnd": "aug", "ts": "2026-08-26T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "8da52bd1-3312-4e4d-9a6f-d9f30b7adf13", "pst": "Marco Bjørnstad", "score": 10, "loc": "ryen", "mnd": "aug", "ts": "2026-08-26T13:22:00", "fulgt_opp": false, "deleted": false}, {"id": "42cce3cd-b65e-4c8c-b21c-7632683c29fa", "pst": "Fabian Leyell Finstad", "score": 10, "loc": "fornebu", "mnd": "aug", "ts": "2026-08-27T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "692c274e-9134-44ef-ad1a-8fefa6b66df4", "pst": "Hammad Nayyar Iqbal", "score": 9, "loc": "ryen", "mnd": "aug", "ts": "2026-08-27T13:50:00", "fulgt_opp": false, "deleted": false}, {"id": "f4b9bfa1-ea07-4e7e-9129-39de9d3392d7", "pst": "Hammad Nayyar Iqbal", "score": 9, "loc": "ryen", "mnd": "aug", "ts": "2026-08-27T13:50:00", "fulgt_opp": true, "deleted": false}, {"id": "6709a97f-2db6-46e2-b989-091da558b0a0", "pst": "Abdulghani Ajjan", "score": 10, "loc": "ryen", "mnd": "aug", "ts": "2026-08-27T13:51:00", "fulgt_opp": true, "deleted": false}, {"id": "e64bc5b2-bb5f-45cf-aefe-a9a85544f2fe", "pst": "Vidar Flesvik", "score": 9, "loc": "ryen", "mnd": "aug", "ts": "2026-08-27T13:52:00", "fulgt_opp": true, "deleted": false}, {"id": "17cd76c7-8f86-462d-abee-571b53e83fd9", "pst": "Vidar Flesvik", "score": 10, "loc": "ryen", "mnd": "aug", "ts": "2026-08-27T13:52:00", "fulgt_opp": true, "deleted": false}, {"id": "d1b7c15e-3d73-441d-a139-d9f91df6d100", "pst": "John Arild Bergengen", "score": 9, "loc": "lillestrom", "mnd": "aug", "ts": "2026-08-27T14:01:00", "fulgt_opp": true, "deleted": false}, {"id": "2c30715b-4432-4a5d-97b1-85a6af1b6fd5", "pst": "Elias Lieberg", "score": 9, "loc": "fornebu", "mnd": "aug", "ts": "2026-08-28T12:00:00", "fulgt_opp": false, "deleted": false}, {"id": "4592f194-74a5-4b6e-ad8f-ff0d153c57b8", "pst": "Abishan Balasegar", "score": 10, "loc": "fornebu", "mnd": "aug", "ts": "2026-08-28T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "73af737a-ee2d-4857-99c2-d9d265759e78", "pst": "Aleksander Pettersen", "score": 10, "loc": "lillestrom", "mnd": "aug", "ts": "2026-08-29T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "f403a47a-43d5-43c9-953e-4c38dfad3cd9", "pst": "Martin Pedersen", "score": 10, "loc": "lillestrom", "mnd": "aug", "ts": "2026-08-29T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "75809eb1-d8e4-4263-9a7d-ac25ea0db099", "pst": "Liam Holmen", "score": 10, "loc": "lillestrom", "mnd": "aug", "ts": "2026-08-29T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "65afc794-bf53-4400-b8b0-36a3a1659fb0", "pst": "Abishan Balasegar", "score": 10, "loc": "fornebu", "mnd": "aug", "ts": "2026-08-29T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "a50959d2-7080-44e1-a492-bb3bb68923b8", "pst": "Christopher Sjøstrøm", "score": 10, "loc": "lillestrom", "mnd": "aug", "ts": "2026-08-30T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "91bc16d6-c68d-48fb-92f2-4e19a98fb6e9", "pst": "Brage Grammeltvedt Grefstad", "score": 9, "loc": "fornebu", "mnd": "aug", "ts": "2026-08-30T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "8ce8b54b-c701-4df3-ac54-e797994f3dd8", "pst": "Brage Grammeltvedt Grefstad", "score": 10, "loc": "fornebu", "mnd": "aug", "ts": "2026-08-30T12:00:00", "fulgt_opp": false, "deleted": false}, {"id": "46eae46a-9688-4693-af8b-7867247e731b", "pst": "John Arild Bergengen", "score": 10, "loc": "lillestrom", "mnd": "aug", "ts": "2026-08-31T09:47:00", "fulgt_opp": true, "deleted": false}, {"id": "57cc58e6-f5cd-4614-8aba-3ac9543655da", "pst": "Martin Pedersen", "score": 9, "loc": "lillestrom", "mnd": "aug", "ts": "2026-08-31T09:48:00", "fulgt_opp": true, "deleted": false}, {"id": "b288d386-b625-458c-9470-769d0106a05c", "pst": "John Arild Bergengen", "score": 9, "loc": "lillestrom", "mnd": "aug", "ts": "2026-08-31T09:48:00", "fulgt_opp": true, "deleted": false}, {"id": "675ebdce-4d15-460d-ad8b-9be6f230c73f", "pst": "Gjermund Mauland", "score": 10, "loc": "fornebu", "mnd": "aug", "ts": "2026-08-31T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "505af68b-fe4d-4a63-9802-12858b735245", "pst": "Vidar Flesvik", "score": 9, "loc": "ryen", "mnd": "aug", "ts": "2026-08-31T17:19:00", "fulgt_opp": true, "deleted": false}, {"id": "b369cf9c-3bbb-4e19-9abb-22215732d6ba", "pst": "Biniam Tesfamichael Tekle", "score": 10, "loc": "ryen", "mnd": "aug", "ts": "2026-08-31T17:19:00", "fulgt_opp": true, "deleted": false}, {"id": "13072e86-d060-4c67-a43a-de30d74eb15e", "pst": "Hammad Nayyar Iqbal", "score": 10, "loc": "ryen", "mnd": "aug", "ts": "2026-08-31T17:19:00", "fulgt_opp": true, "deleted": false}, {"id": "5a3022a1-e277-49e8-acf8-090e4c83cd46", "pst": "Vidar Flesvik", "score": 10, "loc": "ryen", "mnd": "aug", "ts": "2026-08-31T17:20:00", "fulgt_opp": true, "deleted": false}, {"id": "b37bbe6d-1288-4067-89f2-2b24ea8b7489", "pst": "Mohammad Yousaf Ahmed", "score": 10, "loc": "ryen", "mnd": "aug", "ts": "2026-08-31T17:20:00", "fulgt_opp": false, "deleted": false}, {"id": "b8cf38c2-ab63-44c5-be2c-c507d2aecf6b", "pst": "Harvinder Singh Kular", "score": 10, "loc": "ryen", "mnd": "aug", "ts": "2026-08-31T17:20:00", "fulgt_opp": true, "deleted": false}, {"id": "969eeb67-6a64-4aea-b0d4-19a34b124341", "pst": "Biniam Tesfamichael Tekle", "score": 10, "loc": "ryen", "mnd": "aug", "ts": "2026-08-31T17:21:00", "fulgt_opp": true, "deleted": false}, {"id": "8066b19e-60d9-4f9a-8153-4271d777362c", "pst": "Sipan Zewki", "score": 10, "loc": "ryen", "mnd": "aug", "ts": "2026-08-31T17:21:00", "fulgt_opp": true, "deleted": false}, {"id": "730a3d4c-7f29-4cc1-b346-87bf43a47369", "pst": "Wajahit Elahit", "score": 9, "loc": "ryen", "mnd": "aug", "ts": "2026-08-31T17:21:00", "fulgt_opp": false, "deleted": false}, {"id": "370f9835-4944-4df1-b424-e37e373a35ba", "pst": "Wajahit Elahit", "score": 10, "loc": "ryen", "mnd": "aug", "ts": "2026-08-31T17:21:00", "fulgt_opp": true, "deleted": false}, {"id": "7175ecea-e069-400a-b3a8-766150c48980", "pst": "Aleydzhan Beynabi", "score": 10, "loc": "okern", "mnd": "sep", "ts": "2026-09-01T08:59:00", "fulgt_opp": false, "deleted": false}, {"id": "90881bf8-72ef-4da9-a158-083bceaaaa33", "pst": "Ali Husseini", "score": 9, "loc": "okern", "mnd": "sep", "ts": "2026-09-01T09:00:00", "fulgt_opp": true, "deleted": false}, {"id": "b7d24579-a628-49b7-b9b7-78394c7f0f71", "pst": "Abishan Balasegar", "score": 9, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-01T11:25:00", "fulgt_opp": false, "deleted": false}, {"id": "0d82c641-9988-475c-ab2c-73e1e4f204ee", "pst": "Mohammad Sirwan Salar", "score": 10, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-01T11:25:00", "fulgt_opp": true, "deleted": false}, {"id": "bc25b2e3-7e1b-4dd5-b0a6-0398ad66a752", "pst": "Martin Pedersen", "score": 10, "loc": "lillestrom", "mnd": "sep", "ts": "2026-09-01T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "c6e13981-73fa-4b20-918d-2fb2be48d461", "pst": "Brage Grammeltvedt Grefstad", "score": 9, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-01T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "c1931b6e-d53d-4974-9d0e-3e17e3a05a01", "pst": "Martin Pedersen", "score": 10, "loc": "lillestrom", "mnd": "sep", "ts": "2026-09-01T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "283668f4-794c-4f9a-b0a8-05389aa146a4", "pst": "Christopher Sjøstrøm", "score": 10, "loc": "lillestrom", "mnd": "sep", "ts": "2026-09-01T12:00:00", "fulgt_opp": false, "deleted": false}, {"id": "bc8e99eb-1fb7-4e42-a8eb-900a70403b44", "pst": "Nikolai Kvilaas", "score": 9, "loc": "lillestrom", "mnd": "sep", "ts": "2026-09-01T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "29cee026-980d-4947-a993-e6b6c202de0b", "pst": "Martin Pedersen", "score": 10, "loc": "lillestrom", "mnd": "sep", "ts": "2026-09-02T06:30:00", "fulgt_opp": false, "deleted": false}, {"id": "0fcdeffe-51d7-4b97-82d1-8b57e5256539", "pst": "Gjermund Mauland", "score": 10, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-02T07:06:00", "fulgt_opp": true, "deleted": false}, {"id": "da8392e5-6fe3-4fc2-a171-3855da75d306", "pst": "Martin Pedersen", "score": 10, "loc": "lillestrom", "mnd": "sep", "ts": "2026-09-02T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "612695bd-c694-449a-a704-5da29b73aace", "pst": "Tom Kjetil Sandmoe", "score": 10, "loc": "lillestrom", "mnd": "sep", "ts": "2026-09-02T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "608f3fee-1af3-479c-ae22-71f82e205b3b", "pst": "Brage Grammeltvedt Grefstad", "score": 9, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-03T12:00:00", "fulgt_opp": false, "deleted": false}, {"id": "34848be0-8c02-4985-b7bd-9e26162c8300", "pst": "Mohammad Sirwan Salar", "score": 9, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-03T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "43a57f82-c134-428a-9aaa-9a4530e7fd2b", "pst": "Gjermund Mauland", "score": 9, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-03T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "c4f1cb44-be63-4483-b584-5f0e5650c5db", "pst": "Ameer Hawary", "score": 10, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-03T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "191c8ad8-bbf7-4297-92d6-c47a59cabec2", "pst": "Wajahit Elahit", "score": 9, "loc": "ryen", "mnd": "sep", "ts": "2026-09-03T12:34:00", "fulgt_opp": true, "deleted": false}, {"id": "fc32990b-6e48-48ab-ba9a-e03b6ef85e58", "pst": "Biniam Tesfamichael Tekle", "score": 10, "loc": "ryen", "mnd": "sep", "ts": "2026-09-03T12:35:00", "fulgt_opp": true, "deleted": false}, {"id": "04b4922f-639d-4217-8867-0b1f6e63bdac", "pst": "Mohammad Yousaf Ahmed", "score": 10, "loc": "ryen", "mnd": "sep", "ts": "2026-09-03T12:35:00", "fulgt_opp": false, "deleted": false}, {"id": "efb3b829-1845-4cdd-bca5-df53ccf6f7c4", "pst": "Sipan Zewki", "score": 9, "loc": "ryen", "mnd": "sep", "ts": "2026-09-03T12:36:00", "fulgt_opp": true, "deleted": false}, {"id": "73de903a-fdce-45bf-9b4a-91b7008de2bd", "pst": "Vidar Flesvik", "score": 10, "loc": "ryen", "mnd": "sep", "ts": "2026-09-03T12:36:00", "fulgt_opp": false, "deleted": false}, {"id": "cf270e40-d452-4c01-b230-5422fe502fcd", "pst": "Mohammad Yousaf Ahmed", "score": 10, "loc": "ryen", "mnd": "sep", "ts": "2026-09-03T12:36:00", "fulgt_opp": true, "deleted": false}, {"id": "6ea96563-7b81-470e-82d0-39d73ef575c1", "pst": "Wajahit Elahit", "score": 9, "loc": "ryen", "mnd": "sep", "ts": "2026-09-03T12:37:00", "fulgt_opp": false, "deleted": false}, {"id": "8c16110a-fbc3-411d-b602-248ca64b5f44", "pst": "Mohammad Yousaf Ahmed", "score": 10, "loc": "ryen", "mnd": "sep", "ts": "2026-09-03T12:37:00", "fulgt_opp": true, "deleted": false}, {"id": "cd487651-0d6d-4d78-ae6e-608601bec276", "pst": "Biniam Tesfamichael Tekle", "score": 10, "loc": "ryen", "mnd": "sep", "ts": "2026-09-03T12:37:00", "fulgt_opp": true, "deleted": false}, {"id": "0ba62140-b700-4aa0-b131-a54f54ae6759", "pst": "Biniam Tesfamichael Tekle", "score": 10, "loc": "ryen", "mnd": "sep", "ts": "2026-09-03T12:38:00", "fulgt_opp": false, "deleted": false}, {"id": "c22c62f0-f8b4-4c24-81bb-2717dc099bd4", "pst": "Biniam Tesfamichael Tekle", "score": 10, "loc": "ryen", "mnd": "sep", "ts": "2026-09-03T12:38:00", "fulgt_opp": true, "deleted": false}, {"id": "9bf39830-4896-4ae6-b7b3-3a2a3b499051", "pst": "Nikolai Kvilaas", "score": 10, "loc": "lillestrom", "mnd": "sep", "ts": "2026-09-03T13:39:00", "fulgt_opp": false, "deleted": false}, {"id": "bad6a69b-b115-4240-a746-3d265896e010", "pst": "Nikolai Kvilaas", "score": 10, "loc": "lillestrom", "mnd": "sep", "ts": "2026-09-05T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "6e49f852-1b50-4f18-aa21-a384f7c1d9f1", "pst": "Mohammad Sirwan Salar", "score": 10, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-05T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "ab6a2819-259e-43c0-a0a8-757523d93b30", "pst": "Moosa Butt", "score": 10, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-06T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "01685c8d-42da-447d-8641-f8f51b0baa4e", "pst": "Aleksander Pettersen", "score": 10, "loc": "lillestrom", "mnd": "sep", "ts": "2026-09-06T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "c85868f5-931b-42a4-9e16-aa894e80f7a8", "pst": "Mohammad Sirwan Salar", "score": 10, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-06T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "6f98300e-4ea5-4cef-a7cb-e5482a459047", "pst": "Mathuran Sandrakumar", "score": 10, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-06T12:00:00", "fulgt_opp": false, "deleted": false}, {"id": "44589d15-d64f-4185-9672-ee4140632961", "pst": "Mohammad Sirwan Salar", "score": 10, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-06T12:00:00", "fulgt_opp": false, "deleted": false}, {"id": "e85e57d5-1e0d-4487-b9e3-cc91ece4ed2c", "pst": "John Arild Bergengen", "score": 9, "loc": "lillestrom", "mnd": "sep", "ts": "2026-09-07T06:41:00", "fulgt_opp": true, "deleted": false}, {"id": "3eaa391f-afc5-4923-8584-5436080f418e", "pst": "Mohammad Sirwan Salar", "score": 10, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-07T09:47:00", "fulgt_opp": true, "deleted": false}, {"id": "80c16d17-6fea-4e18-ac8b-131a7bd0880e", "pst": "Mathuran Sandrakumar", "score": 9, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-07T09:47:00", "fulgt_opp": true, "deleted": false}, {"id": "4fe4a0d2-5ebb-4ca2-89ab-dc449bb61b38", "pst": "Gjermund Mauland", "score": 10, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-07T10:17:00", "fulgt_opp": true, "deleted": false}, {"id": "9e0f3c3c-6eee-4528-bf93-a4ae40c0110c", "pst": "Elias Lieberg", "score": 9, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-07T10:18:00", "fulgt_opp": false, "deleted": false}, {"id": "781afa03-18a2-45e3-88c7-f79a01123002", "pst": "Mohammed Salou", "score": 10, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-07T10:19:00", "fulgt_opp": false, "deleted": false}, {"id": "c8963bf4-1690-4730-9e9a-742aa69415aa", "pst": "Gjermund Mauland", "score": 9, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-07T10:19:00", "fulgt_opp": true, "deleted": false}, {"id": "f6e3117d-ad01-4a7e-8238-dd8b566b032f", "pst": "Moosa Butt", "score": 10, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-07T10:41:00", "fulgt_opp": false, "deleted": false}, {"id": "30bc6d10-896d-4852-a825-b639a82a79fa", "pst": "Mohammad Sirwan Salar", "score": 10, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-07T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "603a422a-97d3-4af2-ba93-b576952bd563", "pst": "Martin Pedersen", "score": 10, "loc": "lillestrom", "mnd": "sep", "ts": "2026-09-07T15:37:00", "fulgt_opp": true, "deleted": false}, {"id": "2a1b6330-db9a-4e22-830f-9a64f4788d97", "pst": "Nikolai Kvilaas", "score": 10, "loc": "lillestrom", "mnd": "sep", "ts": "2026-09-07T15:37:00", "fulgt_opp": true, "deleted": false}, {"id": "d5f4d66f-f1b5-4a18-beef-73b0b116dd3e", "pst": "Moosa Butt", "score": 9, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-08T09:04:00", "fulgt_opp": true, "deleted": false}, {"id": "776265d9-0e3a-4883-a0f1-8977ad7efa87", "pst": "Mathuran Sandrakumar", "score": 9, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-08T10:06:00", "fulgt_opp": false, "deleted": false}, {"id": "cc347941-26e1-41a4-ae42-e77562c2f0e1", "pst": "Mathuran Sandrakumar", "score": 10, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-08T11:53:00", "fulgt_opp": true, "deleted": false}, {"id": "46cf38ec-8954-4cae-8d81-487ab860785f", "pst": "John Arild Bergengen", "score": 10, "loc": "lillestrom", "mnd": "sep", "ts": "2026-09-08T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "5abf841f-7584-4e6e-8767-36f3f1a3e56e", "pst": "Harvinder Singh Kular", "score": 9, "loc": "ryen", "mnd": "sep", "ts": "2026-09-08T12:00:00", "fulgt_opp": false, "deleted": false}, {"id": "0f74885c-e1b3-4f0c-b041-8d960880b0fe", "pst": "Brage Grammeltvedt Grefstad", "score": 10, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-08T12:11:00", "fulgt_opp": true, "deleted": false}, {"id": "b1b606fa-4b55-4e3e-8581-62f276c498a2", "pst": "Abishan Balasegar", "score": 10, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-08T12:12:00", "fulgt_opp": true, "deleted": false}, {"id": "593179ba-61c4-4208-b646-088d9fa586f1", "pst": "Gjermund Mauland", "score": 10, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-08T12:15:00", "fulgt_opp": false, "deleted": false}, {"id": "23930a34-ecec-406a-9022-9665b193aab5", "pst": "Christopher Sjøstrøm", "score": 10, "loc": "lillestrom", "mnd": "sep", "ts": "2026-09-08T15:32:00", "fulgt_opp": true, "deleted": false}, {"id": "295335f2-139c-4513-852b-58c3200b566a", "pst": "Matilde R. Ojala-Andskog", "score": 10, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-08T16:31:00", "fulgt_opp": true, "deleted": false}, {"id": "fc1e8977-c9b1-4bd3-905f-832e1719df60", "pst": "Mohammad Sirwan Salar", "score": 9, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-09T07:59:00", "fulgt_opp": true, "deleted": false}, {"id": "e123ef57-0170-4980-9fd1-91d16b3d1610", "pst": "Gjermund Mauland", "score": 10, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-09T08:31:00", "fulgt_opp": true, "deleted": false}, {"id": "7608171f-27c0-46ff-a6c8-aee13553ceea", "pst": "Mathuran Sandrakumar", "score": 9, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-09T09:25:00", "fulgt_opp": true, "deleted": false}, {"id": "09ebae9a-a3a7-4b72-88cc-78d2994a79a2", "pst": "Vidar Flesvik", "score": 10, "loc": "ryen", "mnd": "sep", "ts": "2026-09-09T11:03:00", "fulgt_opp": true, "deleted": false}, {"id": "585ea438-13e1-4d8d-a834-0f19bff117b4", "pst": "Biniam Tesfamichael Tekle", "score": 10, "loc": "ryen", "mnd": "sep", "ts": "2026-09-09T11:04:00", "fulgt_opp": true, "deleted": false}, {"id": "e04ee4aa-f1ce-40ac-8483-bef8911e984f", "pst": "Wajahit Elahit", "score": 10, "loc": "ryen", "mnd": "sep", "ts": "2026-09-09T11:04:00", "fulgt_opp": true, "deleted": false}, {"id": "3ffec451-b845-49ab-8c09-b352a3bf1d98", "pst": "Harvinder Singh Kular", "score": 10, "loc": "ryen", "mnd": "sep", "ts": "2026-09-09T11:05:00", "fulgt_opp": false, "deleted": false}, {"id": "0e2c430e-b0d8-4494-8d1d-7b213a860f5a", "pst": "Vidar Flesvik", "score": 10, "loc": "ryen", "mnd": "sep", "ts": "2026-09-09T11:05:00", "fulgt_opp": true, "deleted": false}, {"id": "150b4803-ce1c-4fe4-a4b5-1a920ba52095", "pst": "Harvinder Singh Kular", "score": 10, "loc": "ryen", "mnd": "sep", "ts": "2026-09-09T11:05:00", "fulgt_opp": true, "deleted": false}, {"id": "3a7ad79d-2577-4866-9c86-a31891b2d943", "pst": "Sipan Zewki", "score": 10, "loc": "ryen", "mnd": "sep", "ts": "2026-09-09T11:06:00", "fulgt_opp": true, "deleted": false}, {"id": "7a3b619c-c6bc-4d08-a3e2-031115aec56b", "pst": "Vidar Flesvik", "score": 10, "loc": "ryen", "mnd": "sep", "ts": "2026-09-09T11:06:00", "fulgt_opp": true, "deleted": false}, {"id": "fe9fec1a-c396-487d-ba54-94468a2d0701", "pst": "Hammad Nayyar Iqbal", "score": 10, "loc": "ryen", "mnd": "sep", "ts": "2026-09-09T11:07:00", "fulgt_opp": true, "deleted": false}, {"id": "44f34f51-3d2d-4227-9251-7e403015b201", "pst": "Wajahit Elahit", "score": 10, "loc": "ryen", "mnd": "sep", "ts": "2026-09-09T11:07:00", "fulgt_opp": false, "deleted": false}, {"id": "6d46bc3e-d302-421c-a780-8947e898c027", "pst": "Vidar Flesvik", "score": 10, "loc": "ryen", "mnd": "sep", "ts": "2026-09-09T11:07:00", "fulgt_opp": true, "deleted": false}, {"id": "7972c377-d437-4b67-bfd7-26817dcc2633", "pst": "Mathuran Sandrakumar", "score": 9, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-10T10:45:00", "fulgt_opp": true, "deleted": false}, {"id": "b97906c5-8982-4c4d-a8a7-39a073408256", "pst": "Harvinder Singh Kular", "score": 10, "loc": "ryen", "mnd": "sep", "ts": "2026-09-10T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "98e00079-2d80-4627-876d-92236b3b6b43", "pst": "Biniam Tesfamichael Tekle", "score": 10, "loc": "ryen", "mnd": "sep", "ts": "2026-09-10T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "d40499be-cdc6-404b-8bfd-78c1abbca388", "pst": "Vidar Flesvik", "score": 10, "loc": "ryen", "mnd": "sep", "ts": "2026-09-10T12:00:00", "fulgt_opp": false, "deleted": false}, {"id": "ed96f174-16d9-47eb-9909-5736ff0673b9", "pst": "Mohammad Sirwan Salar", "score": 10, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-10T12:32:00", "fulgt_opp": true, "deleted": false}, {"id": "3db1d260-7f6f-4b61-a0d5-b1200c0e8755", "pst": "Aleksander Pettersen", "score": 10, "loc": "lillestrom", "mnd": "sep", "ts": "2026-09-12T12:00:00", "fulgt_opp": false, "deleted": false}, {"id": "fa5ebff1-42bf-4815-9d5d-0ca485761447", "pst": "Moosa Butt", "score": 10, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-12T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "a6a1c268-64b6-419f-a947-8122def3b4f8", "pst": "Moosa Butt", "score": 9, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-13T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "334afce9-de6a-4a7b-8be4-3236f95e0f04", "pst": "Nikolai Kvilaas", "score": 9, "loc": "lillestrom", "mnd": "sep", "ts": "2026-09-13T12:00:00", "fulgt_opp": false, "deleted": false}, {"id": "a36ec2c7-f85d-46f8-836b-7bf11408b281", "pst": "Brage Grammeltvedt Grefstad", "score": 10, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-14T08:38:00", "fulgt_opp": true, "deleted": false}, {"id": "d866e58a-a0ab-402e-b6e8-ba97f5a31c0e", "pst": "Elias Lieberg", "score": 10, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-14T08:39:00", "fulgt_opp": false, "deleted": false}, {"id": "104b66d2-06b6-4a6e-a901-1cf41e4a530b", "pst": "Gjermund Mauland", "score": 10, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-14T08:39:00", "fulgt_opp": true, "deleted": false}, {"id": "31e9d8fe-bb1a-46d0-8d5c-c12a2a9a96dc", "pst": "Abishan Balasegar", "score": 9, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-14T08:39:00", "fulgt_opp": true, "deleted": false}, {"id": "97d128d7-d925-4a03-abee-e6277850b113", "pst": "Mathuran Sandrakumar", "score": 10, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-14T09:39:00", "fulgt_opp": false, "deleted": false}, {"id": "01d19b4f-67db-490c-bf41-64a0a39f856d", "pst": "Mohammad Sirwan Salar", "score": 10, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-14T09:39:00", "fulgt_opp": false, "deleted": false}, {"id": "07bc4302-9a9f-451b-a7a8-50d1e57cb592", "pst": "Harvinder Singh Kular", "score": 9, "loc": "ryen", "mnd": "sep", "ts": "2026-09-14T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "461748fb-b2c2-4cbd-9ccd-c02ded309ac8", "pst": "Elias Palacios", "score": 9, "loc": "ryen", "mnd": "sep", "ts": "2026-09-14T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "cf57b77e-3057-4af9-8b79-8adba38ae4ff", "pst": "Vidar Flesvik", "score": 10, "loc": "ryen", "mnd": "sep", "ts": "2026-09-14T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "7cd5d05d-fc30-4326-8fcd-88f56c40a54c", "pst": "John Arild Bergengen", "score": 10, "loc": "lillestrom", "mnd": "sep", "ts": "2026-09-14T12:00:00", "fulgt_opp": false, "deleted": false}, {"id": "ad416805-ae8a-4096-9147-6cac1636b4b7", "pst": "Biniam Tesfamichael Tekle", "score": 10, "loc": "ryen", "mnd": "sep", "ts": "2026-09-14T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "215146cf-4d1c-4eb8-b529-45db88a3153f", "pst": "John Arild Bergengen", "score": 10, "loc": "lillestrom", "mnd": "sep", "ts": "2026-09-14T12:11:00", "fulgt_opp": false, "deleted": false}, {"id": "5f268493-f71c-4374-ae8d-ccdfc85e425d", "pst": "John Arild Bergengen", "score": 10, "loc": "lillestrom", "mnd": "sep", "ts": "2026-09-15T06:33:00", "fulgt_opp": true, "deleted": false}, {"id": "723b2dba-1aae-40d2-8cf0-b352a0e4bcfe", "pst": "Brage Grammeltvedt Grefstad", "score": 9, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-15T07:26:00", "fulgt_opp": false, "deleted": false}, {"id": "b95cd472-11de-4221-925f-ab7da3b79032", "pst": "Brage Grammeltvedt Grefstad", "score": 10, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-15T07:26:00", "fulgt_opp": true, "deleted": false}, {"id": "1647f72e-fd25-4670-ab60-c51211b62dda", "pst": "Biniam Tesfamichael Tekle", "score": 9, "loc": "ryen", "mnd": "sep", "ts": "2026-09-15T12:00:00", "fulgt_opp": false, "deleted": false}, {"id": "08dc8a62-4682-44a5-a370-5a966e863931", "pst": "Hammad Nayyar Iqbal", "score": 9, "loc": "ryen", "mnd": "sep", "ts": "2026-09-15T12:00:00", "fulgt_opp": false, "deleted": false}, {"id": "86f0187b-a3c2-457e-9627-4c939196de6a", "pst": "Harvinder Singh Kular", "score": 9, "loc": "ryen", "mnd": "sep", "ts": "2026-09-15T12:00:00", "fulgt_opp": false, "deleted": false}, {"id": "dee66092-1f47-45f5-858c-46eefde05680", "pst": "Elias Palacios", "score": 10, "loc": "ryen", "mnd": "sep", "ts": "2026-09-15T12:00:00", "fulgt_opp": false, "deleted": false}, {"id": "0173ec78-b06a-49e3-b003-973770485fdf", "pst": "Elias Palacios", "score": 10, "loc": "ryen", "mnd": "sep", "ts": "2026-09-15T12:00:00", "fulgt_opp": false, "deleted": false}, {"id": "80a590a2-b48a-493b-8466-29f4dc4ab021", "pst": "Wajahit Elahit", "score": 10, "loc": "ryen", "mnd": "sep", "ts": "2026-09-15T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "24e4ae45-2017-4653-8dc9-ddc7ba8d62ed", "pst": "Vidar Flesvik", "score": 9, "loc": "ryen", "mnd": "sep", "ts": "2026-09-15T12:00:00", "fulgt_opp": false, "deleted": false}, {"id": "e611769c-e9af-4085-a303-0b1d1b0efdc0", "pst": "Vidar Flesvik", "score": 10, "loc": "ryen", "mnd": "sep", "ts": "2026-09-15T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "aa9e2aa4-5096-46e9-b876-0cf7fbb8f7aa", "pst": "Mohammad Sirwan Salar", "score": 10, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-15T13:53:00", "fulgt_opp": true, "deleted": false}, {"id": "b422de1e-149f-4845-acd6-71689da906a7", "pst": "Andrzej Jozef Jachnicki", "score": 10, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-15T15:04:00", "fulgt_opp": true, "deleted": false}, {"id": "fe471b88-0bf9-469c-9c52-96efd6eb8c5e", "pst": "Jørn Sørensen", "score": 9, "loc": "lillestrom", "mnd": "sep", "ts": "2026-09-16T06:32:00", "fulgt_opp": false, "deleted": false}, {"id": "a5492c2b-f011-4e43-8b98-e801062b90d5", "pst": "Liam Holmen", "score": 10, "loc": "lillestrom", "mnd": "sep", "ts": "2026-09-16T06:33:00", "fulgt_opp": false, "deleted": false}, {"id": "6a7e48cf-3b9e-4f94-a0a9-9f0080b8fb29", "pst": "Gjermund Mauland", "score": 10, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-16T08:01:00", "fulgt_opp": true, "deleted": false}, {"id": "93f9afd4-3235-4853-9c33-288edb534443", "pst": "Brage Grammeltvedt Grefstad", "score": 10, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-16T08:01:00", "fulgt_opp": false, "deleted": false}, {"id": "49af5085-2131-465f-84c4-e0a48d70b9e7", "pst": "Mathuran Sandrakumar", "score": 10, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-16T09:44:00", "fulgt_opp": false, "deleted": false}, {"id": "8dc4289f-6a23-472d-a6f0-1396411173d1", "pst": "Mathuran Sandrakumar", "score": 9, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-16T09:45:00", "fulgt_opp": true, "deleted": false}, {"id": "301500f5-4d87-4fd6-afb7-d6ec3989c476", "pst": "Gjermund Mauland", "score": 10, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-16T09:54:00", "fulgt_opp": true, "deleted": false}, {"id": "630ce0ff-4d08-41fc-92cd-3439df72d989", "pst": "Gjermund Mauland", "score": 10, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-16T09:54:00", "fulgt_opp": false, "deleted": false}, {"id": "2e21c31a-391b-42bd-a67a-12dec9eab06f", "pst": "Liam Holmen", "score": 10, "loc": "lillestrom", "mnd": "sep", "ts": "2026-09-16T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "0bbb182f-197c-4d53-bc35-639d121cc5b9", "pst": "Martin Pedersen", "score": 10, "loc": "lillestrom", "mnd": "sep", "ts": "2026-09-16T12:00:00", "fulgt_opp": false, "deleted": false}, {"id": "03b51011-a3de-48c0-b869-fb0f70527f01", "pst": "John Arild Bergengen", "score": 9, "loc": "lillestrom", "mnd": "sep", "ts": "2026-09-16T12:00:00", "fulgt_opp": false, "deleted": false}, {"id": "4f2d8bf2-58d2-4eaf-b027-09c1da8fe1c9", "pst": "Mohammad Sirwan Salar", "score": 10, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-16T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "4c4460b5-0f13-44f6-b79d-36bf8ff7c7b6", "pst": "Mohammad Yousaf Ahmed", "score": 10, "loc": "ryen", "mnd": "sep", "ts": "2026-09-16T12:00:00", "fulgt_opp": false, "deleted": false}, {"id": "5af4a987-66f7-436f-9e92-2bb6e8067842", "pst": "Martin Pedersen", "score": 10, "loc": "lillestrom", "mnd": "sep", "ts": "2026-09-16T12:00:00", "fulgt_opp": false, "deleted": false}, {"id": "907b3a40-c0a2-4f2b-b88f-41d59ec35c75", "pst": "Wajahit Elahit", "score": 10, "loc": "ryen", "mnd": "sep", "ts": "2026-09-16T12:00:00", "fulgt_opp": false, "deleted": false}, {"id": "049a2a17-deb1-47c4-844f-4424dbc3db12", "pst": "Vidar Flesvik", "score": 10, "loc": "ryen", "mnd": "sep", "ts": "2026-09-16T12:00:00", "fulgt_opp": false, "deleted": false}, {"id": "cd339ea4-2595-4253-bd10-097313130ef5", "pst": "Harvinder Singh Kular", "score": 9, "loc": "ryen", "mnd": "sep", "ts": "2026-09-16T12:00:00", "fulgt_opp": false, "deleted": false}, {"id": "cad23238-34f5-4d24-ab92-36679b885f37", "pst": "Vidar Flesvik", "score": 10, "loc": "ryen", "mnd": "sep", "ts": "2026-09-16T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "737418b2-f0e0-4e55-86ba-0d87161e6723", "pst": "Biniam Tesfamichael Tekle", "score": 10, "loc": "ryen", "mnd": "sep", "ts": "2026-09-16T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "35a44a0d-6156-4d1e-b303-56d885b955dd", "pst": "Vidar Flesvik", "score": 10, "loc": "ryen", "mnd": "sep", "ts": "2026-09-16T12:00:00", "fulgt_opp": false, "deleted": false}, {"id": "5ac6fd69-32f9-4f6b-b477-dd958c82bf9e", "pst": "Abdulghani Ajjan", "score": 10, "loc": "ryen", "mnd": "sep", "ts": "2026-09-16T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "bd75f6a4-e894-41c8-95fe-1a89b25a26ad", "pst": "Elias Palacios", "score": 9, "loc": "ryen", "mnd": "sep", "ts": "2026-09-16T12:00:00", "fulgt_opp": false, "deleted": false}, {"id": "071b26fa-7ddd-4a76-aa7a-2accd872f1ac", "pst": "Mathuran Sandrakumar", "score": 10, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-16T12:10:00", "fulgt_opp": false, "deleted": false}, {"id": "62a792ab-2d82-470c-a8c6-fb8e84a8be54", "pst": "Mohammad Sirwan Salar", "score": 9, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-16T12:18:00", "fulgt_opp": true, "deleted": false}, {"id": "60f52e38-ddb5-4983-882d-b46b9a18f820", "pst": "Elias Lieberg", "score": 10, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-17T07:11:00", "fulgt_opp": false, "deleted": false}, {"id": "6d679c81-8b84-40eb-8476-255eaf231601", "pst": "Gjermund Mauland", "score": 10, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-17T07:11:00", "fulgt_opp": true, "deleted": false}, {"id": "8d051874-053b-4e5c-93b8-cf04d3865a48", "pst": "Andrzej Jozef Jachnicki", "score": 10, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-17T07:12:00", "fulgt_opp": true, "deleted": false}, {"id": "66a13581-a58d-400d-a233-ccd593e55105", "pst": "John Arild Bergengen", "score": 10, "loc": "lillestrom", "mnd": "sep", "ts": "2026-09-17T08:15:00", "fulgt_opp": true, "deleted": false}, {"id": "39894fbe-d81e-4f85-be22-77acb6e9983e", "pst": "John Arild Bergengen", "score": 10, "loc": "lillestrom", "mnd": "sep", "ts": "2026-09-17T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "ce3e4a8b-8661-4f5e-be72-81c193849411", "pst": "John Arild Bergengen", "score": 9, "loc": "lillestrom", "mnd": "sep", "ts": "2026-09-17T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "cc0bb7b3-c3d3-4074-9332-31c52f5f4a70", "pst": "Moosa Butt", "score": 10, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-18T06:56:00", "fulgt_opp": false, "deleted": false}, {"id": "26865d7c-bb7c-4ee2-b30c-358dd57c7cec", "pst": "Moosa Butt", "score": 9, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-18T12:00:00", "fulgt_opp": false, "deleted": false}, {"id": "f20c1cd9-780e-4548-aaef-7562f0981e9c", "pst": "John Arild Bergengen", "score": 10, "loc": "lillestrom", "mnd": "sep", "ts": "2026-09-18T12:00:00", "fulgt_opp": false, "deleted": false}, {"id": "45734fd7-2b69-47eb-b2c4-c4c825fb9675", "pst": "Christopher Sjøstrøm", "score": 10, "loc": "lillestrom", "mnd": "sep", "ts": "2026-09-19T12:00:00", "fulgt_opp": false, "deleted": false}, {"id": "c669df71-7c75-47fa-aaa8-57f162d9ae29", "pst": "Martin Pedersen", "score": 10, "loc": "lillestrom", "mnd": "sep", "ts": "2026-09-21T06:24:00", "fulgt_opp": true, "deleted": false}, {"id": "dd08db99-1f56-4cbf-9949-e275f81fb19b", "pst": "Brage Grammeltvedt Grefstad", "score": 10, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-21T07:07:00", "fulgt_opp": true, "deleted": false}, {"id": "fd3c7b81-c80d-4da9-a9d7-dd265a0279f3", "pst": "Sipan Zewki", "score": 10, "loc": "ryen", "mnd": "sep", "ts": "2026-09-21T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "cc680193-0bdd-4675-b997-56f90b24a0d4", "pst": "Mohammad Sirwan Salar", "score": 9, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-21T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "e1ff9f4b-7d36-49ec-bc5c-ef7fb7fe3655", "pst": "Vidar Flesvik", "score": 10, "loc": "ryen", "mnd": "sep", "ts": "2026-09-21T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "373058a3-dc0f-45c5-b924-18e412c3ac60", "pst": "Harvinder Singh Kular", "score": 9, "loc": "ryen", "mnd": "sep", "ts": "2026-09-21T12:00:00", "fulgt_opp": false, "deleted": false}, {"id": "15069478-3819-4993-83dd-6444fbd8456b", "pst": "Abdulghani Ajjan", "score": 10, "loc": "ryen", "mnd": "sep", "ts": "2026-09-21T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "cd58863c-7846-4582-b905-aa3f315c01fd", "pst": "John Arild Bergengen", "score": 10, "loc": "lillestrom", "mnd": "sep", "ts": "2026-09-21T18:56:00", "fulgt_opp": true, "deleted": false}, {"id": "66dba8b3-6f30-4f8d-8afc-fcb91df93202", "pst": "Mohammad Sirwan Salar", "score": 10, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-22T07:41:00", "fulgt_opp": false, "deleted": false}, {"id": "ec5f28f2-8cb4-496a-a646-f3ffbad637dc", "pst": "Mohammad Sirwan Salar", "score": 10, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-22T09:12:00", "fulgt_opp": false, "deleted": false}, {"id": "7b9538ac-56f2-4d11-a4d7-fbdd68cdcac2", "pst": "Mathuran Sandrakumar", "score": 10, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-22T09:20:00", "fulgt_opp": true, "deleted": false}, {"id": "6e0a5743-6a17-427c-a44b-62f41467a52e", "pst": "Elise Olsen Torseth", "score": 10, "loc": "lillestrom", "mnd": "sep", "ts": "2026-09-22T09:36:00", "fulgt_opp": true, "deleted": false}, {"id": "d6a15e4b-7d1d-4208-bf70-f949dd8b8ec0", "pst": "John Arild Bergengen", "score": 10, "loc": "lillestrom", "mnd": "sep", "ts": "2026-09-22T09:36:00", "fulgt_opp": true, "deleted": false}, {"id": "342653a8-8d30-4517-b21b-653e0bab8052", "pst": "John Arild Bergengen", "score": 10, "loc": "lillestrom", "mnd": "sep", "ts": "2026-09-22T09:37:00", "fulgt_opp": true, "deleted": false}, {"id": "92834e68-d60f-4d8a-8341-48e5316829b9", "pst": "Martin Pedersen", "score": 10, "loc": "lillestrom", "mnd": "sep", "ts": "2026-09-22T09:37:00", "fulgt_opp": true, "deleted": false}, {"id": "ea31efb3-2403-4b00-9c7c-a889d1b7faf2", "pst": "Martin Pedersen", "score": 10, "loc": "lillestrom", "mnd": "sep", "ts": "2026-09-22T09:38:00", "fulgt_opp": true, "deleted": false}, {"id": "8e5e5a6a-32df-4955-a640-ca518c6db6a8", "pst": "John Arild Bergengen", "score": 10, "loc": "lillestrom", "mnd": "sep", "ts": "2026-09-22T09:39:00", "fulgt_opp": true, "deleted": false}, {"id": "037f6671-6227-4a7e-ba04-877ce453ca0a", "pst": "Mathuran Sandrakumar", "score": 9, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-22T11:31:00", "fulgt_opp": true, "deleted": false}, {"id": "d016127c-ffb9-4790-8db1-f8ddb2a7b7ba", "pst": "John Arild Bergengen", "score": 10, "loc": "lillestrom", "mnd": "sep", "ts": "2026-09-22T14:14:00", "fulgt_opp": true, "deleted": false}, {"id": "49f70e65-b68c-42b1-a9f7-88602798dc0d", "pst": "Mathuran Sandrakumar", "score": 9, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-22T14:45:00", "fulgt_opp": false, "deleted": false}, {"id": "ef927559-8d2e-4f1c-aff9-e705af1bb81b", "pst": "Mohammed Salou", "score": 10, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-22T16:59:00", "fulgt_opp": true, "deleted": false}, {"id": "74b3ce46-1d3d-4667-b044-209369460a4c", "pst": "Gjermund Mauland", "score": 10, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-22T16:59:00", "fulgt_opp": true, "deleted": false}, {"id": "572668ed-d82b-494f-9cac-cf86827e574b", "pst": "Gjermund Mauland", "score": 9, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-22T17:00:00", "fulgt_opp": true, "deleted": false}, {"id": "9da32707-fd26-4c4a-827c-5eabae84db20", "pst": "Moosa Butt", "score": 10, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-23T07:16:00", "fulgt_opp": false, "deleted": false}, {"id": "2b7bd1b5-8d72-42a0-9f3c-0dbf90c1a976", "pst": "Gjermund Mauland", "score": 9, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-23T11:59:00", "fulgt_opp": false, "deleted": false}, {"id": "caa77702-4c0a-45a0-9541-15c9a60fab37", "pst": "Nikolai Kvilaas", "score": 10, "loc": "lillestrom", "mnd": "sep", "ts": "2026-09-23T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "f9f91f1d-9e2a-4edf-a1ac-143daabb5877", "pst": "Aleksander Pettersen", "score": 9, "loc": "lillestrom", "mnd": "sep", "ts": "2026-09-23T12:00:00", "fulgt_opp": false, "deleted": false}, {"id": "d4ad40c7-42ef-4b1b-91f5-febc5ba56fd1", "pst": "Nikolai Kvilaas", "score": 10, "loc": "lillestrom", "mnd": "sep", "ts": "2026-09-23T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "96e01775-7d75-4cd6-a6c6-dbcbaaab30a7", "pst": "Christopher Sjøstrøm", "score": 10, "loc": "lillestrom", "mnd": "sep", "ts": "2026-09-23T12:00:00", "fulgt_opp": false, "deleted": false}, {"id": "61ea0d28-76a5-4910-a0d2-ce9b05fceb57", "pst": "Martin Pedersen", "score": 9, "loc": "lillestrom", "mnd": "sep", "ts": "2026-09-23T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "1370bc26-b079-4ef0-87bd-09a64f77560a", "pst": "John Arild Bergengen", "score": 10, "loc": "lillestrom", "mnd": "sep", "ts": "2026-09-23T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "c2bbbb49-2902-4fd5-bfe5-3f6d1d719025", "pst": "Martin Pedersen", "score": 10, "loc": "lillestrom", "mnd": "sep", "ts": "2026-09-23T12:00:00", "fulgt_opp": false, "deleted": false}, {"id": "4cdfdd56-8aa6-4aef-99dc-1a18ae11c7cb", "pst": "Mathuran Sandrakumar", "score": 9, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-24T07:08:00", "fulgt_opp": false, "deleted": false}, {"id": "25a39b35-ca63-4d8a-a05a-8e377ed3d7b4", "pst": "Matilde R. Ojala-Andskog", "score": 10, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-25T15:42:00", "fulgt_opp": true, "deleted": false}, {"id": "822cdfdd-e250-4080-b018-6abccbdb4cdd", "pst": "Akshanan Subaskaran", "score": 10, "loc": "lillestrom", "mnd": "sep", "ts": "2026-09-26T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "ff6ab969-a17a-42c2-8ab2-3f3e6ea00546", "pst": "Liam Holmen", "score": 10, "loc": "lillestrom", "mnd": "sep", "ts": "2026-09-26T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "9d9bb003-46cf-469a-ac67-9466b42fc04e", "pst": "Nikolai Kvilaas", "score": 10, "loc": "lillestrom", "mnd": "sep", "ts": "2026-09-27T12:00:00", "fulgt_opp": false, "deleted": false}, {"id": "5ecc7b03-5e8b-49e8-bb33-9403c846a280", "pst": "Mathuran Sandrakumar", "score": 10, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-28T06:56:00", "fulgt_opp": true, "deleted": false}, {"id": "cac354ae-4544-4783-91f0-4556a62eb549", "pst": "Moosa Butt", "score": 10, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-28T06:57:00", "fulgt_opp": false, "deleted": false}, {"id": "f39c9ac8-1df4-4906-a4fc-d7b89a6939d7", "pst": "Mathuran Sandrakumar", "score": 9, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-28T08:51:00", "fulgt_opp": false, "deleted": false}, {"id": "195f4770-b803-4776-87cf-10d7122c665f", "pst": "Gjermund Mauland", "score": 10, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-28T09:24:00", "fulgt_opp": true, "deleted": false}, {"id": "60b9fc59-6237-426c-a0b0-34765520c0f6", "pst": "Brage Grammeltvedt Grefstad", "score": 10, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-28T09:25:00", "fulgt_opp": true, "deleted": false}, {"id": "0c1180ec-9215-4657-a4ba-e1619fbdfebb", "pst": "Brage Grammeltvedt Grefstad", "score": 9, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-28T09:26:00", "fulgt_opp": true, "deleted": false}, {"id": "fa08937a-a745-4a7b-8719-8404404e4b76", "pst": "Gjermund Mauland", "score": 10, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-28T09:26:00", "fulgt_opp": true, "deleted": false}, {"id": "d75d41fe-bbf9-46da-b3c5-d5438f59f2e9", "pst": "Martin Pedersen", "score": 10, "loc": "lillestrom", "mnd": "sep", "ts": "2026-09-28T09:26:00", "fulgt_opp": true, "deleted": false}, {"id": "28bf6d9c-bfd1-4312-a10c-75dc3dba8971", "pst": "Nikolai Kvilaas", "score": 10, "loc": "lillestrom", "mnd": "sep", "ts": "2026-09-28T09:27:00", "fulgt_opp": true, "deleted": false}, {"id": "bb84be4d-7099-49b4-b890-0e259732472d", "pst": "Moosa Butt", "score": 10, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-28T09:40:00", "fulgt_opp": true, "deleted": false}, {"id": "517dc4e7-7fb7-4c11-a94e-55ffe320197a", "pst": "Brage Grammeltvedt Grefstad", "score": 10, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-28T11:50:00", "fulgt_opp": true, "deleted": false}, {"id": "7eaecb2b-fafd-4610-af08-a64e9bc1d909", "pst": "Brage Grammeltvedt Grefstad", "score": 10, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-28T11:51:00", "fulgt_opp": true, "deleted": false}, {"id": "5729753b-a07a-4ed7-954b-692e1ffca664", "pst": "Martin Pedersen", "score": 10, "loc": "lillestrom", "mnd": "sep", "ts": "2026-09-28T12:00:00", "fulgt_opp": false, "deleted": false}, {"id": "1a7946d6-09b1-4621-a898-23e03ecfc344", "pst": "Liam Holmen", "score": 10, "loc": "lillestrom", "mnd": "sep", "ts": "2026-09-28T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "15637cb4-7f4f-4765-91b1-37fdfd8266b9", "pst": "Mathuran Sandrakumar", "score": 9, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-28T13:42:00", "fulgt_opp": true, "deleted": false}, {"id": "1a1d79ca-1b56-4842-9d06-401c5f535c98", "pst": "Brage Grammeltvedt Grefstad", "score": 9, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-28T16:45:00", "fulgt_opp": true, "deleted": false}, {"id": "a9a59d4e-c08c-4aea-b500-64ce1eaac17c", "pst": "Matilde R. Ojala-Andskog", "score": 10, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-28T16:46:00", "fulgt_opp": false, "deleted": false}, {"id": "f487ea47-959b-468e-840f-4ebf8b78c282", "pst": "Abishan Balasegar", "score": 10, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-29T07:19:00", "fulgt_opp": false, "deleted": false}, {"id": "0eeee82d-fec7-4135-973f-92fee884463f", "pst": "Mohammad Sirwan Salar", "score": 10, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-29T08:04:00", "fulgt_opp": false, "deleted": false}, {"id": "d990cc60-c46f-4ab5-83ba-cf4c770e4ae4", "pst": "Moosa Butt", "score": 10, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-29T08:04:00", "fulgt_opp": false, "deleted": false}, {"id": "72623fea-4ad5-446e-a3ac-93ffa505b51c", "pst": "Nikolai Kvilaas", "score": 10, "loc": "lillestrom", "mnd": "sep", "ts": "2026-09-29T08:37:00", "fulgt_opp": true, "deleted": false}, {"id": "e820af41-2f85-4823-a0d6-16d958ce4dd1", "pst": "Jørn Sørensen", "score": 9, "loc": "lillestrom", "mnd": "sep", "ts": "2026-09-29T10:01:00", "fulgt_opp": true, "deleted": false}, {"id": "70883b58-e4c6-4446-8f6a-550516f8dc39", "pst": "Abishan Balasegar", "score": 10, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-29T11:56:00", "fulgt_opp": true, "deleted": false}, {"id": "a4fcc478-14ac-4a7e-91ff-0cdc9f23e671", "pst": "Mohammed Salou", "score": 10, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-29T12:00:00", "fulgt_opp": false, "deleted": false}, {"id": "af424bc2-59c3-4403-a9c2-0fc845f9a057", "pst": "John Arild Bergengen", "score": 9, "loc": "lillestrom", "mnd": "sep", "ts": "2026-09-29T12:00:00", "fulgt_opp": true, "deleted": false}, {"id": "f3008600-0b29-45f4-bd88-f784fbf3903a", "pst": "Mohammad Sirwan Salar", "score": 10, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-29T14:50:00", "fulgt_opp": false, "deleted": false}, {"id": "06e2b621-2a99-4aa3-8777-032097fba92c", "pst": "Mathuran Sandrakumar", "score": 10, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-30T07:01:00", "fulgt_opp": true, "deleted": false}, {"id": "32418584-8538-4c71-bf23-d3087711a27d", "pst": "Tom Kjetil Sandmoe", "score": 9, "loc": "lillestrom", "mnd": "sep", "ts": "2026-09-30T08:41:00", "fulgt_opp": false, "deleted": false}, {"id": "3aaf919a-86ab-4864-a191-3807b14a85de", "pst": "Brage Grammeltvedt Grefstad", "score": 9, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-30T09:43:00", "fulgt_opp": false, "deleted": false}, {"id": "fbc101fb-f165-419f-ad35-4334e3a6a739", "pst": "Matilde R. Ojala-Andskog", "score": 10, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-30T09:44:00", "fulgt_opp": false, "deleted": false}, {"id": "b658bcc5-b1cc-401e-8317-fd255d422c2c", "pst": "Nikolai Kvilaas", "score": 10, "loc": "lillestrom", "mnd": "sep", "ts": "2026-09-30T10:35:00", "fulgt_opp": true, "deleted": false}, {"id": "e0801963-7e53-419e-9c50-133c5681ba09", "pst": "Martin Pedersen", "score": 9, "loc": "lillestrom", "mnd": "sep", "ts": "2026-09-30T11:42:00", "fulgt_opp": true, "deleted": false}, {"id": "c81b859e-9b80-454e-9bd0-e1b4db5febe6", "pst": "Aleksander Pettersen", "score": 10, "loc": "lillestrom", "mnd": "sep", "ts": "2026-09-30T11:42:00", "fulgt_opp": true, "deleted": false}, {"id": "0360b1d5-7348-4f42-9e4d-0ba6d6415629", "pst": "Abishan Balasegar", "score": 10, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-30T12:23:00", "fulgt_opp": true, "deleted": false}, {"id": "01dd888e-53f7-487f-9394-f1d7658c5f92", "pst": "Mathuran Sandrakumar", "score": 10, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-30T14:52:00", "fulgt_opp": true, "deleted": false}, {"id": "c5ab9891-b193-41d9-9841-9707a04b2c33", "pst": "Mohammad Sirwan Salar", "score": 10, "loc": "fornebu", "mnd": "sep", "ts": "2026-09-30T15:36:00", "fulgt_opp": true, "deleted": false}, {"id": "203b40b2-b757-41a1-a168-b06a98c1d265", "pst": "Liam Holmen", "score": 10, "loc": "lillestrom", "mnd": "sep", "ts": "2026-09-30T21:10:00", "fulgt_opp": true, "deleted": false}];
+
+/* ── SESONG 2-FILTER ────────────────────────────────────────────────
+   Tabellen inneholder også sesong 1-rader, så alt filtreres til sesong 2
+   (ts er lokal norsk tid som tekst → sammenlign på de ti første tegnene).
+   UTELATT: deltakere som ikke skal telle verken individuelt, i
+   avdelingspoeng eller i divisoren (besluttet 29.09.2026). */
+const SESONG_FRA='2026-08-03', SESONG_TIL='2026-09-30';
+const UTELATT=[];
+function sesongFilter(rows){
+  return (rows||[]).filter(r=>{
+    const d=String(r.ts||'').slice(0,10);
+    return d>=SESONG_FRA && d<=SESONG_TIL && !r.deleted && !UTELATT.includes(r.pst);
+  });
+}
+
+const SEASON_LABEL = "Sesong 2 · Q3 2026";
+const GAZZETTA_URL = "la_gazzetta_finale_s2_osat.html";
+const TABELL_URL = "tabell_s2_osat.html";
+
+/* ── PST-stall (fra OSAT-repoet) ── */
+const PST=[
+  {name:'Marco Bjørnstad', loc:'ryen', id:'marco_bjornstad'},
+  {name:'Joel Andom Jiji', loc:'ryen', id:'joel_andom_jiji'},
+  {name:'Pavel Jizba', loc:'lillestrom', id:'pavel_jizba'},
+  {name:'Jøran Granholt Ejersbo', loc:'lillestrom', id:'joran_granholt_ejersbo'},
+  {name:'Abishan Balasegar', loc:'fornebu', id:'abishan_balasegar'},
+  {name:'Ameer Hawary', loc:'fornebu', id:'ameer_hawary'},
+  {name:'Andrzej Jozef Jachnicki', loc:'fornebu', id:'andrzej_jozef_jachnicki'},
+  {name:'Bawar Faraj', loc:'fornebu', id:'bawar_faraj'},
+  {name:'Brage Grammeltvedt Grefstad', loc:'fornebu', id:'brage_grammeltvedt_grefstad'},
+  {name:'Elias Lieberg', loc:'fornebu', id:'elias_lieberg'},
+  {name:'Fabian Leyell Finstad', loc:'fornebu', id:'fabian_leyell_finstad'},
+  {name:'Gjermund Mauland', loc:'fornebu', id:'gjermund_mauland'},
+  {name:'Mathuran Sandrakumar', loc:'fornebu', id:'mathuran_sandrakumar'},
+  {name:'Matilde R. Ojala-Andskog', loc:'fornebu', id:'matilde_r_ojalaandskog'},
+  {name:'Mohammed Salou', loc:'fornebu', id:'mohammed_salou'},
+  {name:'Mohammad Sirwan Salar', loc:'fornebu', id:'mohammad_sirwan_salar'},
+  {name:'Moosa Butt', loc:'fornebu', id:'moosa_butt'},
+  {name:'Akshanan Subaskaran', loc:'lillestrom', id:'akshanan_subaskaran'},
+  {name:'Aleksander Pettersen', loc:'lillestrom', id:'aleksander_pettersen'},
+  {name:'Christopher Sjøstrøm', loc:'lillestrom', id:'christopher_sjostrom'},
+  {name:'Elias Hassel Sivertsen', loc:'lillestrom', id:'elias_hassel_sivertsen'},
+  {name:'Elise Olsen Torseth', loc:'lillestrom', id:'elise_olsen_torseth'},
+  {name:'George Xheki Hanelli', loc:'lillestrom', id:'george_xheki_hanelli'},
+  {name:'John Arild Bergengen', loc:'lillestrom', id:'john_arild_bergengen'},
+  {name:'Jørn Sørensen', loc:'lillestrom', id:'jorn_sorensen'},
+  {name:'Liam Holmen', loc:'lillestrom', id:'liam_holmen'},
+  {name:'Martin Pedersen', loc:'lillestrom', id:'martin_pedersen'},
+  {name:'Nikolai Kvilaas', loc:'lillestrom', id:'nikolai_kvilaas'},
+  {name:'Tom Kjetil Sandmoe', loc:'lillestrom', id:'tom_kjetil_sandmoe'},
+  {name:'Trym Sverre Svendsen', loc:'lillestrom', id:'trym_sverre_svendsen'},
+  {name:'Yamen Agheid Madkhana', loc:'lillestrom', id:'yamen_agheid_madkhana'},
+  {name:'Aleydzhan Beynabi', loc:'okern', id:'aleydzhan_beynabi'},
+  {name:'Ali Husseini', loc:'okern', id:'ali_husseini'},
+  {name:'Azizcan Gøzlek', loc:'okern', id:'azizcan_gozlek'},
+  {name:'Basil Omar', loc:'okern', id:'basil_omar'},
+  {name:'Bjørn Inge Millerjord', loc:'okern', id:'bjorn_inge_millerjord'},
+  {name:'Emirhan Cimen', loc:'okern', id:'emirhan_cimen'},
+  {name:'Ernest Maciejec', loc:'okern', id:'ernest_maciejec'},
+  {name:'Haider Ali', loc:'okern', id:'haider_ali'},
+  {name:'Kristian Severin', loc:'okern', id:'kristian_severin'},
+  {name:'Magnus Unger', loc:'okern', id:'magnus_unger'},
+  {name:'Marcus Fjeldstad', loc:'okern', id:'marcus_fjeldstad'},
+  {name:'Marek Szpiech', loc:'okern', id:'marek_szpiech'},
+  {name:'Marek Zebrowski', loc:'okern', id:'marek_zebrowski'},
+  {name:'Nasser Alnafaa', loc:'okern', id:'nasser_alnafaa'},
+  {name:'Philip Hernes', loc:'okern', id:'philip_hernes'},
+  {name:'Roger Johansen', loc:'okern', id:'roger_johansen'},
+  {name:'Shezad Masih Azam', loc:'okern', id:'shezad_masih_azam'},
+  {name:'Sondre Nakland', loc:'okern', id:'sondre_nakland'},
+  {name:'Vladimir Gnjatovic', loc:'okern', id:'vladimir_gnjatovic'},
+  {name:'Abdulghani Ajjan', loc:'ryen', id:'abdulghani_ajjan'},
+  {name:'Biniam Tesfamichael Tekle', loc:'ryen', id:'biniam_tesfamichael_tekle'},
+  {name:'Elias Palacios', loc:'ryen', id:'elias_palacios'},
+  {name:'Harvinder Singh Kular', loc:'ryen', id:'harvinder_singh_kular'},
+  {name:'Mohammad Yousaf Ahmed', loc:'ryen', id:'mohammad_yousaf_ahmed'},
+  {name:'Sipan Zewki', loc:'ryen', id:'sipan_zewki'},
+  {name:'Vidar Flesvik', loc:'ryen', id:'vidar_flesvik'},
+  {name:'Wajahit Elahit', loc:'ryen', id:'wajahit_elahit'},
+  {name:'Leon Pettersen', loc:'ryen', id:'leon_pettersen'},
+  {name:'Oliver Nordengen', loc:'ryen', id:'oliver_nordengen'},
+  {name:'Hammad Nayyar Iqbal', loc:'ryen', id:'hammad_nayyar_iqbal'},
+];
+
+const SELGER_PHOTOS={}; Object.assign(SELGER_PHOTOS,{"abishan_balasegar": "photos/abishan_balasegar.jpg", "ameer_hawary": "photos/ameer_hawary.jpg", "bawar_faraj": "photos/bawar_faraj.jpg", "brage_grammeltvedt_grefstad": "photos/brage_grammeltvedt_grefstad.jpg", "elias_lieberg": "photos/elias_lieberg.jpg", "fabian_leyell_finstad": "photos/fabian_leyell_finstad.jpg", "mathuran_sandrakumar": "photos/mathuran_sandrakumar.jpg", "matilde_r_ojalaandskog": "photos/matilde_r_ojalaandskog.jpg", "mohammed_salou": "photos/mohammed_salou.jpg", "mohammad_sirwan_salar": "photos/mohammad_sirwan_salar.jpg", "moosa_butt": "photos/moosa_butt.jpg", "akshanan_subaskaran": "photos/akshanan_subaskaran.webp", "aleksander_pettersen": "photos/aleksander_pettersen.jpg", "christopher_sjostrom": "photos/christopher_sjostrom.jpg", "elias_hassel_sivertsen": "photos/elias_hassel_sivertsen.webp", "elise_olsen_torseth": "photos/elise_olsen_torseth.webp", "george_xheki_hanelli": "photos/george_xheki_hanelli.jpg", "john_arild_bergengen": "photos/john_arild_bergengen.jpg", "jorn_sorensen": "photos/jorn_sorensen.jpg", "liam_holmen": "photos/liam_holmen.webp", "martin_pedersen": "photos/martin_pedersen.jpg", "tom_kjetil_sandmoe": "photos/tom_kjetil_sandmoe.jpg", "trym_sverre_svendsen": "photos/trym_sverre_svendsen.webp", "yamen_agheid_madkhana": "photos/yamen_agheid_madkhana.webp", "ali_husseini": "photos/ali_husseini.jpg", "basil_omar": "photos/basil_omar.jpg", "emirhan_cimen": "photos/emirhan_cimen.jpg", "marek_zebrowski": "photos/marek_zebrowski.jpg", "shezad_masih_azam": "photos/shezad_masih_azam.jpg", "abdulghani_ajjan": "photos/abdulghani_ajjan.jpg", "biniam_tesfamichael_tekle": "photos/biniam_tesfamichael_tekle.jpg", "elias_palacios": "photos/elias_palacios.jpg", "harvinder_singh_kular": "photos/harvinder_singh_kular.jpg", "mohammad_yousaf_ahmed": "photos/mohammad_yousaf_ahmed.jpg", "sipan_zewki": "photos/sipan_zewki.jpg", "vidar_flesvik": "photos/vidar_flesvik.jpg", "wajahit_elahit": "photos/wajahit_elahit.jpg", "leon_pettersen": "photos/leon_pettersen.jpg"});
+const ROSTER={};        PST.forEach(p=>{ROSTER[p.name]=p.loc;});
+
+const DEPT={
+  okern:     {label:"Økern",      color:"#fca5a5",soft:"#ffd4d4",dark:"#8a3a3a",bg:"rgba(252,165,165,0.12)"},
+  ryen:      {label:"Ryen",       color:"#fde047",soft:"#fff0a0",dark:"#8a7a14",bg:"rgba(253,224,71,0.12)"},
+  lillestrom:{label:"Lillestrøm", color:"#86efac",soft:"#c4f7d6",dark:"#2f7a4f",bg:"rgba(134,239,172,0.12)"},
+  fornebu:   {label:"Fornebu",    color:"#93c5fd",soft:"#cfe3ff",dark:"#3a5f94",bg:"rgba(147,197,253,0.12)"},
+};
+const dc=loc=>DEPT[loc]?.color||"#e0710e";
+const dl=loc=>DEPT[loc]?.label||loc;
+const {useState,useEffect,useRef}=React;
+
+function nameToId(n){
+  return n.toLowerCase().replace(/\s+/g,'_').replace(/æ/g,'ae').replace(/ø/g,'o').replace(/å/g,'aa').replace(/[^a-z0-9_]/g,'');
+}
+function hexA(hex,a){const h=hex.replace('#','');const r=parseInt(h.slice(0,2),16),g=parseInt(h.slice(2,4),16),b=parseInt(h.slice(4,6),16);return `rgba(${r},${g},${b},${a})`;}
+const shimGrad=(dark,accent,soft)=>`linear-gradient(90deg,${dark},${accent},${soft},#ffffff,${accent},${dark})`;
+const ringGrad=(dark,accent,soft)=>`conic-gradient(${dark},${soft},${accent},#ffffff,${soft},${dark})`;
+
+function useBurst(ref,colors,enabled){
+  useEffect(()=>{
+    if(!enabled)return;const c=ref.current;if(!c)return;const ctx=c.getContext&&c.getContext("2d");if(!ctx)return;
+    const w=c.width=c.offsetWidth||320,h=c.height=c.offsetHeight||440;
+    const ps=[];for(let i=0;i<70;i++)ps.push({x:w/2+(Math.random()-0.5)*w*0.55,y:h*0.16+Math.random()*24,vx:(Math.random()-0.5)*2.4,vy:Math.random()*1.3+0.4,r:Math.random()*2.2+0.6,col:colors[(Math.random()*colors.length)|0],life:0,max:Math.random()*55+70});
+    let raf,frame=0;
+    function step(){ctx.clearRect(0,0,w,h);frame++;let alive=false;ps.forEach(p=>{p.life++;if(p.life>p.max)return;alive=true;p.x+=p.vx;p.y+=p.vy;p.vy+=0.022;ctx.save();ctx.globalAlpha=Math.max(0,1-p.life/p.max);ctx.fillStyle=p.col;ctx.shadowBlur=8;ctx.shadowColor=p.col;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();ctx.restore();});if(alive&&frame<210)raf=requestAnimationFrame(step);else ctx.clearRect(0,0,w,h);}
+    step();return ()=>{if(raf)cancelAnimationFrame(raf);};
+  },[enabled]);
+}
+function AnimNum({value,color,suffix=""}){
+  const[n,setN]=useState(0);
+  useEffect(()=>{if(!value)return;let start=null;function step(ts){if(!start)start=ts;const p=Math.min((ts-start)/1100,1),e=1-Math.pow(1-p,4);setN(Math.round(e*value));if(p<1)requestAnimationFrame(step);}requestAnimationFrame(step);},[value]);
+  return <span style={{color}}>{n}{suffix}</span>;
+}
+function SmallAvatar({name,loc,size=38}){
+  const id=nameToId(name);const photo=SELGER_PHOTOS[id];
+  const init=name.split(" ").map(p=>p[0]).join("").slice(0,2).toUpperCase();const col=dc(loc);
+  return(<div style={{width:size,height:size,borderRadius:'50%',overflow:'hidden',border:'1.5px solid '+col+'66',flexShrink:0,background:DEPT[loc]?.bg||'rgba(224,113,14,0.1)',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 0 12px '+col+'33'}}>
+    {photo?<img src={photo} style={{width:'100%',height:'100%',objectFit:'cover'}} alt={name}/>:<span style={{fontFamily:"'Playfair Display',serif",fontSize:size*0.34,fontWeight:700,color:col}}>{init}</span>}</div>);
+}
+
+/* ── Beregning (osat_scores) ──────────────────────────────────────── */
+function buildStats(rows){
+  const valid=rows.filter(s=>s.score===9||s.score===10);
+  const stats={};
+  PST.forEach(p=>{stats[p.name]={name:p.name,loc:p.loc,g:0,tens:0,nines:0,fup:0,pts:0,dayTens:{}};});
+  valid.forEach(s=>{const p=stats[s.pst];if(!p)return;p.g++;p.pts+=3;if(s.score===10)p.tens++;else p.nines++;if(s.fulgt_opp)p.fup++;if(s.score===10){const d=s.ts.slice(0,10);p.dayTens[d]=(p.dayTens[d]||0)+1;}});
+  Object.values(stats).forEach(p=>{p.hatDays=Object.values(p.dayTens).filter(c=>c>=3).length;});
+  return stats;
+}
+function rankPst(stats){return Object.values(stats).filter(p=>p.pts>0).sort((a,b)=>b.pts-a.pts||b.tens-a.tens||b.fup-a.fup);}
+function deptStandings(stats){
+  const head={};PST.forEach(p=>{head[p.loc]=(head[p.loc]||0)+1;});
+  const pts={},g={};Object.keys(head).forEach(l=>{pts[l]=0;g[l]=0;});
+  Object.values(stats).forEach(p=>{if(pts[p.loc]!=null){pts[p.loc]+=p.pts;g[p.loc]+=p.g;}});
+  return Object.keys(head).map(loc=>({loc,pts:pts[loc],g:g[loc],head:head[loc],pps:head[loc]?pts[loc]/head[loc]:0})).sort((a,b)=>b.pps-a.pps);
+}
+
+function Portrait({name,loc,accent,soft}){
+  const id=nameToId(name);const photo=SELGER_PHOTOS[id];
+  const init=name.split(" ").map(p=>p[0]).join("").slice(0,2).toUpperCase();
+  return(<div className="mom-portrait"><div className="mom-portrait-ring" style={{background:ringGrad(DEPT[loc]?.dark||"#5a3a14",accent,soft),boxShadow:`0 0 40px ${hexA(accent,0.45)}`}}>
+    <div className="mom-portrait-inner">{photo?<img src={photo} alt={name}/>:<span style={{color:soft}}>{init}</span>}</div></div></div>);
+}
+function Crest({initials,accent,soft,dark}){
+  return(<div className="mom-crest"><div className="mom-crest-ring" style={{background:ringGrad(dark,accent,soft),boxShadow:`0 0 38px ${hexA(accent,0.45)}`}}>
+    <div className="mom-crest-inner"><span style={{color:soft}}>{initials}</span></div></div></div>);
+}
+function Moment(p){
+  const ref=useRef(null);
+  useBurst(ref,[p.soft,p.accent,"#ffffff"],!!p.particles);
+  const grad=shimGrad(p.dark,p.accent,p.soft);
+  return(<div className={"mom "+(p.rkey||"")}>
+    <div className="mom-card" style={{background:`radial-gradient(ellipse 90% 55% at 50% 0%,${hexA(p.accent,0.14)},transparent 60%),linear-gradient(160deg,#1a0f06,#120a04,#0f0a05)`,boxShadow:`0 0 0 1px ${hexA(p.accent,0.2)},0 0 90px ${hexA(p.accent,0.08)},0 40px 80px rgba(0,0,0,0.55)`}}>
+      <div className="mom-bar" style={{background:`linear-gradient(90deg,transparent,${hexA(p.accent,0.4)},${p.accent},${p.soft},${p.accent},${hexA(p.accent,0.4)},transparent)`}}/>
+      <div className="mom-beam" style={{background:`radial-gradient(ellipse 50% 100% at 50% 0%,${hexA(p.soft,0.16)},transparent 70%)`}}/>
+      {p.particles&&<canvas ref={ref} className="mom-burst"/>}
+      <div className="mom-sweep"/>
+      <div className="mom-yr">{SEASON_LABEL}</div>
+      <div className="mom-eyebrow mom-shimmer" style={{backgroundImage:grad}}>★ {p.eyebrow} ★</div>
+      <div className="mom-icon" style={{filter:`drop-shadow(0 0 18px ${hexA(p.soft,0.8)})`}}>{p.icon}</div>
+      {p.badge}
+      <div className="mom-name mom-shimmer" style={{backgroundImage:grad}}>{p.name}</div>
+      <div className="mom-honor">{p.honor}</div>
+      {p.hero!=null&&(<div className="mom-hero" style={{borderColor:hexA(p.accent,0.3),background:hexA(p.accent,0.08)}}>
+        <div className="mom-hero-num mom-shimmer" style={{backgroundImage:grad}}>{p.hero}</div>
+        <div className="mom-hero-lbl" style={{color:hexA(p.soft,0.78)}}>{p.heroLabel}</div></div>)}
+      {p.tiles&&(<div className="mom-tiles">{p.tiles.map((t,i)=>(<div key={i} className="mom-tile" style={{borderTop:`1px solid ${hexA(p.accent,0.32)}`,animationDelay:(0.5+i*0.12)+'s'}}>
+        <div className="mom-tile-num"><AnimNum value={t.num} color={t.col}/></div><div className="mom-tile-lbl">{t.lbl}</div></div>))}</div>)}
+      {p.sub}
+    </div></div>);
+}
+
+/* ── OSAT-mester (amber headliner) ────────────────────────────────── */
+function ChampionCard({champ}){
+  if(!champ)return null;
+  const col=dc(champ.loc);const pid=nameToId(champ.name);const photo=SELGER_PHOTOS[pid];
+  const init=champ.name.split(" ").map(p=>p[0]).join("").slice(0,2).toUpperCase();
+  const ref=useRef(null);useBurst(ref,["#e0710e","#f3a23a","#ffb866","#ffffff"],true);
+  const stats=[{val:champ.pts,lbl:"Poeng",c:"#f3a23a",delay:"0.55s"},{val:champ.tens,lbl:"10-ere",c:"#ffb866",delay:"0.7s"},{val:champ.fup,lbl:"Fulgt opp",c:"#86efac",delay:"0.85s"}];
+  return(<div className="champ-wrap r2"><div className="champ-card">
+    <div className="champ-beam"/><canvas ref={ref} className="champ-burst"/><div className="champ-sweep"/>
+    <div className="champ-yr">{SEASON_LABEL}</div>
+    <div className="champ-eyebrow gold-text">★ OSAT-MESTER Q3 2026 ★</div>
+    <div className="champ-crown">👑</div>
+    <div className="champ-portrait-wrap"><div className="champ-portrait-ring"><div className="champ-portrait-inner">{photo?<img src={photo} alt={champ.name}/>:<span>{init}</span>}</div></div>
+      <span className="champ-laurel champ-laurel-l">🌿</span><span className="champ-laurel champ-laurel-r">🌿</span></div>
+    <div className="champ-name gold-text">{champ.name}</div>
+    <div className="champ-honor">Vinner {SEASON_LABEL}</div>
+    <div style={{textAlign:'center'}}><span className="champ-pill" style={{background:DEPT[champ.loc]?.bg,border:`1px solid ${col}66`,color:col}}>
+      <span style={{width:7,height:7,borderRadius:'50%',background:col,boxShadow:`0 0 8px ${col}`,display:'inline-block'}}/>{dl(champ.loc)}</span></div>
+    <div className="champ-stats">{stats.map((s,i)=>(<div key={i} className="champ-stat" style={{animationDelay:s.delay}}>
+      <div className="champ-stat-num"><AnimNum value={s.val} color={s.c}/></div><div className="champ-stat-lbl">{s.lbl}</div></div>))}</div>
+    <div className="champ-down">▾ &nbsp; PALLEN · VINNERAVDELING · GULLTELEFON · PLETTFRI · HAT-TRICKS &nbsp; ▾</div>
+  </div></div>);
+}
+
+function PallCard({ranked}){
+  if(ranked.length<2)return null;
+  const top=ranked.slice(0,3);const medals=["🥇","🥈","🥉"];const mc=["#f3a23a","#c0c0c0","#cd7f32"];
+  return(<div className="sec r3" style={{margin:'18px 16px'}}>
+    <div className="sec-top" style={{background:'linear-gradient(90deg,transparent,rgba(224,113,14,0.7),transparent)'}}/>
+    <div className="sec-title">🏅 Sesongpallen</div>
+    {top.map((p,i)=>{const col=dc(p.loc);return(<div key={p.name} className="rank-row">
+      <div className="rank-num" style={{color:mc[i],fontSize:i===0?22:18}}>{medals[i]}</div>
+      <SmallAvatar name={p.name} loc={p.loc} size={i===0?44:38}/>
+      <div style={{flex:1}}><div className="rank-name" style={{color:i===0?'#fff':'rgba(255,255,255,0.78)',fontSize:i===0?15:14}}>{p.name}</div>
+        <div className="rank-dept" style={{color:col+'cc'}}>{dl(p.loc)} · {p.g} scoringer · {p.tens} 10-ere</div></div>
+      <div style={{textAlign:'right'}}><div className="rank-pts" style={{color:mc[i]}}>{p.pts}</div>
+        <div style={{fontFamily:"'Cinzel',serif",fontSize:7,letterSpacing:'0.15em',color:'rgba(255,255,255,0.25)',marginTop:2}}>POENG</div></div></div>);})}
+  </div>);
+}
+
+function VinneravdelingMoment({depts}){
+  if(!depts.length)return null;const best=depts[0];const D=DEPT[best.loc]||{};
+  const accent=D.color||"#e0710e",soft=D.soft||"#ffb866",dark=D.dark||"#8a3d08";
+  const sub=(<div style={{margin:'18px 4px 2px',position:'relative',zIndex:2}}>
+    <div style={{fontFamily:"'Cinzel',serif",fontSize:9,letterSpacing:'0.3em',color:'rgba(255,255,255,0.25)',textAlign:'center',marginBottom:12}}>— AVDELINGSKAMPEN —</div>
+    {depts.map((d,i)=>{const c=dc(d.loc);return(<div key={d.loc} className="mom-sub-row">
+      <span style={{fontFamily:"'Playfair Display',serif",fontWeight:700,width:22,textAlign:'center',color:i===0?soft:'rgba(255,255,255,0.5)'}}>{i+1}</span>
+      <span style={{flex:1,fontWeight:600,color:i===0?'#fff':'rgba(255,255,255,0.7)'}}>{dl(d.loc)}</span>
+      <span style={{fontSize:11,color:c+'aa',marginRight:8}}>{d.g} scoringer · {d.head} PST</span>
+      <span style={{fontFamily:"'Playfair Display',serif",fontWeight:700,color:i===0?soft:'rgba(255,255,255,0.6)'}}>{d.pps.toFixed(1).replace('.',',')}</span></div>);})}</div>);
+  return <Moment rkey="r3" particles={true} accent={accent} soft={soft} dark={dark}
+    icon="🏆" eyebrow="VINNERAVDELING" name={dl(best.loc)} honor="Sesongens beste avdeling"
+    badge={<Crest initials={dl(best.loc).slice(0,2).toUpperCase()} accent={accent} soft={soft} dark={dark}/>}
+    hero={best.pps.toFixed(1).replace('.',',')} heroLabel="POENG PER PST"
+    tiles={[{num:best.pts,lbl:'Poeng totalt',col:soft},{num:best.g,lbl:'Scoringer',col:accent},{num:best.head,lbl:'PST-er',col:'#fff'}]}
+    sub={sub}/>;
+}
+
+function GulltelefonMoment({gulls}){
+  if(!gulls.length)return null;const g=gulls[0];const accent="#f0c96e",soft="#ffe98a",dark="#8a6414";
+  const sub=gulls.length>1?(<div className="mom-shared">{gulls.slice(1).map(x=>(<span key={x.name} style={{display:'inline-flex',alignItems:'center',gap:8,color:'rgba(255,255,255,0.7)',fontWeight:600,fontSize:14}}><SmallAvatar name={x.name} loc={x.loc} size={30}/>{x.name}</span>))}</div>):null;
+  return <Moment rkey="r4" accent={accent} soft={soft} dark={dark} icon="📞"
+    eyebrow={gulls.length>1?"DELT GULLTELEFON":"GULLTELEFON"} name={g.name} honor="Flest oppfølginger i sesongen"
+    badge={<Portrait name={g.name} loc={g.loc} accent={accent} soft={soft}/>} hero={g.fup} heroLabel="FULGT OPP" sub={sub}/>;
+}
+
+function PlettfriMoment({plett}){
+  if(!plett.length)return null;const p=plett[0];const accent="#5fb8d8",soft="#a8e0f0",dark="#2a7a96";
+  const sub=plett.length>1?(<div className="mom-shared">{plett.slice(1).map(x=>(<span key={x.name} style={{display:'inline-flex',alignItems:'center',gap:8,color:'rgba(255,255,255,0.7)',fontWeight:600,fontSize:14}}><SmallAvatar name={x.name} loc={x.loc} size={30}/>{x.name} ({x.tens})</span>))}</div>):null;
+  return <Moment rkey="r4" accent={accent} soft={soft} dark={dark} icon="💎"
+    eyebrow={plett.length>1?"DELT PLETTFRI":"PLETTFRI"} name={p.name} honor="Kun toppscore — ingen 9-ere"
+    badge={<Portrait name={p.name} loc={p.loc} accent={accent} soft={soft}/>} hero={p.tens} heroLabel="STRAKE 10-ERE" sub={sub}/>;
+}
+
+function HatTrickMoment({hatters}){
+  if(!hatters.length)return null;const h=hatters[0];const accent="#27c98a",soft="#7fe3bf",dark="#176f4f";
+  const htDays=Object.entries(h.dayTens||{}).filter(([,c])=>c>=3).map(([d,c])=>({d,c})).sort((a,b)=>a.d.localeCompare(b.d));
+  const sub=(<div style={{margin:'16px 2px 0',position:'relative',zIndex:2}}>
+    {htDays.map(({d,c})=>(<div key={d} className="ht-row"><div className="ht-dot"/><span className="ht-ct">{c} tiere</span>
+      <span style={{color:'rgba(255,255,255,0.25)'}}>—</span><span className="ht-dt">{new Date(d).toLocaleDateString("no-NO",{weekday:"long",day:"numeric",month:"long"})}</span></div>))}
+    {hatters.length>1&&(<div className="mom-shared" style={{marginTop:12}}>{hatters.slice(1).map(x=>(<span key={x.name} style={{display:'inline-flex',alignItems:'center',gap:8,color:'rgba(255,255,255,0.7)',fontWeight:600,fontSize:14}}><SmallAvatar name={x.name} loc={x.loc} size={30}/>{x.name} ({x.hatDays})</span>))}</div>)}</div>);
+  return <Moment rkey="r4" accent={accent} soft={soft} dark={dark} icon="⭐" eyebrow="FLEST HAT-TRICKS"
+    name={h.name} honor={`${h.hatDays} hat-trick-dag${h.hatDays>1?"er":""} — 3 tiere på én dag`}
+    badge={<Portrait name={h.name} loc={h.loc} accent={accent} soft={soft}/>} hero={h.hatDays} heroLabel="HAT-TRICKS" sub={sub}/>;
+}
+
+function SesongStats({stats,rows}){
+  const all=Object.values(stats);
+  const totScore=all.reduce((s,p)=>s+p.g,0);
+  const totTens=all.reduce((s,p)=>s+p.tens,0);
+  const totFup=all.reduce((s,p)=>s+p.fup,0);
+  const activeDays=new Set(rows.filter(s=>s.score===9||s.score===10).map(s=>s.ts.slice(0,10))).size;
+  return(<div className="r5" style={{margin:'18px 0 0'}}>
+    <div style={{margin:'0 16px 8px'}}><div className="rank-title">Sesongen i tall</div></div>
+    <div className="stats-bar">
+      {[{val:totScore,lbl:'Scoringer',col:'#f3a23a',delay:'0.6s'},{val:totTens,lbl:'10-ere',col:'#ffb866',delay:'0.72s'},{val:totFup,lbl:'Fulgt opp',col:'#86efac',delay:'0.84s'},{val:activeDays,lbl:'Aktive dager',col:'#93c5fd',delay:'0.96s'}].map(({val,lbl,col,delay},i)=>(
+        <div key={i} className="stat-tile" style={{animationDelay:delay}}><div className="stat-tile-num"><AnimNum value={val} color={col}/></div><div className="stat-tile-lbl">{lbl}</div></div>))}
+    </div></div>);
+}
+
+function Ticker({ranked,champ}){
+  const items=ranked.slice(0,5).map((r,i)=>`${i+1}. ${r.name} · ${r.pts} p`).join("   ✦   ");
+  const full=`✦ SESONGFINALE · ${SEASON_LABEL.toUpperCase()} · VCSO OSAT LEAGUE ✦   ${champ?`👑 OSAT-MESTER: ${champ.name}   ✦   `:""}${items}   `;
+  return(<div className="ticker-wrap"><div className="ticker-inner"><span className="ticker-chunk">{full}</span><span className="ticker-chunk">{full}</span></div></div>);
+}
+
+function App(){
+  const[rows,setRows]=useState(null);const[error,setError]=useState(null);
+  useEffect(()=>{
+    if(FROZEN_ROWS){setRows(sesongFilter(FROZEN_ROWS));return;}
+    fetch(SB_URL+"/rest/v1/osat_scores?select=*&order=ts.asc",{headers:{apikey:SB_KEY,Authorization:"Bearer "+SB_KEY}})
+    .then(r=>r.ok?r.json():Promise.reject(r.statusText)).then(r=>setRows(sesongFilter(r))).catch(e=>setError(String(e)));
+  },[]);
+  if(error)return <div style={{minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center',color:'#ef4444',fontFamily:'Rajdhani',padding:24,textAlign:'center'}}><div><div style={{fontSize:36,marginBottom:12}}>⚠️</div>Feil: {error}</div></div>;
+  if(!rows)return <div className="loading"><div className="spin-ring"/><div className="loading-lbl">Laster sluttstilling...</div></div>;
+  const stats=buildStats(rows);const ranked=rankPst(stats);const depts=deptStandings(stats);
+  return(<div>
+    <div className="header rf">
+      <div className="eyebrow">VCSO OSAT League · 2026</div>
+      <div className="header-title gold-text">Sluttstilling</div>
+      <div className="header-sub">Hele sesongen</div>
+      <div className="month-badge"><div className="badge-dot"/>{SEASON_LABEL}</div>
+    </div>
+    {ranked.length===0?(
+      <div style={{textAlign:'center',padding:'80px 24px',fontFamily:"'Playfair Display',serif",fontStyle:'italic',fontSize:18,color:'rgba(255,255,255,0.2)'}}>Ingen scoringer registrert i sesongen.</div>
+    ):(
+    <div className="content">
+      <div className="sec r2" style={{margin:'18px 16px'}}>
+        <div className="sec-top" style={{background:'linear-gradient(90deg,transparent,rgba(224,113,14,0.7),transparent)'}}/>
+        <div className="sec-title">🔧 PST-er</div>
+        {ranked.map((p,i)=>{const col=dc(p.loc);return(
+          <div key={p.name} className="rank-row">
+            <div className="rank-num" style={{color:i<3?'var(--gold2)':undefined}}>{i+1}</div>
+            <SmallAvatar name={p.name} loc={p.loc} size={36}/>
+            <div style={{flex:1}}>
+              <div className="rank-name" style={{color:i===0?'#fff':'rgba(255,255,255,0.82)'}}>{p.name}</div>
+              <div className="rank-dept" style={{color:col+'cc'}}>{dl(p.loc)} · {p.g} scoringer · {p.tens} 10-ere · {p.fup} fulgt opp</div>
+            </div>
+            <div style={{textAlign:'right'}}><div className="rank-pts" style={{color:i<3?'var(--gold2)':'#fff'}}>{p.pts}</div>
+              <div style={{fontFamily:"'Cinzel',serif",fontSize:7,letterSpacing:'0.15em',color:'rgba(255,255,255,0.25)',marginTop:2}}>POENG</div></div>
+          </div>);})}
+      </div>
+      <div className="sec r3" style={{margin:'18px 16px'}}>
+        <div className="sec-top" style={{background:'linear-gradient(90deg,transparent,rgba(224,113,14,0.7),transparent)'}}/>
+        <div className="sec-title">🏆 Avdelinger · poeng per PST</div>
+        {depts.map((d,i)=>{const c=dc(d.loc);return(
+          <div key={d.loc} className="rank-row">
+            <div className="rank-num" style={{color:i===0?'var(--gold2)':undefined}}>{i+1}</div>
+            <div style={{flex:1}}><div className="rank-name" style={{color:i===0?'#fff':'rgba(255,255,255,0.82)'}}>{dl(d.loc)}</div>
+              <div className="rank-dept" style={{color:c+'99'}}>{d.g} scoringer · {d.head} PST</div></div>
+            <div style={{textAlign:'right'}}><div className="rank-pts" style={{color:c}}>{d.pps.toFixed(1).replace('.',',')}</div>
+              <div style={{fontFamily:"'Cinzel',serif",fontSize:7,letterSpacing:'0.15em',color:'rgba(255,255,255,0.25)',marginTop:2}}>P/PST</div></div>
+          </div>);})}
+      </div>
+      <div style={{margin:'18px 16px 28px',display:'flex',flexDirection:'column',gap:10}}>
+        <a className="gz-cta" href="sesongfinale_s2_osat.html"><span style={{fontSize:18}}>🏆</span><span>Til kåringen</span><span style={{opacity:0.6}}>→</span></a>
+        <a className="gz-cta gz-cta-sec" href="index.html"><span>←</span><span>Forsiden</span></a>
+      </div>
+      <div className="footer r6"><div className="footer-line"/><div className="footer-txt">VCSO OSAT League · {SEASON_LABEL} · Sluttstilling</div></div>
+    </div>)}
+  </div>);
+}
+ReactDOM.render(<App/>,document.getElementById("root"));
+</script>
+</body>
+</html>

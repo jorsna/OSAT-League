@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VCSO OSAT League – Sesong 2 er over</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=Cinzel:wght@400;600;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0f0a05; --gold:#e0710e; --gold2:#f3a23a; --gold3:#8a3d08; --gold-bright:#ffb866;
+    --blue:#4a8fff;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    background:
+      radial-gradient(ellipse 90% 50% at 50% -5%, rgba(224,113,14,0.16), transparent 60%),
+      radial-gradient(ellipse 70% 50% at 50% 110%, rgba(243,162,58,0.06), transparent 60%),
+      var(--bg);
+    color:#fff; font-family:'Rajdhani',sans-serif; min-height:100vh;
+    display:flex; align-items:center; justify-content:center; padding:24px 0;
+    overflow-x:hidden;
+  }
+  #particles{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;}
+  @keyframes shimmer{0%{background-position:200% center;}100%{background-position:-200% center;}}
+  @keyframes flagFloat{0%,100%{transform:translateY(0) rotate(-3deg);}50%{transform:translateY(-8px) rotate(3deg);}}
+  @keyframes revealUp{from{opacity:0;transform:translateY(40px);}to{opacity:1;transform:translateY(0);}}
+  .wrap{position:relative;z-index:1;width:100%;max-width:540px;margin:0 16px;
+    background:linear-gradient(160deg,#0a1322,#04090e 55%,#061210);
+    border:1px solid rgba(201,168,76,0.2); border-radius:26px; overflow:hidden;
+    box-shadow:0 0 0 1px rgba(201,168,76,0.05),0 0 90px rgba(201,168,76,0.07),0 40px 80px rgba(0,0,0,0.6);
+    animation:revealUp 0.9s cubic-bezier(.16,1,.3,1) both;
+  }
+  .accbar{height:3px;background:linear-gradient(90deg,transparent,rgba(243,162,58,0.4),var(--gold),var(--gold2),var(--gold),rgba(243,162,58,0.4),transparent);}
+  .gold-text{
+    background:linear-gradient(90deg,var(--gold3),var(--gold),var(--gold2),var(--gold-bright),var(--gold),var(--gold3));
+    background-size:300% auto; -webkit-background-clip:text; background-clip:text;
+    -webkit-text-fill-color:transparent; animation:shimmer 4.5s linear infinite;
+  }
+  .eyebrow{font-family:'Cinzel',serif;letter-spacing:0.4em;text-transform:uppercase;}
+
+  .hero{text-align:center;padding:46px 28px 8px;}
+  .hero .eyebrow{font-size:10px;color:rgba(201,168,76,0.6);margin-bottom:16px;}
+  .flag{font-size:46px;line-height:1;margin-bottom:10px;display:inline-block;animation:flagFloat 3.2s ease-in-out infinite;filter:drop-shadow(0 0 18px rgba(201,168,76,0.5));}
+  .title{font-family:'Playfair Display',serif;font-weight:900;font-size:clamp(30px,8vw,44px);line-height:1.04;}
+  .season{font-family:'Cinzel',serif;font-size:11px;letter-spacing:0.35em;color:rgba(255,255,255,0.4);margin-top:10px;}
+  .thanks{font-family:'Playfair Display',serif;font-style:italic;font-size:17px;color:rgba(255,255,255,0.55);line-height:1.55;max-width:400px;margin:22px auto 6px;}
+
+  .teaser{margin:16px 20px 4px;padding:20px;border-radius:18px;text-align:center;
+    background:linear-gradient(160deg,rgba(201,168,76,0.06),rgba(0,0,0,0.2));
+    border:1px solid rgba(224,113,14,0.16);}
+  .teaser .eyebrow{font-size:12px;color:var(--gold2);margin-bottom:6px;}
+  .teaser .crown{font-size:30px;line-height:1;margin-bottom:8px;display:block;}
+  .teaser .sub{font-size:13px;color:rgba(255,255,255,0.45);}
+
+  .cta-primary{display:flex;align-items:center;justify-content:center;gap:10px;margin:18px 20px 6px;padding:17px;
+    border-radius:15px;text-decoration:none;font-family:'Cinzel',serif;font-weight:700;font-size:13px;
+    letter-spacing:0.12em;text-transform:uppercase;color:#04090f;
+    background:linear-gradient(135deg,var(--gold),var(--gold2));
+    box-shadow:0 8px 30px rgba(201,168,76,0.25);transition:transform 0.15s,box-shadow 0.15s;}
+  .cta-primary:hover{transform:translateY(-2px);box-shadow:0 12px 38px rgba(201,168,76,0.35);}
+
+  .countdown{padding:26px 20px 10px;}
+  .countdown .lbl{text-align:center;font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:14px;}
+  .cd-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;}
+  .cd-box{background:rgba(0,0,0,0.4);border-radius:15px;padding:18px 6px 13px;text-align:center;border-top:1px solid rgba(201,168,76,0.3);}
+  .cd-num{font-family:'Playfair Display',serif;font-weight:900;font-size:34px;line-height:1;}
+  .cd-cap{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.22em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-top:5px;}
+  .cd-date{text-align:center;font-family:'Cinzel',serif;font-size:11px;letter-spacing:0.25em;color:rgba(201,168,76,0.7);margin-top:14px;}
+
+  .links{padding:18px 20px 28px;}
+  .links .eyebrow{font-size:9px;color:rgba(255,255,255,0.3);text-align:center;margin-bottom:12px;}
+  .link{display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:13px;text-decoration:none;
+    background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);
+    font-size:14px;font-weight:500;color:rgba(255,255,255,0.78);margin-bottom:8px;transition:all 0.15s;}
+  .link:hover{background:rgba(255,255,255,0.05);border-color:rgba(201,168,76,0.3);}
+  .link .arr{margin-left:auto;color:rgba(201,168,76,0.5);}
+
+  .foot{text-align:center;padding:16px;border-top:1px solid rgba(255,255,255,0.05);
+    font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.22em;color:rgba(255,255,255,0.22);}
+</style>
+</head>
+<body>
+<canvas id="particles"></canvas>
+<div class="wrap">
+  <div class="accbar"></div>
+
+  <div class="hero">
+    <div class="eyebrow">Matchday · VCSO OSAT League</div>
+    <div class="flag">🏁</div>
+    <div class="title gold-text">Sesong 2 er over</div>
+    <div class="season">Q3 2026</div>
+    <p class="thanks">Takk til alle PST-er for en sesong full av fornøyde kunder og strake tiere.</p>
+  </div>
+
+  <div class="teaser">
+    <span class="crown">👑</span><div class="eyebrow">Sesongvinneren er kåret</div>
+    <div class="sub">Avduket på resultatsiden</div>
+  </div>
+
+  <a class="cta-primary" href="sesongfinale_s2_osat.html">Se resultatene <span>→</span></a>
+
+  <div class="countdown" id="tall">
+    <div class="lbl" id="tall-lbl">Sesong 2 i tall</div>
+    <div class="cd-grid" id="tall-grid"></div>
+    <div class="cd-date">Neste sesong annonseres senere</div>
+  </div>
+
+  <div class="links">
+    <div class="eyebrow">Utforsk sesongen</div>
+    <a class="link" href="tabell_s2_osat.html"><span>📊</span><span>Full sluttabell</span><span class="arr">→</span></a>
+    <a class="link" href="la_gazzetta_finale_s2_osat.html"><span>📰</span><span>La Gazzetta — spesialutgaven</span><span class="arr">→</span></a>
+    <a class="link" href="sesongfinale.html"><span>🏛️</span><span>Sesong 1 — resultatene</span><span class="arr">→</span></a>
+  </div>
+
+  <div class="foot">© 2026 SNARLINK</div>
+</div>
+
+<script>
+(function(){
+
+  // ── Sesongen i tall: bakes inn som statisk tekst etter frysingen 1. oktober.
+  //    null = stripen skjules. Eksempel: [{v:'166',l:'Biler'},{v:'498',l:'Poeng'},{v:'41',l:'Salgsdager'}]
+  var SESONG_TALL = [{"v": "412", "l": "Scoringer"}, {"v": "300", "l": "Tiere"}, {"v": "259", "l": "Fulgt opp"}];
+  var tg = document.getElementById('tall-grid'), tl = document.getElementById('tall-lbl');
+  if (SESONG_TALL && SESONG_TALL.length) {
+    SESONG_TALL.forEach(function(t){
+      var box = document.createElement('div'); box.className = 'cd-box';
+      var num = document.createElement('div'); num.className = 'cd-num gold-text'; num.textContent = t.v;
+      var cap = document.createElement('div'); cap.className = 'cd-cap'; cap.textContent = t.l;
+      box.appendChild(num); box.appendChild(cap); tg.appendChild(box);
+    });
+  } else { tg.style.display = 'none'; tl.style.display = 'none'; }
+
+  // ── Rolige gulldrysspartikler ──
+  var c = document.getElementById('particles');
+  if(c && c.getContext){
+    var ctx = c.getContext('2d');
+    var W, H, ps;
+    function resize(){
+      W = c.width = window.innerWidth;
+      H = c.height = window.innerHeight;
+    }
+    function init(){
+      ps = [];
+      var n = Math.min(46, Math.floor(W/26));
+      for(var i=0;i<n;i++){
+        ps.push({
+          x: Math.random()*W, y: Math.random()*H,
+          r: Math.random()*1.6+0.4,
+          vy: -(Math.random()*0.35+0.12),
+          a: Math.random()*0.5+0.15,
+          tw: Math.random()*Math.PI*2
+        });
+      }
+    }
+    function draw(){
+      ctx.clearRect(0,0,W,H);
+      for(var i=0;i<ps.length;i++){
+        var p = ps[i];
+        p.y += p.vy; p.tw += 0.02;
+        if(p.y < -5){ p.y = H+5; p.x = Math.random()*W; }
+        var alpha = p.a * (0.6 + 0.4*Math.sin(p.tw));
+        ctx.save();
+        ctx.globalAlpha = alpha;
+        ctx.fillStyle = '#e0710e';
+        ctx.shadowBlur = 6; ctx.shadowColor = '#f3a23a';
+        ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2); ctx.fill();
+        ctx.restore();
+      }
+      requestAnimationFrame(draw);
+    }
+    resize(); init(); draw();
+    window.addEventListener('resize', function(){ resize(); init(); });
+  }
+})();
+</script>
+</body>
+</html>
