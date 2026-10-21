@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>OSAT – Medallia-import</title>
+<style>
+  :root{--bg:#0f0a05;--amber:#f97316;--txt:#f5ede4;--dim:#a8927c;--line:#3a2a1a;}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--txt);font:15px/1.5 system-ui,-apple-system,Segoe UI,sans-serif;padding:24px 16px}
+  .wrap{max-width:720px;margin:0 auto}
+  h1{font-size:20px;color:var(--amber);letter-spacing:.04em;text-transform:uppercase}
+  p.sub{color:var(--dim);margin:4px 0 20px}
+  .box{border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin-bottom:14px}
+  .k{color:var(--dim);font-size:12px;text-transform:uppercase;letter-spacing:.06em}
+  pre{white-space:pre-wrap;word-break:break-word;font:12px/1.45 ui-monospace,Consolas,monospace;color:var(--txt)}
+  .ok{color:#7bd88f}.feil{color:#ff7a7a}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>OSAT League · Medallia-import</h1>
+  <p class="sub">Brukes av den planlagte kjøringen. Siden lagrer ingenting selv og viser bare siste resultat.</p>
+  <div class="box"><div class="k">Status</div><pre id="status">Venter på kjøring …</pre></div>
+  <div class="box"><div class="k">Siste resultat</div><pre id="resultat">–</pre></div>
+</div>
+<script>
+(function(){
+  var FN = 'https://aemboxqpaeyfdlzmghxe.supabase.co/functions/v1/osat-medallia-import';
+  var ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFlbWJveHFwYWV5ZmRsem1naHhlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3OTIzNTQsImV4cCI6MjA5NDM2ODM1NH0.vKRaz0bRJm621eKgtF7iXh23Zqdh0qNuriMgDMhJ8Yw';
+  function vis(id, tekst, klasse){ var el=document.getElementById(id); el.textContent=tekst; el.className=klasse||''; }
+  function kall(nokkel, body){
+    return fetch(FN, {method:'POST', headers:{'Content-Type':'application/json','Authorization':'Bearer '+ANON,'apikey':ANON,'x-import-key':nokkel}, body:JSON.stringify(body)})
+      .then(function(r){ return r.json().then(function(d){ if(!r.ok) throw new Error((d&&d.error)||('HTTP '+r.status)); return d; }); });
+  }
+  // Brukes av kjøringen: await osatStatus(nokkel)
+  window.osatStatus = function(nokkel){
+    vis('status','Henter status …');
+    return kall(nokkel,{action:'status'}).then(function(d){ vis('status','Siste svardato i databasen: '+(d.siste_svardato||'ingen')+'\nSesongstart: '+d.sesong_start,'ok'); return d; })
+      .catch(function(e){ vis('status','Feil: '+e.message,'feil'); throw e; });
+  };
+  // Brukes av kjøringen: await osatImport(rader, nokkel, torrkjoring)
+  window.osatImport = function(rader, nokkel, torrkjoring){
+    vis('status',(torrkjoring===false?'Importerer ':'Tørrkjører ')+rader.length+' rader …');
+    return kall(nokkel,{rows:rader, dry_run: torrkjoring!==false}).then(function(d){
+      vis('status',(d.torrkjoring?'TØRRKJØRING – ingenting lagret':'LAGRET')+' · '+new Date().toLocaleString('no-NO'),'ok');
+      vis('resultat',JSON.stringify(d,null,2)); return d;
+    }).catch(function(e){ vis('status','Feil: '+e.message,'feil'); throw e; });
+  };
+})();
+</script>
+</body>
+</html>
