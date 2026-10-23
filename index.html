@@ -1252,15 +1252,17 @@ body.tier-kritisk #urgency-stripe{background:rgba(239,68,68,.14);border:1px soli
 .s3-hent{margin:8px 14px 0;padding:9px 12px;border-radius:10px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;
   background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07);font-size:12px;color:var(--muted)}
 .s3-hent-k{display:flex;align-items:center;gap:7px;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:12px;letter-spacing:.12em;color:var(--txt)}
-.s3-hent-d{width:8px;height:8px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 0 rgba(34,197,94,.6);animation:s3HentPuls 2s ease-out infinite}
-.s3-hent.vent .s3-hent-d{background:#f59e0b;box-shadow:0 0 0 0 rgba(245,158,11,.6)}
-.s3-hent.henter .s3-hent-d{background:var(--gold)}
+.s3-hent-d{--rc:34,197,94;position:relative;width:16px;height:16px;border-radius:50%;border:1.5px solid rgba(var(--rc),.75);background:radial-gradient(circle,rgba(var(--rc),.9) 0 1.5px,transparent 2px),repeating-radial-gradient(circle,transparent 0 3px,rgba(var(--rc),.25) 3.5px 4px);overflow:hidden}
+.s3-hent-d:after{content:'';position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 0deg,rgba(var(--rc),.85),rgba(var(--rc),0) 28%,transparent 100%);animation:s3Radar 2.4s linear infinite}
+.s3-hent.vent .s3-hent-d{--rc:245,158,11}
+.s3-hent.henter .s3-hent-d{--rc:249,115,22}
+.s3-hent.henter .s3-hent-d:after{animation-duration:.9s}
 .s3-hent b{color:var(--txt);font-weight:700}
 .s3-hent-n{margin-left:auto;text-align:right}
 .s3-hent-nt{font-family:'Anton',sans-serif;font-size:15px;letter-spacing:.03em;color:var(--txt)}
 .s3-hent-m{width:100%;font-size:11px;color:#f59e0b}
-@keyframes s3HentPuls{0%{box-shadow:0 0 0 0 rgba(34,197,94,.55)}70%{box-shadow:0 0 0 7px rgba(34,197,94,0)}100%{box-shadow:0 0 0 0 rgba(34,197,94,0)}}
-@media(prefers-reduced-motion:reduce){.s3-hent-d{animation:none}}
+@keyframes s3Radar{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.s3-hent-d:after{animation:none}}
 </style>
 <style id="s3-effekter-css">
 /* ═══ SESONG 3: EFFEKTER ═══ */
@@ -1785,8 +1787,8 @@ body.tier-kritisk #urgency-stripe{background:rgba(239,68,68,.14);border:1px soli
       </div>
 
       <div style="padding:10px 0;border-bottom:1px solid var(--b1)">
-        <div style="font-family:'Anton',sans-serif;font-size:12px;color:var(--gold);letter-spacing:1px;margin-bottom:6px">VAR-SJEKKEN</div>
-        <div>VAR-rommet sjekker Medallia flere ganger om dagen. Alle svar med 9 eller 10 hentes automatisk og kobles til riktig PST via ansattnummeret. Øverst på siden ser du når siste VAR-sjekk var, og når neste kommer.</div>
+        <div style="font-family:'Anton',sans-serif;font-size:12px;color:var(--gold);letter-spacing:1px;margin-bottom:6px">RADAREN</div>
+        <div>Radaren sveiper Medallia flere ganger om dagen. Alle svar med 9 eller 10 hentes automatisk og kobles til riktig PST via ansattnummeret. Øverst på siden ser du når siste sveip var, og når neste kommer.</div>
         <div style="margin-top:4px">Ingen trenger å registrere noe. Svaret teller på datoen kunden svarte.</div>
         <div style="margin-top:4px">Mangler PST på servicen i Medallia, kan ikke svaret kobles. Sørg for at PST alltid er registrert.</div>
       </div>
@@ -2728,14 +2730,14 @@ function s3RenderHent() {
   var klasse = '', melding = '';
   if (forrige && naa >= forste && (!sist || sist < forrige)) {
     if (hentMin(naa) - hentMin(forrige) < 25) klasse = 'henter';
-    else { klasse = 'vent'; melding = 'VAR-sjekken ' + hentNar(forrige, naa) + ' er ikke kjørt ennå. Den tas igjen ved neste sjekk – ingen svar går tapt.'; }
+    else { klasse = 'vent'; melding = 'Sveipet ' + hentNar(forrige, naa) + ' er ikke kjørt ennå. Det tas igjen ved neste sveip – ingen svar går tapt.'; }
   }
-  var venstre = klasse === 'henter' ? 'VAR sjekker Medallia nå …'
-    : sist ? 'Siste VAR-sjekk <b>' + hentNar(sist, naa) + '</b>' + (nye ? ' · <b>' + nye + '</b> ny' + (nye === 1 ? '' : 'e') + ' 9/10' : '')
-    : naa < forste ? 'Hver 9-er og 10-er sjekkes automatisk mot Medallia' : 'Ingen VAR-sjekk registrert ennå';
-  el.innerHTML = '<div class="s3-hent ' + klasse + '"><span class="s3-hent-k"><i class="s3-hent-d"></i>VAR-ROMMET</span>'
+  var venstre = klasse === 'henter' ? 'Radaren sveiper Medallia nå …'
+    : sist ? 'Siste sveip <b>' + hentNar(sist, naa) + '</b>' + (nye ? ' · fanget <b>' + nye + '</b> ny' + (nye === 1 ? '' : 'e') + ' 9/10' : '')
+    : naa < forste ? 'Radaren sveiper Medallia etter 9-ere og 10-ere' : 'Ingen sveip registrert ennå';
+  el.innerHTML = '<div class="s3-hent ' + klasse + '"><span class="s3-hent-k"><i class="s3-hent-d"></i>RADAR</span>'
     + '<span>' + venstre + '</span>'
-    + (neste ? '<span class="s3-hent-n">' + (naa < forste ? 'Første VAR-sjekk' : 'Neste VAR-sjekk') + ' <span class="s3-hent-nt">' + hentNar(neste, naa) + '</span><br><span>' + hentOm(hentMin(neste) - hentMin(naa)) + '</span></span>' : '')
+    + (neste ? '<span class="s3-hent-n">' + (naa < forste ? 'Første sveip' : 'Neste sveip') + ' <span class="s3-hent-nt">' + hentNar(neste, naa) + '</span><br><span>' + hentOm(hentMin(neste) - hentMin(naa)) + '</span></span>' : '')
     + (melding ? '<span class="s3-hent-m">' + melding + '</span>' : '') + '</div>';
 }
 function s3HentLogg() {
