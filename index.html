@@ -1115,6 +1115,28 @@ body.tier-kritisk #urgency-stripe{background:rgba(239,68,68,.14);border:1px soli
 .md-maal-ekstra span{padding:4px 10px;border-radius:999px;border:1px solid rgba(201,168,76,.55);background:rgba(201,168,76,.12);
   color:#f4e9c8;font-size:13px;font-weight:600}
 </style>
+<style id="rydd-css">
+/* ═══ RYDDIGERE TABELL (Sesong 3) – samme som Championship og Selekt ═══ */
+.tabs-row .tab{padding:10px 0 9px}
+.tabs-row .tab-label{font-size:11px;letter-spacing:0;white-space:nowrap}
+.tabs-row .tab{min-width:0;overflow:hidden}
+.tabs-row .tab-icon{font-size:17px}
+.hdr-left .tab-icon{font-size:17px}
+#uv-tab.uv-new .tab-icon{display:inline-block}
+body[data-tab]:not([data-tab="ind"]) :is(#top-banner,#gazzetta-ticker,#vbar){display:none !important}
+body[data-tab]:not([data-tab="ind"]):not([data-tab="team"]) .mbar{display:none !important}
+.mbar{padding:10px 16px;gap:10px;flex-wrap:nowrap}
+.mtabs{flex-wrap:nowrap}
+.tab{color:var(--muted)}
+.tab.on{color:#f97316}
+.mbar-l{display:none}
+.mbar-v{font-size:13px;white-space:nowrap}
+.mbar .mt{padding:6px 12px;font-size:11px}
+#top-banner{border-bottom:none}
+#gazzetta-ticker{margin-top:0}
+.name-sub{font-size:11px}
+.trow .sc span{opacity:.55}
+</style>
 <style id="s3-drakt-css">
 /* ═══ SESONG 3-DRAKT ═══ */
 /* Innlogging: flomlys over banen */
@@ -1427,17 +1449,44 @@ body.tier-kritisk #urgency-stripe{background:rgba(239,68,68,.14);border:1px soli
           <span class="login-badge" id="role-badge"></span>
         </div>
       </div>
+      <div class="hdr-left" style="position:absolute;top:0;left:0;display:flex;gap:6px"><button id="uv-tab" onclick="uvGaa()" aria-label="Ukens vinner" title="Ukens vinner" style="position:relative;width:38px;height:38px;border-radius:50%;border:1px solid #f97316;background:rgba(249,115,22,.08);font-size:17px;cursor:pointer;line-height:1;display:inline-flex;align-items:center;justify-content:center"><span class="tab-icon">👑</span><span id="uv-dot" style="display:none;position:absolute;top:-2px;right:-2px;width:11px;height:11px;border-radius:50%;background:#f97316;border:2px solid var(--card)"></span></button><button id="gazz-tab" onclick="openGazzetta()" aria-label="La Gazzetta" title="La Gazzetta" style="position:relative;width:38px;height:38px;border-radius:50%;border:1px solid #f97316;background:rgba(249,115,22,.08);font-size:17px;cursor:pointer;line-height:1;display:inline-flex;align-items:center;justify-content:center"><span class="tab-icon">📰</span><span id="gazz-dot" style="display:none;position:absolute;top:-2px;right:-2px;width:11px;height:11px;border-radius:50%;background:#f97316;border:2px solid var(--card)"></span></button></div>
       <div class="hdr-right" style="position:absolute;top:0;right:0">
-        <button id="news-btn" onclick="openNews()" aria-label="Nyheter fra Matchday" title="Nyheter fra Matchday" style="position:relative;width:34px;height:34px;border-radius:50%;border:1px solid #f97316;background:rgba(249,115,22,.08);font-size:15px;cursor:pointer;line-height:1;display:inline-flex;align-items:center;justify-content:center">📣<span id="news-dot" style="display:none;position:absolute;top:-2px;right:-2px;width:10px;height:10px;border-radius:50%;background:#f97316;border:2px solid var(--card,#1a0f0a)"></span></button>
-        <button class="hdr-btn" onclick="showHelp()">? Slik fungerer det</button>
+        <button id="news-btn" onclick="openNews()" aria-label="Nyheter fra Matchday" title="Nyheter fra Matchday" style="position:relative;width:38px;height:38px;border-radius:50%;border:1px solid #f97316;background:rgba(249,115,22,.08);font-size:17px;cursor:pointer;line-height:1;display:inline-flex;align-items:center;justify-content:center">📣<span id="news-dot" style="display:none;position:absolute;top:-2px;right:-2px;width:11px;height:11px;border-radius:50%;background:#f97316;border:2px solid var(--card)"></span></button>
+        <button onclick="showHelp()" aria-label="Slik fungerer det" title="Slik fungerer det" style="width:38px;height:38px;border-radius:50%;border:1px solid #f97316;background:rgba(249,115,22,.08);font-size:18px;font-weight:700;color:#f97316;cursor:pointer;line-height:1;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0">?</button>
         <div id="export-btn" style="display:none"></div>
       </div>
     </div>
   </div>
 </div>
+<!-- TABS -->
+<div class="tabs">
+  <div class="tabs-row">
+    <button class="tab on" onclick="setTab('ind',this)"><span class="tab-icon">⚽</span><span class="tab-label">PST-er</span></button>
+    <button class="tab" onclick="setTab('team',this)"><span class="tab-icon">🏟️</span><span class="tab-label">Avdelinger</span></button>
+    <button class="tab" onclick="setTab('scoring',this)"><span class="tab-icon">🎯</span><span class="tab-label">Scoringer</span></button>
+    <button class="tab" onclick="setTab('stats',this)"><span class="tab-icon">📊</span><span class="tab-label">Statistikk</span></button>
+    <button class="tab" onclick="setTab('hof',this)"><span class="tab-icon">🏆</span><span class="tab-label">Legender</span></button>
+    <button class="tab" onclick="setTab('tips',this)"><span class="tab-icon">💡</span><span class="tab-label">Verktøy</span></button>
+  </div>
+</div>
+
+<!-- MATCHDAY BAR -->
+<div class="mbar">
+  <div>
+    <div class="mbar-l">Periode</div>
+    <div class="mbar-v" id="mbar-v">Oktober &ndash; desember 2026</div>
+  </div>
+  <div class="mtabs">
+    <button class="mt on" onclick="setMonth('all',this)">Alle</button>
+    <button class="mt" onclick="setMonth('okt',this)">Okt</button>
+    <button class="mt" onclick="setMonth('nov',this)">Nov</button>
+    <button class="mt" onclick="setMonth('des',this)">Des</button>
+  </div>
+</div>
+
 <!-- GAZZETTA TICKER -->
 <div id="gazzetta-ticker" style="display:none">
-  <div class="ticker-label">&#128240; LA GAZZETTA</div>
+  <div class="ticker-label">&#128240; LA GAZZETTA <span style="opacity:.55;font-weight:400">&middot; i går</span></div>
   <div class="ticker-track-wrap">
     <div class="ticker-track" id="ticker-track">
       <span style="font-size:10px;color:rgba(255,255,255,.3);padding:0 20px">Laster nyheter...</span>
@@ -1448,30 +1497,6 @@ body.tier-kritisk #urgency-stripe{background:rgba(239,68,68,.14);border:1px soli
 <!-- VÆRSTRIPE -->
 <div class="vbar" id="vbar" style="display:none"></div>
 
-
-<!-- TABS -->
-<div class="tabs">
-  <div class="tabs-row">
-    <button class="tab on" onclick="setTab('ind',this)"><span class="tab-icon">&#128100;</span><span class="tab-label">PST-er</span></button>
-    <button class="tab" onclick="setTab('team',this)"><span class="tab-icon">&#127967;&#65039;</span><span class="tab-label">Avdelinger</span></button>
-    <button class="tab" onclick="setTab('stats',this)"><span class="tab-icon">&#128200;</span><span class="tab-label">Statistikk</span></button>
-    <button class="tab" onclick="setTab('scoring',this)"><span class="tab-icon">&#127919;</span><span class="tab-label">Scoringer</span></button>
-  </div>
-  <div class="tabs-row">
-    <button class="tab" onclick="setTab('hof',this)"><span class="tab-icon">&#127942;</span><span class="tab-label">Hall of Fame</span></button>
-    <button id="uv-tab" class="tab" style="position:relative" onclick="uvGaa()"><span class="tab-icon">&#128081;</span><span class="tab-label">Ukens vinner</span><span id="uv-dot" style="display:none;position:absolute;top:5px;right:7px;width:9px;height:9px;border-radius:50%;background:var(--gold);border:2px solid var(--card)"></span></button>
-    <button class="tab" onclick="setTab('tips',this)"><span class="tab-icon">&#128161;</span><span class="tab-label">Tips</span></button>
-    <button id="gazz-tab" class="tab" style="position:relative" onclick="openGazzetta()"><span class="tab-icon">&#128240;</span><span class="tab-label">La Gazzetta</span><span id="gazz-dot" style="display:none;position:absolute;top:5px;right:7px;width:9px;height:9px;border-radius:50%;background:var(--gold);border:2px solid var(--card)"></span></button>
-  </div>
-</div>
-
-<!-- PERIODE BAR - kun Alle, ingen måneder -->
-<div class="mbar">
-  <div>
-    <div class="mbar-l">Periode</div>
-    <div class="mbar-v" id="mbar-v">Sesong 3 &middot; Oktober &ndash; desember 2026</div>
-  </div>
-</div>
 
 <!-- TOP BANNER (dagens topp) -->
 <div id="top-banner" style="display:none;padding:10px 16px;background:linear-gradient(135deg,rgba(168,85,247,.1),rgba(255,215,0,.04));border-bottom:1px solid rgba(168,85,247,.2);align-items:center;gap:12px">
@@ -3829,6 +3854,7 @@ function renderAll() {
 // ─── TABS OG NAVIGASJON ──────────────────────────────────────
 function setTab(tab, btn) {
   curTab=tab;
+  document.body.setAttribute('data-tab', tab);
   document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('on');});
   btn.classList.add('on');
   document.querySelectorAll('.view').forEach(function(v){v.classList.remove('on');});
@@ -4206,6 +4232,7 @@ function buildDropdown() {
 
 // ─── AUTO-MÅNEDSSETTING ──────────────────────────────────────
 function setDefaultMonth() {
+  return; // Sesong 3: «Alle» er standard, som i Championship og Selekt
   var m = new Date().getMonth();
   var mndMap = ['jan','feb','mar','apr','mai','jun','jul','aug','sep','okt','nov','des'];
   var mndStr = mndMap[m];
