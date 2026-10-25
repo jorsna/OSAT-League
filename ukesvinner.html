@@ -172,6 +172,14 @@ body{background:var(--bg);font-family:'Rajdhani',sans-serif;color:#fff;overflow-
 .stats-4{grid-template-columns:repeat(2,1fr);}
 .stats-4 .stat-num{font-size:46px;}
 </style>
+<style id="md-teams-css">
+.md-teams-knapp{display:inline-flex;align-items:center;gap:9px;padding:11px 20px;border-radius:999px;cursor:pointer;
+  font-family:'Rajdhani',sans-serif;font-weight:700;font-size:14px;letter-spacing:.12em;text-transform:uppercase;
+  color:#fdba74;background:rgba(255,255,255,.04);border:1px solid #f97316;transition:background .2s,transform .2s}
+.md-teams-knapp:hover{background:rgba(255,255,255,.09)}
+.md-teams-knapp:active{transform:scale(.97)}
+.md-teams-knapp:focus-visible{outline:2px solid #f97316;outline-offset:3px}
+</style>
 </head>
 <body>
 <canvas id="particles"></canvas>
@@ -215,6 +223,143 @@ body{background:var(--bg);font-family:'Rajdhani',sans-serif;color:#fff;overflow-
 })();
 </script>
 
+<script id="md-teams-kort">
+/* ═══ MATCHDAY: UKESVINNER-KORT TIL TEAMS (felles for alle tre) ════════════
+   mdTeamsKort({konkurranse, eyebrow, uke, navn, avdeling, avdFarge, foto, tall:[{v,l}], tema:{bg1,bg2,aksent,lys}})
+   Lager et 1200×630 PNG-kort. Mobil: delingsark (velg Teams). PC: kopieres – lim inn i Teams med Ctrl+V.
+   ═══════════════════════════════════════════════════════════════════════ */
+(function () {
+  function rgba(hex, a) {
+    var n = parseInt(hex.replace('#', ''), 16);
+    return 'rgba(' + (n >> 16 & 255) + ',' + (n >> 8 & 255) + ',' + (n & 255) + ',' + a + ')';
+  }
+  function rund(x, X, Y, w, h, r) {
+    x.beginPath(); x.moveTo(X + r, Y); x.arcTo(X + w, Y, X + w, Y + h, r); x.arcTo(X + w, Y + h, X, Y + h, r);
+    x.arcTo(X, Y + h, X, Y, r); x.arcTo(X, Y, X + w, Y, r); x.closePath();
+  }
+  function sporing(x, px) { if ('letterSpacing' in x) x.letterSpacing = px + 'px'; }
+  function lastBilde(src) {
+    return new Promise(function (ok) {
+      if (!src) return ok(null);
+      var i = new Image(); i.onload = function () { ok(i); }; i.onerror = function () { ok(null); }; i.src = src;
+    });
+  }
+  function toast(tekst, nedlasting) {
+    var t = document.createElement('div');
+    t.style.cssText = 'position:fixed;left:50%;bottom:26px;transform:translateX(-50%);z-index:99999;display:flex;gap:12px;align-items:center;'
+      + 'background:rgba(10,10,12,.94);color:#fff;border:1px solid rgba(255,255,255,.18);padding:11px 16px;border-radius:10px;'
+      + 'font:600 14px Rajdhani,system-ui,sans-serif;letter-spacing:.03em;box-shadow:0 10px 30px rgba(0,0,0,.5)';
+    t.textContent = tekst;
+    if (nedlasting) {
+      var a = document.createElement('a'); a.textContent = 'Last ned'; a.href = nedlasting.url; a.download = nedlasting.fil;
+      a.style.cssText = 'color:#fff;text-decoration:underline;font-weight:700';
+      t.appendChild(a);
+    }
+    document.body.appendChild(t);
+    setTimeout(function () { t.remove(); }, 6000);
+  }
+
+  window.mdTeamsKort = async function (o) {
+    var W = 1200, H = 630, c = document.createElement('canvas');
+    c.width = W; c.height = H;
+    var x = c.getContext('2d'), T = o.tema;
+    try {
+      await Promise.all(['900 80px "Playfair Display"', '700 22px Cinzel', '600 22px Rajdhani', '700 64px Rajdhani'].map(function (f) { return document.fonts.load(f); }));
+    } catch (e) {}
+
+    var g = x.createLinearGradient(0, 0, W, H);
+    g.addColorStop(0, T.bg1); g.addColorStop(1, T.bg2);
+    x.fillStyle = g; x.fillRect(0, 0, W, H);
+    var cx = 300, cy = 315, r = 165;
+    var lys = x.createRadialGradient(cx, cy, 30, cx, cy, 360);
+    lys.addColorStop(0, rgba(T.aksent, .34)); lys.addColorStop(1, rgba(T.aksent, 0));
+    x.fillStyle = lys; x.fillRect(0, 0, W, H);
+    x.strokeStyle = rgba(T.aksent, .45); x.lineWidth = 2; rund(x, 18, 18, W - 36, H - 36, 22); x.stroke();
+
+    // Foto i ring
+    x.beginPath(); x.arc(cx, cy, r + 14, 0, Math.PI * 2); x.strokeStyle = T.aksent; x.lineWidth = 6; x.stroke();
+    x.beginPath(); x.arc(cx, cy, r + 30, 0, Math.PI * 2); x.strokeStyle = rgba(T.aksent, .25); x.lineWidth = 2; x.stroke();
+    var bilde = await lastBilde(o.foto);
+    x.save(); x.beginPath(); x.arc(cx, cy, r, 0, Math.PI * 2); x.clip();
+    if (bilde) {
+      var s = Math.max((2 * r) / bilde.width, (2 * r) / bilde.height);
+      if ('filter' in x) x.filter = 'grayscale(100%) contrast(1.05)';
+      x.drawImage(bilde, cx - bilde.width * s / 2, cy - bilde.height * s / 2, bilde.width * s, bilde.height * s);
+      x.filter = 'none';
+    } else {
+      x.fillStyle = rgba(o.avdFarge || T.aksent, .25); x.fillRect(cx - r, cy - r, 2 * r, 2 * r);
+      x.fillStyle = o.avdFarge || T.aksent; x.font = '900 110px "Playfair Display",serif'; x.textAlign = 'center'; x.textBaseline = 'middle';
+      x.fillText(o.navn.split(' ').map(function (p) { return p[0]; }).join('').slice(0, 2).toUpperCase(), cx, cy + 6);
+    }
+    x.restore();
+
+    // Tekst
+    var tx = 545, maks = W - tx - 60;
+    x.textAlign = 'left'; x.textBaseline = 'alphabetic';
+    x.fillStyle = T.aksent; x.font = '700 22px Cinzel,serif'; sporing(x, 5);
+    x.fillText((o.eyebrow || 'Ukens vinner').toUpperCase() + '  ·  UKE ' + o.uke, tx, 150);
+    sporing(x, 0);
+    var str = 86, linjer = [o.navn];
+    x.font = '900 ' + str + 'px "Playfair Display",serif';
+    while (x.measureText(o.navn).width > maks && str > 62) { str -= 4; x.font = '900 ' + str + 'px "Playfair Display",serif'; }
+    if (x.measureText(o.navn).width > maks) {
+      var d = o.navn.split(' '), m = Math.ceil(d.length / 2);
+      linjer = [d.slice(0, m).join(' '), d.slice(m).join(' ')];
+    }
+    var ny = linjer.length > 1 ? 232 : 250;
+    var gr = x.createLinearGradient(tx, ny - str, tx, ny + 20);
+    gr.addColorStop(0, '#ffffff'); gr.addColorStop(1, T.lys);
+    x.fillStyle = gr;
+    linjer.forEach(function (l, i) { x.fillText(l, tx, ny + i * (str * 0.98)); });
+    var y = ny + (linjer.length - 1) * str * 0.98 + 52;
+
+    // Avdeling
+    x.font = '700 18px Cinzel,serif'; sporing(x, 4);
+    var avd = (o.avdeling || '').toUpperCase(), aw = x.measureText(avd).width + 54;
+    x.fillStyle = rgba(o.avdFarge || T.aksent, .14); rund(x, tx, y - 26, aw, 40, 20); x.fill();
+    x.strokeStyle = rgba(o.avdFarge || T.aksent, .5); x.lineWidth = 1.5; x.stroke();
+    x.beginPath(); x.arc(tx + 22, y - 6, 6, 0, Math.PI * 2); x.fillStyle = o.avdFarge || T.aksent; x.fill();
+    x.fillText(avd, tx + 38, y);
+    sporing(x, 0);
+
+    // Tall
+    var n = o.tall.length, bw = Math.min(150, (maks - (n - 1) * 14) / n), by = y + 40;
+    o.tall.forEach(function (t, i) {
+      var bx = tx + i * (bw + 14);
+      x.fillStyle = 'rgba(255,255,255,.04)'; rund(x, bx, by, bw, 120, 14); x.fill();
+      x.strokeStyle = rgba(T.aksent, .28); x.lineWidth = 1.5; x.stroke();
+      x.textAlign = 'center'; x.fillStyle = T.lys; x.font = '700 64px Rajdhani,sans-serif';
+      x.fillText(String(t.v), bx + bw / 2, by + 72);
+      x.fillStyle = 'rgba(255,255,255,.6)'; x.font = '600 19px Rajdhani,sans-serif'; sporing(x, 2);
+      x.fillText(String(t.l).toUpperCase(), bx + bw / 2, by + 102); sporing(x, 0);
+    });
+    x.textAlign = 'left';
+    x.fillStyle = rgba(T.aksent, .55); x.font = '700 15px Cinzel,serif'; sporing(x, 6);
+    x.fillText((o.konkurranse + ' · Sesong 3').toUpperCase(), tx, H - 52); sporing(x, 0);
+
+    var blob = await new Promise(function (ok) { c.toBlob(ok, 'image/png'); });
+    var fil = 'ukesvinner_uke' + o.uke + '_' + o.konkurranse.toLowerCase().replace(/[^a-z]+/g, '_').replace(/^_|_$/g, '') + '.png';
+    var url = URL.createObjectURL(blob);
+    var mobil = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    try {
+      var f = new File([blob], fil, { type: 'image/png' });
+      if (mobil && navigator.canShare && navigator.canShare({ files: [f] })) {
+        await navigator.share({ files: [f], title: (o.eyebrow || 'Ukens vinner') + ' uke ' + o.uke });
+        return;
+      }
+    } catch (e) { if (e && e.name === 'AbortError') return; }
+    try {
+      if (navigator.clipboard && window.ClipboardItem) {
+        await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+        toast('Kortet er kopiert – lim inn i Teams med Ctrl+V.', { url: url, fil: fil });
+        return;
+      }
+    } catch (e) {}
+    var a = document.createElement('a'); a.href = url; a.download = fil; document.body.appendChild(a); a.click(); a.remove();
+    toast('Kortet er lastet ned – dra det inn i Teams.');
+  };
+})();
+</script>
 <script type="text/babel">
 const {useState,useEffect}=React;
 
@@ -278,8 +423,12 @@ const PST=[
   {name:'Wajahit Elahit',              loc:'ryen', id:'wajahit_elahit'},
   {name:'Oliver Nordengen',            loc:'ryen', id:'oliver_nordengen'},
   {name:'Hammad Nayyar Iqbal',         loc:'ryen', id:'hammad_nayyar_iqbal'},
+  {name:'J\u00f8ran Granholt Ejersbo',  loc:'lillestrom', id:'joran_granholt_ejersbo'},
+  {name:'Pavel Jizba',                  loc:'lillestrom', id:'pavel_jizba'},
+  {name:'Joel Andom Jiji',              loc:'ryen', id:'joel_andom_jiji'},
 ];
-const PHOTOS={}; PST.forEach(p=>{PHOTOS[p.name]='photos/'+p.id+'.jpg';});
+const WEBP=['akshanan_subaskaran','eirik_flatner','elias_hassel_sivertsen','elise_olsen_torseth','joran_granholt_ejersbo','kenneth_okshaug','kurt_ronny_karlsen','liam_holmen','trym_sverre_svendsen','yamen_agheid_madkhana'];
+const PHOTOS={}; PST.forEach(p=>{PHOTOS[p.name]='photos/'+p.id+(WEBP.indexOf(p.id)>=0?'.webp':'.jpg');});
 const LOC_OF={}; PST.forEach(p=>{LOC_OF[p.name]=p.loc;});
 
 /* ── OSAT Supabase ── */
@@ -447,6 +596,12 @@ function WinnerCard({winner,ranked}){
               <div className="stat-lbl">{l}</div>
             </div>
           ))}
+        </div>
+        <div style={{display:'flex',justifyContent:'center',margin:'-6px 0 26px'}}>
+          <button className="md-teams-knapp" onClick={()=>mdTeamsKort({konkurranse:'VCSO OSAT League',eyebrow:'Ukens PST',uke:getDisplayWeek().week,navn:w.name,avdeling:dl(w.loc),avdFarge:col,foto:PHOTOS[w.name],tall:[{v:w.pts,l:"Poeng"},{v:w.tens,l:"10-ere"},{v:w.nines,l:"9-ere"},{v:w.fup,l:"Fulgt opp"}],tema:{bg1:'#2a1b10',bg2:'#0b0806',aksent:'#f97316',lys:'#fdba74'}})}>
+            <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 15V3"/><path d="m7 8 5-5 5 5"/><path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/></svg>
+            Del i Teams
+          </button>
         </div>
         {ranked.length>1&&(
           <>
